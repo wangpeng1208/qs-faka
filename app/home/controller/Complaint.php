@@ -1,0 +1,153 @@
+<?php
+
+// +----------------------------------------------------------------------
+// | 骑士发卡 [ 平顶山若拉网络科技有限公司，并保留所有权利 ]
+// +----------------------------------------------------------------------
+// | Copyright (c) 2016~2020 https://www.qqss.net All rights reserved.
+// +----------------------------------------------------------------------
+// | Licensed 骑士软件 并不是自由软件，商业用途务必到官方购买正版授权, 以免引起不必要的法律纠纷.
+// +----------------------------------------------------------------------
+// | Author: QQSS <admin@qqss.net>
+// +----------------------------------------------------------------------
+
+namespace app\home\controller;
+
+use think\facade\Db;
+use think\facade\Cache;
+use app\service\sms\SmsService;
+use app\common\model\Order as OrderModel;
+use app\common\model\OrderComplaint as ComplaintModel;
+use app\common\model\AutoUnfreeze as AutoUnfreezeModel;
+use app\common\model\OrderComplaintMessage as ComplaintMessage;
+
+class Complaint extends Base
+{
+    /**
+     * 买家投诉
+     */
+    public function doComplaint()
+    {
+        $post = [
+            'trade_no' => input('trade_no', ''),
+            'type'     => input('type', ''),
+            'qq'       => input('qq', ''),
+            'mobile'   => input('mobile', ''),
+            'desc'     => input('desc', ''),
+        ];
+
+        $validate = new \app\home\validate\ComplaintValidate;
+        $validate->failException(true)->check($post);
+        $order = OrderModel::where(["trade_no" => $post['trade_no']])->findOrFail();
+
+        try {
+            Db::startTrans();
+            $pwd    = rand(100000, 999999);
+            $result = ComplaintModel::create([
+                "user_id"              => $order->user_id,
+                "proxy_parent_user_id" => $order->proxy_parent_user_id,
+                "trade_no"             => $post['trade_no'],
+                "type"                 => $post['type'],
+                "qq"                   => $post['qq'],
+                "mobile"               => $post['mobile'],
+                "desc"                 => $post['desc'],
+                "status"               => 0,
+                "create_at"            => time(),
+                "create_ip"            => $this->request->ip(),
+                "pwd"                  => $pwd,
+                "expire_at"            => time() + 86400,
+                "buyer_qrcode"         => ''
+            ]);
+
+            $user = $order->user()->lock(true)->findOrEmpty();
+
+            if ($user->isEmpty()) {
+                Db::rollback();
+                $this->error("商户不存在");
+            }
+
+            if (!empty ($result)) {
+                // 自动冻结表 冻结所有该订单状态，冻结时间为当前时间+1天
+                $settlement_frezze_endtime = conf('settlement_frezze_endtime');
+                if ($settlement_frezze_endtime === 2) {
+                    $unfreeze_time = time() + 86400;
+                } else {
+                    // 今日24点
+                    $unfreeze_time = strtotime(date('Y-m-d', strtotime('+1 day'))) - 1;
+                }
+                $auto_freeze = AutoUnfreezeModel::update(["status" => -1, "unfreeze_time" => $unfreeze_time], ["trade_no" => $order->trade_no]);
+
+                if ($auto_freeze) {
+                    $order->is_freeze = 1;
+                    if ($order->save()) {
+                        Db::commit();
+
+                        $sms = new SmsService();
+                        // 向买家发送投诉短信 短信密码
+                        $sms->sendSms('complaint_to_buyer', $post['mobile'], [
+                            'trade_no' => $post['trade_no'],
+                            'code'     => $pwd
+                        ]);
+                        // 向商户发送投诉短信
+                        $sms->sendSms('complaint_to_merchant', $order->user->mobile, [
+                            'trade_no' => $post['trade_no']
+                        ]);
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            Db::rollback();
+            $this->error("操作失败，请重试！" . $e->getMessage());
+        }
+        $this->success("投诉成功！");
+    }
+
+
+    /**
+     * 投诉订单查询
+     */
+    public function complaintQuery()
+    {
+        $trade_no  = input('trade_no');
+        $pwd       = input('pwd');
+        $complaint = ComplaintModel::where([
+            "trade_no" => $trade_no,
+            "pwd"      => $pwd
+        ])->find();
+        if (!empty ($complaint)) {
+            $post['messages']  = $complaint->messages;
+            $post['order']     = $complaint->orders;
+            $post['complaint'] = $complaint;
+            // 记录缓存
+            $ip = $this->request->ip();
+            // 记录ip缓存 用于验证发送聊天权限和push消息通道权限
+            Cache::set('complaint_query_' . $complaint->id, $ip, 86400);
+            $this->success('密码正确！', $post);
+        } else {
+            $this->error('密码不正确，如有问题请联系客服处理！');
+        }
+    }
+
+    /**
+     * 买家投诉信息发送
+     */
+    public function send()
+    {
+        $content     = input("content/s", "") ?: $this->error('请输入沟通内容');
+        $id          = input("id/d", "") ?: $this->error('参数错误');
+        $complaint   = ComplaintModel::findOrFail($id);
+        $check_cache = Cache::get('complaint_query_' . $complaint->id);
+        if ($check_cache !== $this->request->ip()) {
+            $this->error('非法操作');
+        }
+        $post = [
+            "from"      => 0,
+            "type"      => 'buyer',
+            "trade_no"  => $complaint->trade_no,
+            "content"   => $content,
+            "create_at" => time()
+        ];
+        $res  = ComplaintMessage::create($post);
+
+        return $res ? $this->success("发送成功") : $this->error("发送失败");
+    }
+}

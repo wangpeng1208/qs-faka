@@ -1,0 +1,9 @@
+/.idea
+/.vscode
+/vendor
+*.log
+/runtime/*
+/public/upload
+/public/development
+.env
+.user.ini

@@ -1,0 +1,174 @@
+<?php
+
+// +----------------------------------------------------------------------
+// | 骑士发卡 [ 平顶山若拉网络科技有限公司，并保留所有权利 ]
+// +----------------------------------------------------------------------
+// | Copyright (c) 2016~2020 https://www.qqss.net All rights reserved.
+// +----------------------------------------------------------------------
+// | Licensed 骑士软件 并不是自由软件，商业用途务必到官方购买正版授权, 以免引起不必要的法律纠纷.
+// +----------------------------------------------------------------------
+// | Author: QQSS <admin@qqss.net>
+// +----------------------------------------------------------------------
+
+namespace app\merchantapi\controller\goods;
+
+use app\common\model\GoodsCoupon as GoodsCouponModel;
+use app\merchantapi\controller\Base;
+use app\service\export\ExportService;
+
+class Coupon extends Base
+{
+    /**
+     * 优惠券过期 打开时自动标记删除
+     * todo 到定时任务
+     */
+    private function expire()
+    {
+        $this->user->goodsCoupon()->where(["status" => 1])->where("expire_at", "< time", date("Y-m-d H:i:s", time()))->update(["delete_at" => time()]);
+    }
+
+    /**
+     * 优惠券列表
+     */
+    public function index()
+    {
+        $this->expire();
+        $where = $this->request->params([
+            ['cate_id', ''],
+            ['status', ''],
+        ]);
+        $list  = $this->user->goodsCoupon()
+            ->with('category')  // 预加载 category
+            ->withSearch($where[0], $where[1])
+            ->order("id desc")
+            ->paginate($this->limit)
+            ->each(function ($item) {
+                $item->cate_name = $item['cate_id'] == 0 ? '全部' : $item->category->name;
+                $item->status = $item->expire_day;
+            });
+        return $this->success('获取成功', [
+            'list'  => $list->items(),
+            'total' => $list->total(),
+        ]);
+    }
+
+    /**
+     * 优惠券回收站
+     * @return mixed
+     */
+    public function trash()
+    {
+        $this->expire();
+        $where = $this->request->params([
+            ['cate_id', ''],
+            ['status', ''],
+        ]);
+        $list  = $this->user->goodsCoupon()
+            ->with('category')
+            ->withSearch($where[0], $where[1])
+            ->onlyTrashed()
+            ->order("delete_at desc, id desc")
+            ->paginate($this->limit)
+            ->each(function ($item) {
+                $item->cate_name = $item->cate_id == 0 ? '全部' : $item->category->name;
+                $item->status = $item->expire_day;
+            });
+        $this->success('获取成功', [
+            'list'  => $list->items(),
+            'total' => $list->total(),
+        ]);
+    }
+
+    /**
+     * @notes 添加优惠券
+     * @auth true
+     */
+    public function add()
+    {
+        $validate = new \app\merchantapi\validate\goods\CouponValidate;
+        $data     = $validate->data('add', [
+            'user_id' => $this->user->id,
+        ]);
+        $post     = array_fill(0, $data['quantity'], $data);
+        $post     = array_map(function ($item) {
+            $item['code']      = strtoupper(substr(md5(uniqid() . $this->user->id), 0, 12) . get_random_string(4));
+            $item['create_at'] = time();
+            $item['expire_at'] = strtotime($item['expire_at']);
+            $item['status'] = 1;
+            return $item;
+        }, $post);
+        $result = $this->user->goodsCoupon()->saveAll($post);
+        // 获取刚添加的数据
+        $import_coupon = input("import_coupon/d", '');
+        if ($result !== false) {
+            if ($import_coupon) {
+                $coupons = $this->user->goodsCoupon()->where('id', 'in', array_column($result, 'id'))->select();
+                $res     = $this->export($coupons, $import_coupon);
+            }
+            $count = count($result);
+            $this->success("成功添加" . $count . "张优惠券！", $res);
+        } else {
+            $this->error("添加失败！");
+        }
+    }
+
+    /**
+     * 删除|批量删除至回收站
+     *
+     */
+    public function batchDel()
+    {
+        $ids = input("ids/a", []);
+        if (count($ids) == 0)
+            $this->error("没有选中项！");
+        $where[] = ["id", "in", $ids];
+
+
+        $result = $this->user->goodsCoupon()->where($where)->update(["delete_at" => time()]);
+
+        if ($result) {
+            $this->success("批量删除优惠券成功");
+        } else {
+            $this->error("删除失败！");
+        }
+    }
+
+    /**
+     * 恢复|批量恢复
+     *
+     */
+    public function restore()
+    {
+        $ids = input("ids/a", []);
+        if (empty($ids))
+            $this->error('没有选中项！');
+        $where[] = ["id", "in", $ids];
+        $result  = $this->user->goodsCoupon()->onlyTrashed()->where($where)->update(["delete_at" => null]);
+        if ($result) {
+            $this->success("恢复成功！");
+        } else {
+            $this->error("恢复失败！");
+        }
+    }
+
+    /**
+     * 批量清空回收站
+     *
+     */
+    public function clear()
+    {
+        $where[] = ["user_id", "=", $this->user->id];
+        $where[] = ["delete_at", ">", 0];
+        $result  = GoodsCouponModel::onlyTrashed()->where($where)->chunk(100, function ($items) {
+            foreach ($items as $item) {
+                $item->force()->delete();
+            }
+        });
+        if ($result) {
+            $this->success("删除成功！");
+        } else {
+            $this->error("删除失败！");
+        }
+    }
+
+}
