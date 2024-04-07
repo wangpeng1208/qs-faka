@@ -1,0 +1,1 @@
+import{e as o,r as t,Q as a,R as r,a9 as n}from"./vue-0c363a73.js";const _=o({__name:"protocol",setup(s){const e=t("123");return(c,l)=>(a(),r("div",null,"测试 todo "+n(e.value),1))}});export{_ as default};
