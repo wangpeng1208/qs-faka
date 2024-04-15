@@ -33,6 +33,7 @@ class Complaint extends Base
         $where2["user_id"] = $this->user->id;
         $res               = $this->user->complaints()->withSearch($where[0], $where[1])->where($where2)->order("id desc")->paginate($this->limit)->each(function ($item) {
             $item->goods_name = $item->orders->goods_name;
+            unset($item->pwd);
         });
 
         $this->success('获取成功', [
@@ -55,6 +56,7 @@ class Complaint extends Base
         $where2["proxy_parent_user_id"] = $this->user->id;
         $res                            = ComplaintModel::withSearch($where[0], $where[1])->where($where2)->order("id desc")->paginate($this->limit)->each(function ($item) {
             $item->goods_name = $item->orders->goods_name;
+            unset($item->pwd);
         });
 
         $this->success('获取成功', [
@@ -76,6 +78,7 @@ class Complaint extends Base
 
         $where["user_id|proxy_parent_user_id"] = $this->user->id;
         $complaint                             = $this->user->complaints()->where($where)->findOrFail();
+        unset($complaint->pwd);
         $messages = $complaint->messages()->order('id desc')->select();
 
         $this->success('获取成功', [
