@@ -17,6 +17,12 @@ use app\service\shortlink\ShortLinkService;
 
 class User extends Model
 {
+    protected $type = [
+        'freeze_money'  => 'float',
+        'money'         => 'float',
+        'fee_money'     => 'float',
+        'deposit_money' => 'float',
+    ];
     public function role()
     {
         return $this->hasOneThrough('UserRole', 'UserRoleRelation', 'user_id', 'id', 'id', 'role_id');
