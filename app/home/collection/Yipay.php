@@ -113,11 +113,9 @@ class Yipay extends PayService implements CollectionInterface
     {
         $out_trade_no = $request['out_trade_no'];
         $order        = $this->loadOrder($out_trade_no);
-        // todo 这个位置 
-        $para_filter = $this->paraFilter($_GET);
+        $para_filter = $this->paraFilter($request);
         $para_sort   = $this->argSort($para_filter);
         $prestr      = $this->createLinkstring($para_sort);
-        $isSgin      = false;
         $isSgin      = $this->md5Verify($prestr, $request['sign'], $order->channelAccount->params->key);
         if ($isSgin) {
             $order->transaction_id = $request['trade_no'];
