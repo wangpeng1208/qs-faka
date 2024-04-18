@@ -212,6 +212,12 @@ class OrderService
         $post["goods_price"]      = $goods->price;
         $post["goods_cost_price"] = $goods->cost_price;
 
+        // 取卡密码逻辑
+        if ($goods->take_card_type == 2) {
+            $post["take_card_password"] = $post['card_password'];
+            $post["take_card_type"]     = 2;
+        }
+        
         // 批发优惠
         $post["goods_price_old"] = $post["goods_price"];
         if ($goods->wholesale_discount_list != null) {
