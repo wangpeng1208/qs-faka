@@ -23,30 +23,26 @@ class OrderValidate extends Validate
     protected $goods = null;
 
     protected $rule = [
-        'goods_id'      => 'require|checkGoodsExists|checkGoodsStatus|checkGoodsUser',
-        'contact'       => 'require|checkContact|checkBlacklist|checkContactType',
-        'quantity'      => 'require|checkStock|checkMinQuantity|checkMaxQuantity',
-        'coupon_code'   => 'checkCoupon',
-        'card_password' => 'checkCardPassword',
-        'pid'           => 'require|checkPid',
+        'goods_id' => 'require|checkGoodsExists|checkGoodsStatus|checkGoodsUser|checkMore',
+        'contact'  => 'require|checkContact|checkBlacklist|checkContactType',
+        'quantity' => 'require|checkStock|checkMinQuantity|checkMaxQuantity',
+        'pid'      => 'require|checkPid',
     ];
 
     protected $message = [
-        'goods_id.require'                => '商品选择错误！',
-        'goods_id.checkGoodsExists'       => '商品不存在！',
-        'goods_id.checkGoodsStatus'       => '该商品已下架！',
-        'goods_id.checkGoodsUser'         => '该商品所在的用户不存在！',
-        'contact.require'                 => '请填写联系方式！',
-        'contact.checkBlacklist'          => '联系方式不能太简单！',
-        'contact.checkContactType'        => '请填写正确的联系方式！',
-        'quantity.require'                => '请填写购买数量！',
-        'quantity.checkStock'             => '库存不足！',
-        'quantity.checkMinQuantity'       => '起购数量不能少于 :limit 张！',
-        'quantity.checkMaxQuantity'       => '购买数量不能大于 :limit 张！',
-        'coupon_code.checkCoupon'         => '优惠券验证失败！',
-        'card_password.checkCardPassword' => '请输入取卡密码！',
-        'pid.require'                     => '请选择付款方式！',
-        'pid.checkPid'                    => '付款方式选择错误！',
+        'goods_id.require'          => '商品选择错误！',
+        'goods_id.checkGoodsExists' => '商品不存在！',
+        'goods_id.checkGoodsStatus' => '该商品已下架！',
+        'goods_id.checkGoodsUser'   => '该商品所在的用户不存在！',
+        'contact.require'           => '请填写联系方式！',
+        'contact.checkBlacklist'    => '联系方式不能太简单！',
+        'contact.checkContactType'  => '请填写正确的联系方式！',
+        'quantity.require'          => '请填写购买数量！',
+        'quantity.checkStock'       => '库存不足！',
+        'quantity.checkMinQuantity' => '起购数量不能少于 :limit 张！',
+        'quantity.checkMaxQuantity' => '购买数量不能大于 :limit 张！',
+        'pid.require'               => '请选择付款方式！',
+        'pid.checkPid'              => '付款方式选择错误！',
     ];
 
     // 定义验证方法
@@ -68,7 +64,7 @@ class OrderValidate extends Validate
     {
         $goods = Goods::where(["id" => $value])->find();
         $user  = $goods->user;
-        if (empty ($user)) {
+        if (empty($user)) {
             return '该商品所在的用户不存在！';
         }
         if ($user->status != 1) {
@@ -78,10 +74,10 @@ class OrderValidate extends Validate
             return '商家已被冻结！';
         }
         $shop = $user->shop;
-        if (empty ($shop)) {
+        if (empty($shop)) {
             return '商家店铺不存在！';
         }
-        if (empty ($shop->shop_status)) {
+        if (empty($shop->shop_status)) {
             return '商家店铺未通过审核！';
         }
         if ($shop->is_freeze) {
@@ -149,12 +145,13 @@ class OrderValidate extends Validate
         return true;
     }
 
-    protected function checkCoupon($value, $rule, $data = [])
+    // 非require的自定义验证器未能正确识别，故附加验证统一放到checkMore方法中
+    protected function checkMore($value, $rule, $data = [])
     {
-        if (isset ($data['is_coupon']) && $data['is_coupon'] && $this->goods->coupon_type) {
-            if ($value) {
-                $coupon = GoodsCoupon::where('code', $value)->find();
-                if (empty ($coupon))
+        if (isset($data['is_coupon']) && $data['is_coupon'] && $this->goods->coupon_type) {
+            if ($data['coupon_code']) {
+                $coupon = GoodsCoupon::where('code', $data['coupon_code'])->find();
+                if (empty($coupon))
                     return '优惠券不存在！';
                 if ($coupon->user_id != $this->goods->user_id)
                     return '优惠券不能在当前店铺使用！';
@@ -168,22 +165,18 @@ class OrderValidate extends Validate
                     return '优惠券最低消费金额不足，总价满' . $coupon->min_banlance . '元，方可使用！';
             }
         }
-        return true;
-    }
-
-    protected function checkCardPassword($value, $rule, $data = [])
-    {
-        if ($this->goods->take_card_type == 3 && $value == '') {
-            return false;
+        if ($this->goods->take_card_type == 2 && $data['card_password'] == '') {
+            return '请输入取卡密码！';
         }
         return true;
     }
+
 
     // 支付方式检测
     protected function checkPid($value, $rule, $data = [])
     {
         $channel = Channel::where(["id" => $value])->find();
-        if (empty ($channel)) {
+        if (empty($channel)) {
             return '支付方式不存在';
         }
         if ($channel->status != 1) {
@@ -199,7 +192,7 @@ class OrderValidate extends Validate
     // 创建订单时的 验证场景
     public function sceneCreate()
     {
-        $create = ['goods_id', 'contact', 'quantity', 'coupon_code', 'card_password', 'pid'];
+        $create = ['goods_id', 'contact', 'quantity', 'pid'];
         return $this->only($create);
     }
 }
