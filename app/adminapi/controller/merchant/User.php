@@ -72,8 +72,6 @@ class User extends Base
             'email'           => input('email/s', ''),
             'mobile'          => input('mobile/s', ''),
             'qq'              => input('qq/s', ''),
-            'subdomain'       => strtolower(input('subdomain/s', '')),
-            'shop_name'       => input('shop_name/s', ''),
             'statis_code'     => input('statis_code/s', ''),
             'pay_theme'       => input('pay_theme/s', 'default'),
             'password'        => input('password/s', ''),
