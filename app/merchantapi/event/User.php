@@ -15,7 +15,6 @@ declare(strict_types=1);
 namespace app\merchantapi\event;
 
 use app\common\model\UserRoleRelation;
-use app\service\notify\SigninNotifyService;
 
 class User
 {
@@ -55,10 +54,4 @@ class User
 
     }
 
-    // 登录通知
-    function signinNotify($user)
-    {
-        $SigninNotify = new SigninNotifyService();
-        $SigninNotify->notify($user);
-    }
 }
