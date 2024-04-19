@@ -36,12 +36,6 @@ class MerchantUserService
             'site_register_need_email'        => conf('site_register_need_email') ? true : false,
             'site_register_need_mobile_check' => conf('site_register_need_mobile_check') ? true : false,
             'site_register_need_email_check'  => conf('site_register_need_email_check') ? true : false,
-            // 是否开启邀请码
-            'spread_invite_code'              => conf('spread_invite_code') ? true : false,
-            // 是否开启邀请码必填
-            'is_need_invite_code'             => conf('is_need_invite_code') ? true : false,
-            // 邀请码获取地址
-            'invite_code_get_url'             => conf('invite_code_get_url'),
         ];
     }
 
