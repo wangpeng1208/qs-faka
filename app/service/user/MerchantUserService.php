@@ -14,7 +14,6 @@ namespace app\service\user;
 
 use think\facade\Cache;
 use Webman\Event\Event;
-use app\common\model\InviteCode;
 use app\common\model\User;
 use app\service\sms\SmsService;
 use app\service\message\EmailMessageService;
@@ -44,30 +43,6 @@ class MerchantUserService
             // 邀请码获取地址
             'invite_code_get_url'             => conf('invite_code_get_url'),
         ];
-    }
-
-    /**
-     * 邀请码检查
-     * @param string $invite_code 邀请码
-     * @return array
-     */
-    private function invite_code_check($invite_code)
-    {
-        if (conf("spread_invite_code") == 1 && conf("is_need_invite_code") == 1) {
-            if (!$invite_code)
-                throw new \Exception("请输入邀请码！");
-            $invite_data = InviteCode::where(["code" => $invite_code, "status" => 0])->find();
-            if (empty($invite_data)) {
-                throw new \Exception("邀请码不正确！");
-            }
-            if ($invite_data->expire_at < time() && $invite_data->expire_at != 0) {
-                throw new \Exception("邀请码已过期！");
-            }
-            $data = [$invite_data->user_id, 1];
-        } else {
-            $data = [0, 0];
-        }
-        return $data;
     }
 
     /**
@@ -115,10 +90,7 @@ class MerchantUserService
         // 如果$data 则使用mobile或者email
         // 生成随机用户名
         $username = '商户' . get_random_string(6);
-        // $data["username"] = $data["username"] ?: $data["mobile"] ?: $data["email"] ?: $username;
         $data["username"] = $data["username"] ?: $username;
-        // 邀请码检查
-        [$data['parent_id'], $data['invite_type']] = $this->invite_code_check($data["invite_code"]);
         // 如果手机验证码必填
         if (conf('site_register_need_mobile') && conf('site_register_need_mobile_check')) {
             // 检查手机验证码
