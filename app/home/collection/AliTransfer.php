@@ -85,7 +85,7 @@ class AliTransfer extends PayService implements CollectionInterface
       ];
       // 如果是手机访问
       if (request()->isMobile()) {
-        return Pay::alipay()->wap($data)->getBody()->getContents();
+        return Pay::alipay()->h5($data)->getBody()->getContents();
       } else {
         return Pay::alipay()->web($data)->getBody()->getContents();
       }
