@@ -17,6 +17,7 @@ use app\adminapi\controller\Base;
 use app\service\message\EmailMessageService;
 use app\common\model\{User as UserModel, UserCollect as UserCollectModel, Channel as ChannelModel, UserLoginLog, UserRate as UserRateModel, UserRoleRelation, UserLoginErrorLog};
 use app\service\message\MessageService;
+use Webman\Event\Event;
 
 /**
  * 商户管理
@@ -107,11 +108,7 @@ class User extends Base
     {
         $data = $this->post();
         $res  = UserModel::create($data);
-        // 默认分组
-        UserRoleRelation::create([
-            'user_id' => $res->id,
-            'role_id' => 1
-        ]);
+        Event::emit('user.register', $res);
         return $res ? $this->success("操作成功！") : $this->error("操作失败！");
     }
 
