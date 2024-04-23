@@ -522,7 +522,7 @@ function cpu_count(): int
  * @param mixed|null $default default value
  * @return mixed|null
  */
-// function input(string $param = null, $default = null)
-// {
-//     return is_null($param) ? request()->all() : request()->input($param, $default);
-// }
+function input(string $param = null, $default = null)
+{
+    return is_null($param) ? request()->all() : request()->input($param, $default);
+}

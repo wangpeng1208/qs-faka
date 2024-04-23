@@ -86,7 +86,7 @@ class Request extends \Webman\Http\Request
       }
       $default = $param[1];
       $item_filter = $param[2] ?? $filter;
-      $input[$name] = $this->paramFilter(input($key, $default), $item_filter);
+      $input[$name] = $this->paramFilter(inputs($key, $default), $item_filter);
       //过滤后产生空字符串，按照默认值
       if ($input[$name] === '') {
         $input[$name] = $default;
