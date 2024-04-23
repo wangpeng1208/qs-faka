@@ -47,7 +47,7 @@ class Message extends Base
      */
     public function messageList()
     {
-        $from_id = input('from_id/d');
+        $from_id = inputs('from_id/d');
         $to_message    = ChatMessage::where('to_id', $this->user->id)
             ->where('from_id', $from_id)
             ->order('id', 'desc')

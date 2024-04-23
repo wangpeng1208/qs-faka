@@ -37,7 +37,7 @@ class Cash extends Base
      */
     public function setUserCashType()
     {
-        $cash_type             = input("cash_type/d", 1);
+        $cash_type             = inputs("cash_type/d", 1);
         $this->user->cash_type = $cash_type;
 
         $res = $this->user->save();
@@ -76,26 +76,26 @@ class Cash extends Base
             Db::rollback();
             $this->error("当前不允许修改您的收款信息！");
         }
-        if (input("type/d", '') === 3) {
+        if (inputs("type/d", '') === 3) {
             $info = [
-                'account'       => input("account/s", ''),
-                'realname'      => input("realname/s", ''),
-                'idcard_number' => input("idcard_number/s", ''),
-                'bank_name'     => input("bank_name/s", ''),
-                'bank_branch'   => input("bank_branch/s", ''),
-                'bank_card'     => input("idcard_number/s", '')
+                'account'       => inputs("account/s", ''),
+                'realname'      => inputs("realname/s", ''),
+                'idcard_number' => inputs("idcard_number/s", ''),
+                'bank_name'     => inputs("bank_name/s", ''),
+                'bank_branch'   => inputs("bank_branch/s", ''),
+                'bank_card'     => inputs("idcard_number/s", '')
             ];
         } else {
             $info = [
-                'account'       => input("account/s", ''),
-                'realname'      => input("realname/s", ''),
-                'idcard_number' => input("idcard_number/s", ''),
+                'account'       => inputs("account/s", ''),
+                'realname'      => inputs("realname/s", ''),
+                'idcard_number' => inputs("idcard_number/s", ''),
             ];
         }
         $data = [
             "user_id"   => $this->user->id,
             "info"      => $info,
-            "type"      => input("type/d", ''),
+            "type"      => inputs("type/d", ''),
             "create_at" => time()
         ];
         foreach ($data['info'] as $val) {
@@ -193,7 +193,7 @@ class Cash extends Base
         // 没有提现次数提示语
         if (intval(conf("cash_limit_num")) - $count <= 0)
             $this->error(conf("cash_limit_num_tips"));
-        $money = input("money/f", 0);
+        $money = inputs("money/f", 0);
         if ($money <= 0)
             $this->error("提现金额不能小于等于0！");
         if ($money < conf("cash_min_money"))

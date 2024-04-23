@@ -18,7 +18,6 @@ use app\service\analysis\AnalysisService;
 use app\service\pay\PayService;
 use app\service\order\OrderService;
 use think\facade\Db;
-use app\service\export\ExportService;
 
 class Order extends Base
 {
@@ -28,7 +27,7 @@ class Order extends Base
      */
     public function list(OrderModel $model)
     {
-        $limit = input('limit/d', 20);
+        $limit = inputs('limit/d', 20);
         $where = $this->request->params([
             ['date_type', ''],
             ['username', ''],
@@ -67,7 +66,7 @@ class Order extends Base
      */
     public function del(OrderModel $model)
     {
-        $id    = input('id/d', 0);
+        $id    = inputs('id/d', 0);
         $order = OrderModel::findOrFail($id);
         if ($order->status == 1) {
 
@@ -85,7 +84,7 @@ class Order extends Base
      */
     public function notify()
     {
-        $id    = input("id/d", 0);
+        $id    = inputs("id/d", 0);
         $order = OrderModel::findOrFail($id);
         if ($order->status != 0) {
             $this->error("该订单不是未支付状态！");
@@ -101,7 +100,7 @@ class Order extends Base
      */
     public function freeze()
     {
-        $id    = input("id/d", 0);
+        $id    = inputs("id/d", 0);
         $order = OrderModel::where(["id" => $id, "status" => 1])->findOrFail();
 
         $is_freeze = $order->is_freeze == 1 ? 0 : 1;

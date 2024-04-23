@@ -49,13 +49,13 @@ class category extends Base
     private function post()
     {
         $data = [
-            'id'           => input('id/d', 0),
-            'name'         => input('name/s', ''),
-            'sort'         => input('sort/d', 0),
-            'is_show'      => input('is_show/d', 1),
-            'theme'        => input('theme/s', 'default'),
-            'mobile_theme' => input('mobile_theme/s', 'default'),
-            'status'       => input('status/d', 1),
+            'id'           => inputs('id/d', 0),
+            'name'         => inputs('name/s', ''),
+            'sort'         => inputs('sort/d', 0),
+            'is_show'      => inputs('is_show/d', 1),
+            'theme'        => inputs('theme/s', 'default'),
+            'mobile_theme' => inputs('mobile_theme/s', 'default'),
+            'status'       => inputs('status/d', 1),
             'create_at'    => time()
         ];
         // 数据校验
@@ -96,7 +96,7 @@ class category extends Base
 
     public function del()
     {
-        $ids = input('ids/a', []);
+        $ids = inputs('ids/a', []);
         if (empty($ids)) {
             $this->error("请选择要删除的商品栏目！");
         }
@@ -112,9 +112,9 @@ class category extends Base
 
     public function status()
     {
-        $cate  = $this->getCategory(input('id/d', 0));
-        $field = input("field/s");
-        $value = input("value/d");
+        $cate  = $this->getCategory(inputs('id/d', 0));
+        $field = inputs("field/s");
+        $value = inputs("value/d");
         $res   = $cate->allowField(['status', 'sort', 'is_show'])->save([$field => $value]);
         if ($res) {
             $this->success("操作成功！");

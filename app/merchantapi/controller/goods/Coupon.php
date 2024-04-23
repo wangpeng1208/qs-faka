@@ -14,7 +14,6 @@ namespace app\merchantapi\controller\goods;
 
 use app\common\model\GoodsCoupon as GoodsCouponModel;
 use app\merchantapi\controller\Base;
-use app\service\export\ExportService;
 
 class Coupon extends Base
 {
@@ -99,14 +98,10 @@ class Coupon extends Base
         }, $post);
         $result = $this->user->goodsCoupon()->saveAll($post);
         // 获取刚添加的数据
-        $import_coupon = input("import_coupon/d", '');
+        $import_coupon = inputs("import_coupon/d", '');
         if ($result !== false) {
-            if ($import_coupon) {
-                $coupons = $this->user->goodsCoupon()->where('id', 'in', array_column($result, 'id'))->select();
-                $res     = $this->export($coupons, $import_coupon);
-            }
             $count = count($result);
-            $this->success("成功添加" . $count . "张优惠券！", $res);
+            $this->success("成功添加" . $count . "张优惠券！");
         } else {
             $this->error("添加失败！");
         }
@@ -118,7 +113,7 @@ class Coupon extends Base
      */
     public function batchDel()
     {
-        $ids = input("ids/a", []);
+        $ids = inputs("ids/a", []);
         if (count($ids) == 0)
             $this->error("没有选中项！");
         $where[] = ["id", "in", $ids];
@@ -139,7 +134,7 @@ class Coupon extends Base
      */
     public function restore()
     {
-        $ids = input("ids/a", []);
+        $ids = inputs("ids/a", []);
         if (empty($ids))
             $this->error('没有选中项！');
         $where[] = ["id", "in", $ids];

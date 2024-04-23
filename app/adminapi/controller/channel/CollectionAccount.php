@@ -25,7 +25,7 @@ class CollectionAccount extends Base
    */
   public function list()
   {
-    $channel_id = input('id/d', 0);
+    $channel_id = inputs('id/d', 0);
     $res        = ChannelAccountModel::where(['channel_id' => $channel_id])->paginate($this->limit)->each(function ($item, $key) {
       $item->code           = $item->channel->code;
       $item->rate_type_text = $item->rate_type == 1 ? '单独设置' : '继承接口';
@@ -42,7 +42,7 @@ class CollectionAccount extends Base
    */
   public function getFields()
   {
-    $channel_id = input('channel_id/d', 0);
+    $channel_id = inputs('channel_id/d', 0);
     $data       = [];
     $res        = ChannelModel::find($channel_id);
     if ($res) {
@@ -66,7 +66,7 @@ class CollectionAccount extends Base
    */
   public function detail()
   {
-    $id              = input('id/d', 0);
+    $id              = inputs('id/d', 0);
     $data            = ChannelAccountModel::where(['id' => $id])->find();
     $data['lowrate'] *= 1000;
     return $this->success('success', $data);
@@ -75,17 +75,17 @@ class CollectionAccount extends Base
   private function post()
   {
     $data     = [
-      'id'         => input('id/d', ''),
-      'name'       => input('name/s', ''),
-      'rate_type'  => input('rate_type/d', 0),
-      'status'     => input('status/d', 0),
-      'params'     => input('params/a', []),
-      'channel_id' => input('channel_id/d', 0),
+      'id'         => inputs('id/d', ''),
+      'name'       => inputs('name/s', ''),
+      'rate_type'  => inputs('rate_type/d', 0),
+      'status'     => inputs('status/d', 0),
+      'params'     => inputs('params/a', []),
+      'channel_id' => inputs('channel_id/d', 0),
     ];
     $validate = new \app\adminapi\validate\channel\CollectionAccountValidate;
     $validate->failException(true)->check($data);
     if ($data['rate_type'] == 1) {
-      $data['lowrate'] = input('lowrate/d', 0);
+      $data['lowrate'] = inputs('lowrate/d', 0);
       $data['lowrate'] /= 1000;
     }
     return $data;
@@ -119,7 +119,7 @@ class CollectionAccount extends Base
    */
   public function del()
   {
-    $id      = input('id/d', 0);
+    $id      = inputs('id/d', 0);
     $account = ChannelAccountModel::find($id);
     if (empty($account)) {
       $this->error('账户不存在');
@@ -134,12 +134,12 @@ class CollectionAccount extends Base
    */
   public function status()
   {
-    $account_id = input('id/d', 0);
+    $account_id = inputs('id/d', 0);
     $account    = ChannelAccountModel::find($account_id);
     if (empty($account)) {
       return $this->error('账号不存在');
     }
-    $status          = input('status/d', 1);
+    $status          = inputs('status/d', 1);
     $account->status = $status;
     $res             = $account->save();
     $remark          = $status == 1 ? '开启' : '关闭';

@@ -51,7 +51,7 @@ class Goods extends Base
      */
     public function status()
     {
-        $id    = input("id/d", 0);
+        $id    = inputs("id/d", 0);
         $goods = GoodsModel::findOrFail($id);
         $goods->is_freeze == 1 && $this->error("请先解冻商品后再上架！");
         $goods->status = $goods->status == 1 ? 0 : 1;
@@ -66,7 +66,7 @@ class Goods extends Base
      */
     public function freeze()
     {
-        $id    = input("id/d", 0);
+        $id    = inputs("id/d", 0);
         $goods = GoodsModel::findOrFail($id);
 
         $goods->is_freeze = $goods->is_freeze == 1 ? 0 : 1;
@@ -83,8 +83,8 @@ class Goods extends Base
      */
     public function del()
     {
-        $id  = input("id/d", 0);
-        $val = input("val/d", 0);
+        $id  = inputs("id/d", 0);
+        $val = inputs("val/d", 0);
         // 强制删除
         if ($val == 1) {
             $res = GoodsModel::destroy($id, true);

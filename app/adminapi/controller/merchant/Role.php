@@ -49,7 +49,7 @@ class Role extends Base
      */
     public function detail()
     {
-        $id               = input('id/d', 0);
+        $id               = inputs('id/d', 0);
         $user             = $data = UserRoleModel::where('id', $id)->find();
         $data['role_pc']  = array_map('intval', explode(',', $data['role_pc']));
         $data['role_wap'] = array_map('intval', explode(',', $data['role_wap']));
@@ -70,7 +70,7 @@ class Role extends Base
      */
     public function delete()
     {
-        $id = input('id/d', 0);
+        $id = inputs('id/d', 0);
         if ($id == 1) {
             return $this->error('默认分组不能删除');
         }
@@ -114,10 +114,10 @@ class Role extends Base
     public function add()
     {
         $data = [
-            'role_pc'  => implode(',', input('role_pc/a')),
-            'role_wap' => implode(',', input('role_wap/a')),
-            'name'     => input('name', '未知分组'),
-            'remark'   => input('remark', ''),
+            'role_pc'  => implode(',', inputs('role_pc/a')),
+            'role_wap' => implode(',', inputs('role_wap/a')),
+            'name'     => inputs('name', '未知分组'),
+            'remark'   => inputs('remark', ''),
         ];
 
         UserRoleModel::create($data);
@@ -131,11 +131,11 @@ class Role extends Base
     public function edit()
     {
         $data = [
-            'id'       => input('id'),
-            'role_pc'  => implode(',', input('role_pc/a')),
-            'role_wap' => implode(',', input('role_wap/a')),
-            'name'     => input('name', '未知分组'),
-            'remark'   => input('remark', ''),
+            'id'       => inputs('id'),
+            'role_pc'  => implode(',', inputs('role_pc/a')),
+            'role_wap' => implode(',', inputs('role_wap/a')),
+            'name'     => inputs('name', '未知分组'),
+            'remark'   => inputs('remark', ''),
         ];
         UserRoleModel::update($data);
         return $this->success('操作成功');
@@ -147,7 +147,7 @@ class Role extends Base
      */
     public function rateList()
     {
-        $id   = input('id/d', 0);
+        $id   = inputs('id/d', 0);
         $role = UserRoleModel::where('id', $id)->find();
         $res  = ChannelModel::where("is_install", 1)->where('type', 1)->paginate($this->limit)->each(function ($item) use ($role, $id) {
             $role_rate = $role->rate()->where(['channel_id' => $item->id, 'role_id' => $id])->find();
@@ -175,10 +175,10 @@ class Role extends Base
     public function editRate()
     {
         $data = [
-            'role_id'    => input('role_id/d', 0),
-            'channel_id' => input('channel_id/d', 0),
-            'status'     => input('status/d', 0),
-            'rate'       => input('rate/d', 0) / 1000,
+            'role_id'    => inputs('role_id/d', 0),
+            'channel_id' => inputs('channel_id/d', 0),
+            'status'     => inputs('status/d', 0),
+            'rate'       => inputs('rate/d', 0) / 1000,
         ];
         $info = UserRoleRateModel::where(['role_id' => $data['role_id'], 'channel_id' => $data['channel_id']])->find();
         if (empty($info)) {

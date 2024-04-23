@@ -29,8 +29,8 @@ class ArticleService
 
     public function articleList()
     {
-        $alias    = input('alias');
-        $limit    = input('limit/d', 10);
+        $alias    = inputs('alias');
+        $limit    = inputs('limit/d', 10);
         $category = ArticleCategoryModel::where(['alias' => $alias, 'status' => 1])->find();
         $list     = $category->articles()->where('status', 1)->order('top desc, id desc')->paginate($limit);
         return [
@@ -41,7 +41,7 @@ class ArticleService
 
     public function articleDetail()
     {
-        $id     = input('id/d', 0);
+        $id     = inputs('id/d', 0);
         $detail = ArticleModel::findOrEmpty($id);
         if ($detail->isEmpty()) {
             throw new \Exception('文章不存在!');

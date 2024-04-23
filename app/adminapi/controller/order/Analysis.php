@@ -13,7 +13,6 @@ namespace app\adminapi\controller\order;
 
 use app\adminapi\controller\Base;
 use app\common\model\Order as OrderModel;
-use app\service\export\ExportService;
 
 class Analysis extends Base
 {
@@ -68,17 +67,6 @@ class Analysis extends Base
         $counts["sum_platform_money"] = array_sum(array_column($statis, "sum_platform_money"));
         // $counts 作为 $statis 的第一项
         array_unshift($statis, $counts);
-        if (input("action/s", "") == "export") {
-            $file_name  = "商户分析_" . date("Ymd");
-            $out_data   = [];
-            $out_data[] = ["商户ID", "商户名称", "提交订单", "已付订单", "未付订单", "提交金额", "商户收入", "平台收入"];
-            foreach (array_map("array_values", $statis) as $item) {
-                $out_data[] = $item;
-            }
-            $out_data[] = array_values($counts);
-            $res        = (new ExportService())->createExcel($out_data, $file_name . '.xlsx');
-            return $this->success('获取成功', $res);
-        }
 
         $this->success("获取成功", [
             "list"  => $statis,
@@ -137,17 +125,6 @@ class Analysis extends Base
         $counts["sum_money"]          = array_sum(array_column($statis, "sum_money"));
         $counts["sum_actual_money"]   = array_sum(array_column($statis, "sum_actual_money"));
         $counts["sum_platform_money"] = array_sum(array_column($statis, "sum_platform_money"));
-        if (input("action/s", "") == "export") {
-            $file_name  = "渠道分析";
-            $out_data   = [];
-            $out_data[] = ["渠道ID", "渠道名称", "提交订单", "已付订单", "未付订单", "提交金额", "商户收入", "平台收入"];
-            foreach (array_map("array_values", $statis) as $item) {
-                $out_data[] = $item;
-            }
-            $out_data[] = array_values($counts);
-            $res        = (new ExportService())->createExcel($out_data, $file_name . '.xlsx');
-            return $this->success('获取成功', $res);
-        }
         array_unshift($statis, $counts);
         $this->success("获取成功", [
             "list"  => $statis,

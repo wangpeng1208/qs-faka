@@ -64,7 +64,7 @@ class News extends Base
      */
     public function read()
     {
-        $news_id = input('id');
+        $news_id = inputs('id');
         $res     = Db::table('article_read')->where(['user_id' => $this->user->id, 'news_id' => $news_id])->find();
         if ($res) {
             $this->error('已读');
@@ -103,7 +103,7 @@ class News extends Base
      */
     public function detail()
     {
-        $id      = input('id');
+        $id      = inputs('id');
         $article = ArticleModel::find($id);
 
         $article->cate_name = ArticleCategoryModel::where(['id' => $article->cate_id])->value('name');

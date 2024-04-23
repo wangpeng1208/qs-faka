@@ -15,7 +15,6 @@ namespace app\merchantapi\controller\charts;
 use app\merchantapi\controller\Base;
 use app\common\model\Order as OrderModel;
 use app\common\model\ShopIplist as ShopIplistModel;
-use app\service\export\ExportService;
 
 class Charts extends Base
 {
@@ -23,9 +22,9 @@ class Charts extends Base
     {
         $params = [
             "status"     => 1,
-            "date_range" => input("date_range/s", ""),
-            "trade_no"   => input("trade_no/s", ""),
-            "goods_id"   => input("goods_id/d", "")
+            "date_range" => inputs("date_range/s", ""),
+            "trade_no"   => inputs("trade_no/s", ""),
+            "goods_id"   => inputs("goods_id/d", "")
         ];
         $where  = [];
         if (isset($params["paytype"]) && $params["paytype"] !== "") {
@@ -56,7 +55,7 @@ class Charts extends Base
             }
         }
         $total_profit               = round($total_price - $total_cost_price - $cost_price, 2);
-        $limit                      = input('limit', 10);
+        $limit                      = inputs('limit', 10);
         $res                        = $this->user->orders()->where($where)->order("id desc")->paginate($limit)->each(function ($item, $key) {
             $item->cards_count = $item->cards_count;
             $item->paytype = get_paytype($item['paytype'])->name;
@@ -117,17 +116,6 @@ class Charts extends Base
         $totals["unpaid"]           = array_sum(array_column($data, "unpaid"));
         $totals["sum_money"]        = array_sum(array_column($data, "sum_money"));
         $totals["sum_actual_money"] = array_sum(array_column($data, "sum_actual_money"));
-        if (input("action/s", "") == "export") {
-            $file_title = "渠道分析_" . date("Ymd");
-            $result     = [];
-            $result[]   = ["支付方式", "提交订单数", "已付订单数", "未付订单数", "订单总金额", "订单实收金额"];
-            foreach (array_map("array_values", $data) as $item) {
-                $result[] = $item;
-            }
-            $result[] = array_values($totals);
-            $res      = (new ExportService())->createExcel($result, $file_title . ".xlsx");
-            $this->success("导出成功", $res);
-        }
         $data = array_values($data);
         $this->success('获取成功', [
             'list' => $data
@@ -143,23 +131,6 @@ class Charts extends Base
             ['user_id', $this->user->id],
             ['status', 1]
         ]);
-        $action = input("action/s", "");
-        if ($action == "export") {
-            $data = OrderModel::withSearch($where[0], $where[1])->field("contact,sum(total_price) as money,count(*) as times")->group("contact")->order("money", "desc")->select();
-            if ($data->isEmpty()) {
-                $this->error("暂无数据");
-            }
-            // 文件名
-            $file_title = "消费列表_" . date("Ymd");
-            $result     = [];
-            // 标头
-            $result[] = ["买家", "购买次数", "付款总额"];
-            foreach ($data as $v) {
-                $result[] = [$v['contact'], $v['times'], $v['money']];
-            }
-            $res = (new ExportService())->createExcel($result, $file_title . ".xlsx");
-            $this->success("导出成功", $res);
-        }
         $res = OrderModel::withSearch($where[0], $where[1])->field("contact,sum(total_price) as money,count(*) as times")->group("contact")->order("money desc")->paginate($this->limit);
         $this->success('获取成功', [
             'list'  => $res->items(),
@@ -174,10 +145,10 @@ class Charts extends Base
      */
     public function iplist()
     {
-        $params = ["date_range" => input("date_range/s", ""), "keywords" => input("keywords/s", "")];
+        $params = ["date_range" => inputs("date_range/s", ""), "keywords" => inputs("keywords/s", "")];
         if ($this->request->isPost()) {
-            if (input("action/s") == "del") {
-                $id   = input("id/d", 0);
+            if (inputs("action/s") == "del") {
+                $id   = inputs("id/d", 0);
                 $data = ShopIplistModel::where(["id" => $id, "user_id" => $this->user->id])->find();
                 if (empty($data))
                     $this->error("不存在该IP！");

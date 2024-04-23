@@ -24,7 +24,7 @@ class Index extends Base
      */
     public function getProtocol()
     {
-        $user_id = input("userid/s");
+        $user_id = inputs("userid/s");
         $shop    = UserModel::find($user_id);
         if ($shop->shop_gouka_protocol_pop) {
             $buy_protocol = conf("buy_protocol");
@@ -54,7 +54,7 @@ class Index extends Base
 
     public function getGoodsListJson()
     {
-        $cate_id = input("cate_id/d", 0);
+        $cate_id = inputs("cate_id/d", 0);
         if (empty($cate_id)) {
             $cate_id = $this->goods_category[0]['id'];
         }
@@ -81,8 +81,8 @@ class Index extends Base
 
     public function getCouponInfo()
     {
-        $coupon_code = input("coupon_code");
-        $cate_id     = input("cate_id/d", 0);
+        $coupon_code = inputs("coupon_code");
+        $cate_id     = inputs("cate_id/d", 0);
         $coupon      = GoodsCoupon::where(["code" => $coupon_code, 'cate_id' => $cate_id])->find();
         if (empty($coupon)) {
             return json([

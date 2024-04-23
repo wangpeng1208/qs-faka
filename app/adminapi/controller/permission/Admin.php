@@ -55,7 +55,7 @@ class Admin extends Base
      */
     public function detail(AdminUserModel $user)
     {
-        $id   = input('id/d', 0);
+        $id   = inputs('id/d', 0);
         $info = $user->with('role')->find($id);
         unset($info->password);
         $this->success('获取成功', $info);
@@ -69,12 +69,12 @@ class Admin extends Base
     public function edit()
     {
         $data = [
-            'id'       => input('id/d', 0),
-            'username' => input('username'),
-            'password' => input('password'),
-            'nickname' => input('nickname'),
-            'avatar'   => input('avatar'),
-            'status'   => input('status'),
+            'id'       => inputs('id/d', 0),
+            'username' => inputs('username'),
+            'password' => inputs('password'),
+            'nickname' => inputs('nickname'),
+            'avatar'   => inputs('avatar'),
+            'status'   => inputs('status'),
         ];
         if ($data['id']) {
             if (!$data['password']) {
@@ -104,7 +104,7 @@ class Admin extends Base
     public function delete()
     {
         // id 为 1 的用户不能删除
-        $id = input('id/d', 0);
+        $id = inputs('id/d', 0);
         if ($id == 1) {
             $this->error('不能删除超级管理员');
         }
@@ -123,7 +123,7 @@ class Admin extends Base
      */
     public function getRoles()
     {
-        $id   = input('id/d', 0);
+        $id   = inputs('id/d', 0);
         $user = AdminUserModel::find($id);
         $roles = $user->role;
         // 取roles中的id 成字符串用,分割
@@ -143,8 +143,8 @@ class Admin extends Base
      */
     public function setRoles()
     {
-        $admin_id   = input('id/d', 0);
-        $roleIds = input('role/a', []);
+        $admin_id   = inputs('id/d', 0);
+        $roleIds = inputs('role/a', []);
         $user    = AdminUserModel::findOrFail($admin_id);
         // clear old role
         $user->roles()->delete();

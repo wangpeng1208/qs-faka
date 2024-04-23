@@ -53,36 +53,36 @@ class Good extends Base
     {
         $post = [
             "user_id"                 => $this->user->id,
-            "cate_id"                 => input("cate_id/d", 0),
-            "theme"                   => input("theme/s", "default"),
-            "sort"                    => input("sort/d", 0),
-            "name"                    => input("name/s", ""),
-            "price"                   => input("price/f", 0),
-            "wholesale_discount"      => input("wholesale_discount/d", 0),
-            "wholesale_discount_list" => input("wholesale_discount_list/a", null),
-            "cost_price"              => input("cost_price/f", 0),
-            "limit_quantity"          => input("limit_quantity/d", 1),
-            "limit_quantity_max"      => input("limit_quantity_max/d", 0),
-            "inventory_notify"        => input("inventory_notify/d", 0),
-            "inventory_notify_type"   => input("inventory_notify_type/d", 1),
-            "coupon_type"             => input("coupon_type/d", 0),
-            "sold_notify"             => input("sold_notify/d", 0),
-            "take_card_type"          => input("take_card_type/d", 0),
-            "visit_type"              => input("visit_type/d", 0),
-            "visit_password"          => input("visit_password/s", ""),
-            "contact_limit"           => input("contact_limit/s", ""),
-            "content"                 => input("content/s", ""),
-            "remark"                  => input("remark/s", ""),
-            "sms_payer"               => input("sms_payer/d", 0),
-            "card_order"              => input("card_order/d", 0),
-            "can_proxy"               => input("can_proxy/d", 0),
-            "proxy_price"             => input("proxy_price", 0),
-            "proxy_price_add"         => input("proxy_price_add", 0),
-            "selectcard_fee"          => input("selectcard_fee", 0),
+            "cate_id"                 => inputs("cate_id/d", 0),
+            "theme"                   => inputs("theme/s", "default"),
+            "sort"                    => inputs("sort/d", 0),
+            "name"                    => inputs("name/s", ""),
+            "price"                   => inputs("price/f", 0),
+            "wholesale_discount"      => inputs("wholesale_discount/d", 0),
+            "wholesale_discount_list" => inputs("wholesale_discount_list/a", null),
+            "cost_price"              => inputs("cost_price/f", 0),
+            "limit_quantity"          => inputs("limit_quantity/d", 1),
+            "limit_quantity_max"      => inputs("limit_quantity_max/d", 0),
+            "inventory_notify"        => inputs("inventory_notify/d", 0),
+            "inventory_notify_type"   => inputs("inventory_notify_type/d", 1),
+            "coupon_type"             => inputs("coupon_type/d", 0),
+            "sold_notify"             => inputs("sold_notify/d", 0),
+            "take_card_type"          => inputs("take_card_type/d", 0),
+            "visit_type"              => inputs("visit_type/d", 0),
+            "visit_password"          => inputs("visit_password/s", ""),
+            "contact_limit"           => inputs("contact_limit/s", ""),
+            "content"                 => inputs("content/s", ""),
+            "remark"                  => inputs("remark/s", ""),
+            "sms_payer"               => inputs("sms_payer/d", 0),
+            "card_order"              => inputs("card_order/d", 0),
+            "can_proxy"               => inputs("can_proxy/d", 0),
+            "proxy_price"             => inputs("proxy_price", 0),
+            "proxy_price_add"         => inputs("proxy_price_add", 0),
+            "selectcard_fee"          => inputs("selectcard_fee", 0),
             // 叠加赠送
-            "event_give"              => input("event_give/a", null),
+            "event_give"              => inputs("event_give/a", null),
             // 额外赠送
-            "addtion_give"            => input('addtion_give/a', null)
+            "addtion_give"            => inputs('addtion_give/a', null)
         ];
 
         if ($post['price'] <= $post['cost_price']) {
@@ -173,7 +173,7 @@ class Good extends Base
 
     public function detail()
     {
-        $id   = input("id/d", 0);
+        $id   = inputs("id/d", 0);
         $good = $this->user->goods()->withTrashed()->where(["id" => $id])->lock(true)->findOrFail();
         return $this->success('获取成功', $good);
     }
@@ -184,7 +184,7 @@ class Good extends Base
      */
     public function edit()
     {
-        $id   = input("id/d", 0);
+        $id   = inputs("id/d", 0);
         $good = $this->user->goods()->withTrashed()->where(["id" => $id])->lock(true)->find() ?: $this->error("商品不存在！");
         $post = $this->check_post($id);
         $res  = $good->save($post);
@@ -197,7 +197,7 @@ class Good extends Base
      */
     public function del()
     {
-        $id   = input("id/d", 0);
+        $id   = inputs("id/d", 0);
         $data = $this->getGoods($id);
         $res  = $data->delete();
         if ($res) {
@@ -234,7 +234,7 @@ class Good extends Base
     // 批量恢复
     public function recover()
     {
-        $ids = input("ids/a", []);
+        $ids = inputs("ids/a", []);
         if (empty($ids))
             $this->error('没有选中项！');
         $where[] = ["id", "in", $ids];
@@ -250,11 +250,11 @@ class Good extends Base
 
     public function status()
     {
-        $id   = input("id/d", 0);
+        $id   = inputs("id/d", 0);
         $good = $this->getGoods($id);
         if ($good->is_freeze == 1)
             $this->error("该商品已被冻结，如果要上架，请修改相关商品信息再上架");
-        $status       = input("val/d", 0);
+        $status       = inputs("val/d", 0);
         $status       = $status ? 1 : 0;
         $status_text  = $status == 1 ? "上架" : "下架";
         $good->status = $status;
@@ -272,7 +272,7 @@ class Good extends Base
     // 	清空卡密==把未售卡密放入回收站
     public function emptiedCards(GoodsCard $card)
     {
-        $id  = input("id/d", 0);
+        $id  = inputs("id/d", 0);
         $res = $card::update(["delete_at" => time()], ["goods_id" => $id, "user_id" => $this->user->id, "status" => 1]);
         return $res ? $this->success("清空商品未售卡密成功") : $this->error("清空失败！");
     }

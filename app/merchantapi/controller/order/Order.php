@@ -62,7 +62,7 @@ class Order extends Base
      */
     public function card()
     {
-        $id    = input("id/d", 0) ?: $this->error("参数错误！");
+        $id    = inputs("id/d", 0) ?: $this->error("参数错误！");
         $order = OrderModel::where(['user_id' => $this->user->id])->findOrFail($id);
         (new GoodsService())->sendOut($order->trade_no);
 

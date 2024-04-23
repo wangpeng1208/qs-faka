@@ -100,8 +100,8 @@ class Workbench extends Base
      */
     public function orderStatisData()
     {
-        $period = input('period', 7);
-        $unit   = input('unit', 'day');
+        $period = inputs('period', 7);
+        $unit   = inputs('unit', 'day');
         $data   = [];
         for ($i = 0; $i < $period; $i++) {
             if ($unit === 'month') {

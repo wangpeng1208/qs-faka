@@ -35,7 +35,7 @@ class Link extends Base
      */
     public function reset()
     {
-        $status = input("status/d", 1);
+        $status = inputs("status/d", 1);
         if ($status == 0) {
             $this->user->resetShortLink;
         } else {
@@ -51,7 +51,7 @@ class Link extends Base
      */
     public function close()
     {
-        $status      = input("status/d", 1);
+        $status      = inputs("status/d", 1);
         $status_text = $status == 1 ? "开启" : "关闭";
         $this->user->link()->update(["status" => $status]);
         $this->success("该链接已" . $status_text . "成功！");
@@ -75,8 +75,8 @@ class Link extends Base
      */
     public function setTemplate()
     {
-        $field = input('field', '');
-        $value = input('value', '');
+        $field = inputs('field', '');
+        $value = inputs('value', '');
         if (empty($field) || empty($value))
             $this->error('参数错误');
         if (empty($this->user->shop))

@@ -45,14 +45,14 @@ class ArticleCategory extends Base
   private function post()
   {
     $data     = [
-      'id'        => input('id/d', 0),
-      'pid'       => input('pid/d', 0),
-      'name'      => input('name/s', ''),
-      'alias'     => input('alias/s', ''),
-      'remark'    => input('remark/s', ''),
-      'status'    => input('status/d', 1),
+      'id'        => inputs('id/d', 0),
+      'pid'       => inputs('pid/d', 0),
+      'name'      => inputs('name/s', ''),
+      'alias'     => inputs('alias/s', ''),
+      'remark'    => inputs('remark/s', ''),
+      'status'    => inputs('status/d', 1),
       'create_at' => time(),
-      'type'      => input('type/d', 1),
+      'type'      => inputs('type/d', 1),
       'path' => ''
     ];
     $validate = new \app\adminapi\validate\article\ArticleCategoryValidate;
@@ -93,7 +93,7 @@ class ArticleCategory extends Base
    */
   public function del()
   {
-    $id = input('id/d', 0);
+    $id = inputs('id/d', 0);
     CategoryModel::destroy($id);
     $this->success('删除成功');
   }

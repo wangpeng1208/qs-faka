@@ -24,7 +24,7 @@ class Upload extends Base
     {
         $app     = 'merchant';
         $file    = request()->file('file');
-        $type    = input('type', 'image');
+        $type    = inputs('type', 'image');
         $user_id = $this->user->id;
         if ($file && $file->isValid()) {
             try {

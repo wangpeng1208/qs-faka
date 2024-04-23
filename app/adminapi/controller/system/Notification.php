@@ -28,14 +28,14 @@ class Notification extends Base
 
     public function detail()
     {
-        $id   = input('id');
+        $id   = inputs('id');
         $data = SystemNotification::find($id);
         return $this->success('获取成功', $data);
     }
 
     public function add()
     {
-        $data = input('data/a', []);
+        $data = inputs('data/a', []);
         $res  = SystemNotification::create($data);
         if ($res) {
             return $this->success('添加成功');
@@ -44,7 +44,7 @@ class Notification extends Base
 
     public function edit()
     {
-        $data = input('data/a', []);
+        $data = inputs('data/a', []);
         $res  = SystemNotification::update($data);
         if ($res) {
             return $this->success('编辑成功');
@@ -53,7 +53,7 @@ class Notification extends Base
 
     public function del()
     {
-        $id  = input('id');
+        $id  = inputs('id');
 
         $data = SystemNotification::find($id);
         if($data->system){
@@ -70,7 +70,7 @@ class Notification extends Base
      */
     public function getSmsConfig()
     {
-        $id = input('id');
+        $id = inputs('id');
         $data = SystemNotification::find($id);
         return $this->success('获取成功', $data);
     }
@@ -80,7 +80,7 @@ class Notification extends Base
      */
     public function setSmsConfig()
     {
-        $data = input('data/a', []);
+        $data = inputs('data/a', []);
         $notification = SystemNotification::find($data['id']);
         $notification->is_sms = $data['status'];
         $notification->sms_config = $data;

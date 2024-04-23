@@ -58,7 +58,7 @@ class User extends Base
      */
     public function detail()
     {
-        $id   = input('id/d', 0);
+        $id   = inputs('id/d', 0);
         $data = UserModel::findOrFail($id)->toArray();
         unset($data['password']);
         return $this->success('success', $data);
@@ -67,18 +67,18 @@ class User extends Base
     private function post()
     {
         $data     = [
-            'id'              => input('id/d', 0),
-            'parent_id'       => input('parent_id/d', 0),
-            'username'        => input('username/s', ''),
-            'email'           => input('email/s', ''),
-            'mobile'          => input('mobile/s', ''),
-            'qq'              => input('qq/s', ''),
-            'statis_code'     => input('statis_code/s', ''),
-            'pay_theme'       => input('pay_theme/s', 'default'),
-            'password'        => input('password/s', ''),
-            'settlement_type' => input('settlement_type/d', ''),
-            'payapi'          => input('payapi/d', 0),
-            'is_merchant'     => input('is_merchant', 1)
+            'id'              => inputs('id/d', 0),
+            'parent_id'       => inputs('parent_id/d', 0),
+            'username'        => inputs('username/s', ''),
+            'email'           => inputs('email/s', ''),
+            'mobile'          => inputs('mobile/s', ''),
+            'qq'              => inputs('qq/s', ''),
+            'statis_code'     => inputs('statis_code/s', ''),
+            'pay_theme'       => inputs('pay_theme/s', 'default'),
+            'password'        => inputs('password/s', ''),
+            'settlement_type' => inputs('settlement_type/d', ''),
+            'payapi'          => inputs('payapi/d', 0),
+            'is_merchant'     => inputs('is_merchant', 1)
         ];
         $validate = new \app\adminapi\validate\merchant\UserValidate;
         if ($data['id'] > 0) {
@@ -129,7 +129,7 @@ class User extends Base
      */
     public function del()
     {
-        $id = input('id/d', 0);
+        $id = inputs('id/d', 0);
         UserModel::destroy($id);
         // 删除分组
         UserRoleRelation::where('user_id', $id)->delete();
@@ -142,11 +142,11 @@ class User extends Base
      */
     public function message()
     {
-        $user_id = input("user_id/d", 0);
+        $user_id = inputs("user_id/d", 0);
         $user    = UserModel::findOrFail($user_id);
-        $title   = input("title/s", "") ?: $this->error("请输入标题！");
-        $content = input("content/s", "") ?: $this->error("请输入内容！");
-        $type    = input("type/d", 'site');
+        $title   = inputs("title/s", "") ?: $this->error("请输入标题！");
+        $content = inputs("content/s", "") ?: $this->error("请输入内容！");
+        $type    = inputs("type/d", 'site');
         if ($type == 'site') {
             $title  = '【站内信】' . $title;
             $result = MessageService::send(0, $user_id, $title, $content);
@@ -194,11 +194,11 @@ class User extends Base
      */
     public function money()
     {
-        $user_id = input("user_id/d", 0);
+        $user_id = inputs("user_id/d", 0);
         $user    = UserModel::findOrFail($user_id);
-        $action  = input("action/s", "");
-        $money   = input("money/f", 0);
-        $mark    = input("mark/s", "");
+        $action  = inputs("action/s", "");
+        $money   = inputs("money/f", 0);
+        $mark    = inputs("mark/s", "");
         if ($money <= 0) {
             $this->error("操作金额不能小于等于零！");
         }
@@ -288,7 +288,7 @@ class User extends Base
     // role
     public function role()
     {
-        $user_id = input("id/d", 0);
+        $user_id = inputs("id/d", 0);
         $res     = UserRoleRelation::where("user_id", $user_id)->find();
         $this->success("获取成功", $res);
     }
@@ -296,8 +296,8 @@ class User extends Base
     public function setRole()
     {
         $data = [
-            'user_id' => input('user_id/d', 0),
-            'role_id' => input('role_id/d', 0),
+            'user_id' => inputs('user_id/d', 0),
+            'role_id' => inputs('role_id/d', 0),
         ];
         $res  = UserRoleRelation::update($data, ['user_id' => $data['user_id']]);
         $this->success("success", $res);
@@ -309,7 +309,7 @@ class User extends Base
      */
     public function rateList()
     {
-        $id   = input('id/d', 0);
+        $id   = inputs('id/d', 0);
         $user = UserModel::find($id);
         $res  = ChannelModel::where("is_install", 1)->where('type', 1)->paginate($this->limit)->each(function ($item) use ($user, $id) {
             $role_rate = $user->rate()->where(['channel_id' => $item->id, 'user_id' => $id])->find();
@@ -337,10 +337,10 @@ class User extends Base
     public function editRate()
     {
         $data = [
-            'user_id'    => input('user_id/d', 0),
-            'channel_id' => input('channel_id/d', 0),
-            'status'     => input('status/d', 0),
-            'rate'       => input('rate/d', 0) / 1000,
+            'user_id'    => inputs('user_id/d', 0),
+            'channel_id' => inputs('channel_id/d', 0),
+            'status'     => inputs('status/d', 0),
+            'rate'       => inputs('rate/d', 0) / 1000,
         ];
         $info = UserRateModel::where(['user_id' => $data['user_id'], 'channel_id' => $data['channel_id']])->find();
         if (empty($info)) {
@@ -360,8 +360,8 @@ class User extends Base
      */
     public function setRateType()
     {
-        $user_id = input('user_id/d', 0);
-        $type    = input('type/d', 0);
+        $user_id = inputs('user_id/d', 0);
+        $type    = inputs('type/d', 0);
         $res     = UserModel::update(['id' => $user_id, 'rate_type' => $type]);
         return $res ? $this->success('操作成功') : $this->error('操作失败');
     }
@@ -372,7 +372,7 @@ class User extends Base
      */
     public function unlock()
     {
-        $user_id   = input('user_id/d', 0);
+        $user_id   = inputs('user_id/d', 0);
         $max_count = conf("wrong_password_times");
         $res       = UserLoginErrorLog::where([
             "login_name" => $user_id,
@@ -394,7 +394,7 @@ class User extends Base
      */
     public function collectDetail()
     {
-        $id           = input('id/d', 0);
+        $id           = inputs('id/d', 0);
         $user_collect = UserCollectModel::where('user_id', $id)->find() ?? [];
         return $this->success('success', $user_collect);
     }
@@ -406,11 +406,11 @@ class User extends Base
     public function collectEdit()
     {
         $data = [
-            'id'           => input('id/d', 0),
-            'user_id'      => input("user_id/d", 0),
-            'type'         => input('type/d', 0),
-            'info'         => input('info/a', []),
-            'allow_update' => input('allow_update/d', 0),
+            'id'           => inputs('id/d', 0),
+            'user_id'      => inputs("user_id/d", 0),
+            'type'         => inputs('type/d', 0),
+            'info'         => inputs('info/a', []),
+            'allow_update' => inputs('allow_update/d', 0),
             'create_at'    => time(),
         ];
         $this->validateInfo($data);

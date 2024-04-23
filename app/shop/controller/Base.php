@@ -49,7 +49,7 @@ class Base extends Api
             $this->error(conf('site_close_tips'));
         }
         // 链接token标识
-        $this->token = input("token/s", "");
+        $this->token = inputs("token/s", "");
         $link        = Link::where("token", $this->token)->findOrEmpty();
         if ($link->isEmpty()) {
             $this->error("链接不存在!");

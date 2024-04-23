@@ -28,11 +28,11 @@ class Complaint extends Base
     public function doComplaint()
     {
         $post = [
-            'trade_no' => input('trade_no', ''),
-            'type'     => input('type', ''),
-            'qq'       => input('qq', ''),
-            'mobile'   => input('mobile', ''),
-            'desc'     => input('desc', ''),
+            'trade_no' => inputs('trade_no', ''),
+            'type'     => inputs('type', ''),
+            'qq'       => inputs('qq', ''),
+            'mobile'   => inputs('mobile', ''),
+            'desc'     => inputs('desc', ''),
         ];
 
         $validate = new \app\home\validate\ComplaintValidate;
@@ -107,8 +107,8 @@ class Complaint extends Base
      */
     public function complaintQuery()
     {
-        $trade_no  = input('trade_no');
-        $pwd       = input('pwd');
+        $trade_no  = inputs('trade_no');
+        $pwd       = inputs('pwd');
         $complaint = ComplaintModel::where([
             "trade_no" => $trade_no,
             "pwd"      => $pwd
@@ -132,8 +132,8 @@ class Complaint extends Base
      */
     public function send()
     {
-        $content     = input("content/s", "") ?: $this->error('请输入沟通内容');
-        $id          = input("id/d", "") ?: $this->error('参数错误');
+        $content     = inputs("content/s", "") ?: $this->error('请输入沟通内容');
+        $id          = inputs("id/d", "") ?: $this->error('参数错误');
         $complaint   = ComplaintModel::findOrFail($id);
         $check_cache = Cache::get('complaint_query_' . $complaint->id);
         if ($check_cache !== $this->request->ip()) {

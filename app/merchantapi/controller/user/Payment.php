@@ -12,7 +12,6 @@
 
 namespace app\merchantapi\controller\user;
 
-use app\common\model\ChannelAccount;
 use app\merchantapi\controller\Base;
 use app\common\model\Channel;
 use app\common\model\UserChannel;

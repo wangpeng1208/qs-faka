@@ -72,7 +72,7 @@ class Complaint extends Base
     public function detail()
     {
         $data        = [
-            'id' => input("id/d")
+            'id' => inputs("id/d")
         ];
         $where["id"] = $data['id'];
 
@@ -95,13 +95,13 @@ class Complaint extends Base
     public function send()
     {
         $data        = [
-            'id' => input("id/d")
+            'id' => inputs("id/d")
         ];
         $where["id"] = $data['id'];
 
         $where["user_id|proxy_parent_user_id"] = $this->user->id;
         $complaint                             = $this->user->complaints()->where($where)->findOrFail();
-        $content = input("content/s", "") ?: $this->error('请输入沟通内容');
+        $content = inputs("content/s", "") ?: $this->error('请输入沟通内容');
         if ($complaint->status == 2) {
             $this->error('投诉已处理');
         }

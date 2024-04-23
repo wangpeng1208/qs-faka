@@ -44,7 +44,7 @@ class Log extends Base
      */
     public function delBatch()
     {
-        $ids = input("ids/a", []);
+        $ids = inputs("ids/a", []);
         if (empty($ids)) {
             $this->error("请选择要删除的日志！");
         }

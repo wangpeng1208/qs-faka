@@ -25,8 +25,8 @@ class Link extends Base
      */
     public function getTheme()
     {
-        $id   = input('id/d', 0);
-        $type = input("type/s", "");
+        $id   = inputs('id/d', 0);
+        $type = inputs("type/s", "");
         switch ($type) {
             case "category":
                 $categorys = $this->user->categorys()->find($id) ?: $this->error("分类不存在！");
@@ -34,7 +34,7 @@ class Link extends Base
                 $mobile_template = $categorys->mobile_theme ?: 'default';
                 break;
             case "good":
-                $id = input("id/d", 0);
+                $id = inputs("id/d", 0);
                 $goods = $this->user->goods()->find($id) ?: $this->error("商品不存在！");
                 $pc_template = $goods->theme ?: 'default';
                 $mobile_template = $goods->mobile_theme ?: 'default';
@@ -49,10 +49,10 @@ class Link extends Base
      */
     public function saveTheme()
     {
-        $id    = input('id/d', 0);
-        $type  = input("type/s", "");
-        $field = input('field', '');
-        $value = input('value', '');
+        $id    = inputs('id/d', 0);
+        $type  = inputs("type/s", "");
+        $field = inputs('field', '');
+        $value = inputs('value', '');
         switch ($type) {
             case "category":
                 $categorys = $this->user->categorys()->find($id) ?: $this->error("分类不存在！");
@@ -60,7 +60,7 @@ class Link extends Base
                 $categorys->allowField(['theme', 'mobile_theme'])->save();
                 break;
             case "good":
-                $id = input("id/d", 0);
+                $id = inputs("id/d", 0);
                 $goods = $this->user->goods()->find($id) ?: $this->error("商品不存在！");
                 $goods->$field = $value;
                 $goods->allowField(['theme', 'mobile_theme'])->save();
@@ -75,7 +75,7 @@ class Link extends Base
      */
     public function category()
     {
-        $id  = input('id/d', 0);
+        $id  = inputs('id/d', 0);
         $res = $this->user->categorys()->find($id) ?: $this->error("不存在该分类！");
         $this->success('获取成功', [
             'id'         => $id,
@@ -90,7 +90,7 @@ class Link extends Base
      */
     public function good()
     {
-        $id   = input("id/d", 0);
+        $id   = inputs("id/d", 0);
         $good = $this->user->goods()->find($id) ?: $this->error("不存在该商品！");
         $this->success('获取成功', [
             'id'         => $good->id,
@@ -108,11 +108,11 @@ class Link extends Base
      */
     public function reset()
     {
-        $type   = input("type/s", "");
-        $status = input("status/d", 1);
+        $type   = inputs("type/s", "");
+        $status = inputs("status/d", 1);
         switch ($type) {
             case "category":
-                $id = input("id/d", 0);
+                $id = inputs("id/d", 0);
                 $categorys = $this->user->categorys()->where("id", $id)->find() ?: $this->error("分类不存在！");
                 if ($status == 0) {
                     $categorys->resetShortLink;
@@ -122,7 +122,7 @@ class Link extends Base
                 }
                 break;
             case "good":
-                $id = input("id/d", 0);
+                $id = inputs("id/d", 0);
                 $goods = $this->user->goods()->where("id", $id)->find() ?: $this->error("商品不存在！");
                 if ($status == 0) {
                     $goods->resetShortLink;
@@ -144,19 +144,19 @@ class Link extends Base
      */
     public function close()
     {
-        $type        = input("type/s", "");
-        $status      = input("status/d", 1);
+        $type        = inputs("type/s", "");
+        $status      = inputs("status/d", 1);
         $status_text = $status == 1 ? "开启" : "关闭";
         switch ($type) {
             case "category":
-                $id = input("id/d", 0);
+                $id = inputs("id/d", 0);
                 $res = $this->user->categorys()->where("id", $id)->find();
                 if ($res) {
                     $res->link()->update(["status" => $status]);
                 }
                 break;
             case "good":
-                $id = input("id/d", 0);
+                $id = inputs("id/d", 0);
                 $res = $this->user->goods()->where("id", $id)->find();
                 if ($res) {
                     $res->link()->update(["status" => $status]);

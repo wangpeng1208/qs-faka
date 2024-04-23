@@ -62,9 +62,9 @@ class OrderService
      */
     public function orderQuery()
     {
-        $querytype = input("queryType/d", "2");
-        $trade_no  = input("orderid/s", "");
-        $pwd       = input("pwd/s", "");
+        $querytype = inputs("queryType/d", "2");
+        $trade_no  = inputs("orderid/s", "");
+        $pwd       = inputs("pwd/s", "");
         $orderList = $this->orderListsQuery($trade_no, $querytype);
         if ($orderList->total() == 0) {
             throw new \exception("没有查询到订单信息");
@@ -225,7 +225,7 @@ class OrderService
         }
 
         // 是否可以使用优惠券 且输入了优惠券 且点击了优惠券按钮 且优惠券存在
-        if (input('is_coupon/d', '') && $post['coupon_code'] && $goods->coupon_type) {
+        if (inputs('is_coupon/d', '') && $post['coupon_code'] && $goods->coupon_type) {
             $coupon = GoodsCoupon::where('code', $post['coupon_code'])->find();
             // 更新优惠券状态
             $coupon->status = 0; // 使用中，不可再次使用；当订单完成后，状态改为2已使用
@@ -242,9 +242,9 @@ class OrderService
 
         // 买家通知
         // 邮件通知
-        $post["email_notify"] = input("isemail/d", 0);
-        $post["email"]        = input("email/s", "");
-        $post["sms_notify"]   = input("is_rev_sms/d", 0);
+        $post["email_notify"] = inputs("isemail/d", 0);
+        $post["email"]        = inputs("email/s", "");
+        $post["sms_notify"]   = inputs("is_rev_sms/d", 0);
         // 不包含短信费用的总价
         $post["total_product_price"] = round($post["goods_price"] * $post["quantity"] - $post["coupon_price"], 2);
         // 短信费用
@@ -272,7 +272,7 @@ class OrderService
         // 成本价
         $post["total_cost_price"] = round($post["goods_cost_price"] * $post["quantity"], 2);
 
-        $channel = Channel::where(['id' => input("pid/d", 0), "status" => 1])->findOrEmpty();
+        $channel = Channel::where(['id' => inputs("pid/d", 0), "status" => 1])->findOrEmpty();
         if ($channel->isEmpty()) {
             throw new \Exception("支付通道不存在！");
         }

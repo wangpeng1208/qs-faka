@@ -23,7 +23,7 @@ class Config extends Base
      */
     public function getConfig()
     {
-        $field = input('field/a', []);
+        $field = inputs('field/a', []);
         $data  = [];
         foreach ($field as $value) {
             $data[$value] = conf($value);
@@ -37,7 +37,7 @@ class Config extends Base
      */
     public function editConfig()
     {
-        $data = input('data/a', []);
+        $data = inputs('data/a', []);
         foreach ($data as $key => $value) {
             conf($key, $value);
         }
@@ -50,7 +50,7 @@ class Config extends Base
      */
     public function emailTest()
     {
-        $address = input('address');
+        $address = inputs('address');
         if (!preg_match('/(\w)+(\.\w+)*@(\w)+((\.\w+)+)/', $address)) {
             $this->error('请输入正确的邮箱号！');
         }

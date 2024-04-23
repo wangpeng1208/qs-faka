@@ -20,7 +20,7 @@ class Order extends Base
 {
     public function orderStatus(PayService $payService)
     {
-        $trade_no = input("trade_no/s", "");
+        $trade_no = inputs("trade_no/s", "");
         Cache::set("order_" . $trade_no, true, 60 * 15);
 
         if (empty($trade_no) || empty(Cache::get("order_" . $trade_no))) {

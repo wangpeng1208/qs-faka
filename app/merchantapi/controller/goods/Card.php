@@ -15,7 +15,6 @@ namespace app\merchantapi\controller\goods;
 use app\common\model\GoodsCard as GoodsCardModel;
 use think\facade\Db;
 use app\merchantapi\controller\Base;
-use app\service\export\ExportService;
 
 class Card extends Base
 {
@@ -60,13 +59,13 @@ class Card extends Base
     public function add()
     {
         if ($this->request->isPost()) {
-            $goods_id = input("goods_id/d", 0);
+            $goods_id = inputs("goods_id/d", 0);
             $this->user->goods()->find($goods_id) ?: $this->error("商品不存在");
-            $import_type = input("import_type/s", 1);
-            $split_type  = input("split_type/s", " ");
-            $content     = input("content/s", "");
-            $check_card  = input("check_card/d", 0);
-            $is_pre      = input("is_pre/d");
+            $import_type = inputs("import_type/s", 1);
+            $split_type  = inputs("split_type/s", " ");
+            $content     = inputs("content/s", "");
+            $check_card  = inputs("check_card/d", 0);
+            $is_pre      = inputs("is_pre/d");
             $file        = $this->request->file('files');
             if ($import_type == 2 && $file[0]['raw']->isValid() && $file[0]['raw']->getSize() / 1024 <= 20480) {
                 $content = $this->gbk_to_utf(file_get_contents($file[0]['raw']));
@@ -147,7 +146,7 @@ class Card extends Base
             if (empty($cards)) {
                 $this->error("虚拟卡内容格式不正确, 或卡密已存在");
             }
-            $order_type = input("order_type/d", 1);
+            $order_type = inputs("order_type/d", 1);
             if ($order_type == 2) {
                 shuffle($cards);
             }
@@ -175,7 +174,7 @@ class Card extends Base
      */
     public function del()
     {
-        $ids = input("ids/a");
+        $ids = inputs("ids/a");
         if (empty(count($ids))) {
             $this->error("没有选中项！");
         }
@@ -223,7 +222,7 @@ class Card extends Base
      */
     public function trashBatchDel()
     {
-        $ids = input("ids/a");
+        $ids = inputs("ids/a");
         if (empty($ids)) {
             $this->error("没有选中项！");
         }
@@ -263,7 +262,7 @@ class Card extends Base
 
     public function trashBatchRestore()
     {
-        $ids = input("ids/a", []);
+        $ids = inputs("ids/a", []);
         if (empty($ids)) {
             $this->error("没有选中项！");
         }
@@ -278,8 +277,8 @@ class Card extends Base
 
     public function first()
     {
-        $id     = input("id/d", 0);
-        $status = input("status/d", 0);
+        $id     = inputs("id/d", 0);
+        $status = inputs("status/d", 0);
         $res    = $this->user->cards()->where(["id" => $id])->update(["is_first" => $status]);
         if ($res !== false) {
             $this->success("修改成功！");
@@ -290,7 +289,7 @@ class Card extends Base
 
     public function delete_card_right()
     {
-        $goods_id = input("goods_id/d", 0);
+        $goods_id = inputs("goods_id/d", 0);
         $this->user->goods()->where(['id' => $goods_id])->find() ?: $this->error("不存在该商品！");
         // 按条件筛选出已售出数据进行删除
         // 卡密状态已售出条件

@@ -32,29 +32,29 @@ class Config extends Base
      */
     public function saveConfig()
     {
-        $shop_name = input("shop_name/s", "");
+        $shop_name = inputs("shop_name/s", "");
         $res       = check_wordfilter($shop_name);
         if ($res) {
             $this->error("店铺名称包含敏感词汇“" . $res . "”！");
         }
-        $shop_notice = input("shop_notice/s", "");
+        $shop_notice = inputs("shop_notice/s", "");
         $res         = check_wordfilter($shop_notice);
         if ($res) {
             $this->error("店铺公告包含敏感词汇“" . $res . "”！");
         }
 
         $shop                       = $this->user->shop;
-        $shop->shop_close           = input("shop_close/d", 0);
-        $shop->show_contact         = input("show_contact/d", 0);
-        $shop->shop_contact         = input("shop_contact/s", "");
-        $shop->shop_name            = input("shop_name/s", "");
-        $shop->shop_notice          = input("shop_notice/s", "");
-        $shop->shop_notice_show     = input("shop_notice_show/d", 0);
-        $shop->stock_display        = input("stock_display/d", 2);
-        $shop->fee_payer            = input("fee_payer/d", 0);
-        $shop->shop_close_notice    = input("shop_close_notice/s", "");
-        $shop->user_notice_auto_pop = input("user_notice_auto_pop/d", 0);
-        $shop->shop_logo            = input("shop_logo/s", "");
+        $shop->shop_close           = inputs("shop_close/d", 0);
+        $shop->show_contact         = inputs("show_contact/d", 0);
+        $shop->shop_contact         = inputs("shop_contact/s", "");
+        $shop->shop_name            = inputs("shop_name/s", "");
+        $shop->shop_notice          = inputs("shop_notice/s", "");
+        $shop->shop_notice_show     = inputs("shop_notice_show/d", 0);
+        $shop->stock_display        = inputs("stock_display/d", 2);
+        $shop->fee_payer            = inputs("fee_payer/d", 0);
+        $shop->shop_close_notice    = inputs("shop_close_notice/s", "");
+        $shop->user_notice_auto_pop = inputs("user_notice_auto_pop/d", 0);
+        $shop->shop_logo            = inputs("shop_logo/s", "");
         $result                     = $shop->save();
         return $result ? $this->success("保存成功") : $this->error("保存失败");
     }
@@ -68,31 +68,31 @@ class Config extends Base
         $data = [
             'user_id'       => $this->user->id, // 用户id
             // 身份证姓名
-            'id_name'       => input('id_name/s', ''),
+            'id_name'       => inputs('id_name/s', ''),
             // 身份证号码
-            'id_card'       => input('id_card/s', ''),
+            'id_card'       => inputs('id_card/s', ''),
             // 证件类型 1:身份证 2:营业执照
-            'id_type'       => input('id_type/d', 1),
+            'id_type'       => inputs('id_type/d', 1),
             // 身份证正面
-            'id_card_front' => input('id_card_front/s', ''),
+            'id_card_front' => inputs('id_card_front/s', ''),
             // 身份证反面
-            'id_card_back'  => input('id_card_back/s', ''),
+            'id_card_back'  => inputs('id_card_back/s', ''),
             // 产品名称
-            'product_name'  => input('product_name/s', ''),
+            'product_name'  => inputs('product_name/s', ''),
             // 产品类型
-            'product_type'  => input('product_type/s', ''),
+            'product_type'  => inputs('product_type/s', ''),
             // 产品描述
-            'product_desc'  => input('product_desc/s', ''),
+            'product_desc'  => inputs('product_desc/s', ''),
             // 产品官网
-            'product_link'  => input('product_link/s', ''),
+            'product_link'  => inputs('product_link/s', ''),
             // 产品截图
-            'product_img'   => input('product_img/s', ''),
+            'product_img'   => inputs('product_img/s', ''),
             // 预估月销售额
-            'month_sales'   => input('month_sales/s', ''),
+            'month_sales'   => inputs('month_sales/s', ''),
             // 不参与一下内容 色情 赌博 外挂 诈骗 盗版 传销 侵权 套现
-            'no_content'    => input('no_content/s', ''),
+            'no_content'    => inputs('no_content/s', ''),
             // 勾选协议
-            'agree'         => input('agree/d', 0),
+            'agree'         => inputs('agree/d', 0),
             'create_at'     => time(),
         ];
         // 数据验证

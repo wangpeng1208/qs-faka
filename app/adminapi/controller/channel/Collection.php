@@ -26,11 +26,11 @@ class Collection extends Base
      */
     public function list(ChannelModel $channelModel)
     {
-        $is_install = input('is_install', 1);
+        $is_install = inputs('is_install', 1);
         //  type 1收款 2打款
-        $type = input('type', 1);
+        $type = inputs('type', 1);
         // is_custom 0官方渠道
-        $is_custom = input('is_custom', 0);
+        $is_custom = inputs('is_custom', 0);
         $res       = $channelModel->where(['is_install' => $is_install, 'type' => $type, 'is_custom' => $is_custom])->paginate($this->limit);
         $this->success('获取成功', [
             'list'  => $res->items(),
@@ -44,8 +44,8 @@ class Collection extends Base
      */
     public function listSimple()
     {
-        $is_install = input('is_install', 1);
-        $type       = input('type', 1);
+        $is_install = inputs('is_install', 1);
+        $type       = inputs('type', 1);
         $res        = ChannelModel::where(['is_install' => $is_install, 'type' => $type, 'is_custom' => 0])->field('id as value,title as label')->order('sort asc')->select()->toArray();
         $this->success('获取成功', $res);
     }
@@ -57,7 +57,7 @@ class Collection extends Base
      */
     public function detail()
     {
-        $id   = input('id/d', 0);
+        $id   = inputs('id/d', 0);
         $data = ChannelModel::where(['id' => $id])->find();
 
         $data['lowrate'] = $data['lowrate'] * 1000;
@@ -71,7 +71,7 @@ class Collection extends Base
      */
     public function del()
     {
-        $id  = input('id/d', 0);
+        $id  = inputs('id/d', 0);
         $res = ChannelModel::destroy($id);
         //  删除通道时删除通道费率
         UserRoleRateModel::where('channel_id', $id)->delete();
@@ -89,21 +89,21 @@ class Collection extends Base
     private function postData()
     {
         $data     = [
-            'id'             => input('id/d', ''),
-            'title'          => input('title'),
-            'lowrate'        => input('lowrate'),
-            'paytype'        => input('paytype'),
-            'status'         => input('status'),
-            'show_name'      => input('show_name'),
-            'is_available'   => input('is_available'),
-            'sort'           => input('sort'),
-            'type'           => input('type'),
-            'code'           => input('code'),
-            'account_fields' => input('account_fields'),
-            'default_fields' => input('default_fields', ''),
-            'applyurl'       => input('applyurl'),
+            'id'             => inputs('id/d', ''),
+            'title'          => inputs('title'),
+            'lowrate'        => inputs('lowrate'),
+            'paytype'        => inputs('paytype'),
+            'status'         => inputs('status'),
+            'show_name'      => inputs('show_name'),
+            'is_available'   => inputs('is_available'),
+            'sort'           => inputs('sort'),
+            'type'           => inputs('type'),
+            'code'           => inputs('code'),
+            'account_fields' => inputs('account_fields'),
+            'default_fields' => inputs('default_fields', ''),
+            'applyurl'       => inputs('applyurl'),
             'is_install'     => 1,
-            'is_custom'      => input('is_custom', 0),
+            'is_custom'      => inputs('is_custom', 0),
         ];
         $validate = new \app\adminapi\validate\channel\CollectionValidate;
         $validate->scene('collection')->failException(true)->check($data);

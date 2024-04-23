@@ -40,7 +40,7 @@ class PayType extends Base
    */
   public function detail()
   {
-    $id   = input('id/d', 0);
+    $id   = inputs('id/d', 0);
     $data = PayTypeModel::where(['id' => $id])->find();
     return $this->success('success', $data);
   }
@@ -48,10 +48,10 @@ class PayType extends Base
   private function post()
   {
     $data = [
-      'id'   => input('id/d', 0),
-      'name' => input('name'),
-      'logo' => input('logo/s', ''),
-      'ico'  => input('ico/s', ''),
+      'id'   => inputs('id/d', 0),
+      'name' => inputs('name'),
+      'logo' => inputs('logo/s', ''),
+      'ico'  => inputs('ico/s', ''),
     ];
     // 验证数据
     $validate = new \app\adminapi\validate\channel\PayTypeValidate;
@@ -93,7 +93,7 @@ class PayType extends Base
    */
   public function del()
   {
-    $id  = input('id/d', 0);
+    $id  = inputs('id/d', 0);
     $res = PayTypeModel::destroy($id);
     if ($res) {
       return $this->success('操作成功');

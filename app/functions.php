@@ -10,14 +10,14 @@ foreach ($files as $file) {
 }
 
 // 所有input都需要是post请求
-if (!function_exists('input')) {
+if (!function_exists('inputs')) {
     /**
      * 获取输入参数 支持默认值和过滤
      * @param string $name 变量名
      * @param mixed  $default 默认值
      * @return mixed
      */
-    function input(string $name, $default = null)
+    function inputs(string $name, $default = null)
     {
         if (strpos($name, '/') !== false) {
             [$name, $type] = explode('/', $name);

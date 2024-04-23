@@ -68,7 +68,7 @@ class System extends Base
     // 按文件目录清空缓存
     public function clearCache()
     {
-        $dir = input('dir', $this->FILE_PATH);
+        $dir = inputs('dir', $this->FILE_PATH);
         // 判断$dir是否是上面定义的常量
         if (!in_array($dir, [$this->CACHE_PATH, $this->LOG_PATH, $this->FILE_PATH])) {
             return $this->error('非法操作');

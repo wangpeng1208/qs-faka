@@ -74,7 +74,7 @@ class MerchantUserService
 
     public function register()
     {
-        $data = input("reginfo/a", []);
+        $data = inputs("reginfo/a", []);
         // 检查注册状态
         $this->registerStatusCheck();
         // 检查IP注册次数
@@ -205,7 +205,7 @@ class MerchantUserService
         }
 
         $code   = rand(1000, 9999);
-        $screen = input("screen/s", "register");
+        $screen = inputs("screen/s", "register");
         
         record_file_log('短信注册验证码日志', '手机号'. $mobile. '验证码' . $code);
 
@@ -232,7 +232,7 @@ class MerchantUserService
     public function sendEmailCode()
     {
         $this->registerStatusCheck();
-        $email   = input('email', '');
+        $email   = inputs('email', '');
         $validate      = new \app\home\validate\UserValidate;
         $validate->scene('emailCode')->failException(true)->check([
             'email' => $email,

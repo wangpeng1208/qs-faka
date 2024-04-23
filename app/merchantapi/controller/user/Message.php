@@ -18,7 +18,7 @@ class Message extends Base
 {
     public function list()
     {
-        $status = input("status", '');
+        $status = inputs("status", '');
         $list   = $this->user->messagesByTo()->when(
             $status !== '',
             function ($query) use ($status) {
@@ -42,7 +42,7 @@ class Message extends Base
     // 标记已读
     public function read()
     {
-        $id      = input("id");
+        $id      = inputs("id");
         $message = $this->user->messagesByTo()->find($id);
 
         $message->status = 1;
@@ -60,7 +60,7 @@ class Message extends Base
     // 删除消息
     public function del()
     {
-        $id      = input("id");
+        $id      = inputs("id");
         $message = $this->user->messagesByTo()->find($id);
         $message->delete();
         $this->success("操作成功");

@@ -29,7 +29,7 @@ class Sms extends Base
     // 返回各个平台的配置信息字段
     public function smsConfig()
     {
-        $type   = input('type');
+        $type   = inputs('type');
         $config = [];
         switch ($type) {
             case 'qcloud':
@@ -83,7 +83,7 @@ class Sms extends Base
     // 获取短信配置信息
     public function getSmsConfig()
     {
-        $type = input('type');
+        $type = inputs('type');
         $data = conf('sms.' . $type);
         return $this->success('获取成功', $data);
     }
@@ -92,9 +92,9 @@ class Sms extends Base
     public function setSmsConfig()
     {
         // 短信类型
-        $type = input('type');
+        $type = inputs('type');
         // 配置信息
-        $data = input('data/a', []);
+        $data = inputs('data/a', []);
         // 保存到 sms.配置名
         conf('sms.' . $type, $data);
         return $this->success('设置成功');

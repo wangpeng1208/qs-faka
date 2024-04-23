@@ -54,7 +54,7 @@ class Complaint extends Base
     public function detail()
     {
 
-        $id        = input("id/d");
+        $id        = inputs("id/d");
         $complaint = OrderComplaint::findOrFail($id);
 
         if (!$complaint->admin_read) {
@@ -82,8 +82,8 @@ class Complaint extends Base
      */
     public function send()
     {
-        $content   = input("content/s", "") ?: $this->error('请输入沟通内容');
-        $id        = input("id/d", "");
+        $content   = inputs("content/s", "") ?: $this->error('请输入沟通内容');
+        $id        = inputs("id/d", "");
         $complaint = OrderComplaint::findOrFail($id);
         $post      = [
             "from"      => $this->user->id,
@@ -100,7 +100,7 @@ class Complaint extends Base
     // 使用 Db::raw('score+1') 可以防止出现竞态条件 或者 inc dec, 但是inc dec查最新数据需要使用 refresh()
     public function win()
     {
-        $id        = input("id/d");
+        $id        = inputs("id/d");
         $complaint = OrderComplaint::where(["id" => $id])->find();
         if (!$complaint) {
             return $this->error("投诉不存在");
@@ -109,7 +109,7 @@ class Complaint extends Base
             return $this->error("投诉已处理");
         }
         $trade_no          = $complaint->trade_no;
-        $result            = input("result/d");
+        $result            = inputs("result/d");
         $complaint->status = 1;
         $complaint->result = $result;
         $order             = $complaint->orders;
@@ -186,7 +186,7 @@ class Complaint extends Base
 
     public function del()
     {
-        $id  = input("id/d", 0);
+        $id  = inputs("id/d", 0);
         $res = OrderComplaint::destroy($id);
         return $res ? $this->success("删除成功") : $this->error("删除失败");
     }

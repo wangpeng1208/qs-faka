@@ -86,7 +86,7 @@ class Cash extends Base
      */
     public function pass()
     {
-        $cash_id = input('id/d', 0);
+        $cash_id = inputs('id/d', 0);
         $cash    = CashModel::findOrFail($cash_id);
 
         $cash->status == 1 && $this->error('已经审核通过，无需再次审核！');
@@ -118,12 +118,12 @@ class Cash extends Base
      */
     public function refuse()
     {
-        $cash_id = input('id/d', 0);
+        $cash_id = inputs('id/d', 0);
         $cash    = CashModel::findOrFail($cash_id);
 
         $cash->status == 2 && $this->error('已经审核不通过，无法操作！');
 
-        $reason = input('reason/s', '');
+        $reason = inputs('reason/s', '');
         Db::startTrans();
         try {
             $cash->status = 2;
@@ -150,7 +150,7 @@ class Cash extends Base
      */
     public function del()
     {
-        $cash_id = input('id/d', 0);
+        $cash_id = inputs('id/d', 0);
         $cash    = CashModel::findOrFail($cash_id);
         if ($cash->status != 1) {
             $this->error('只能删除已经审核通过的记录！');
@@ -164,7 +164,7 @@ class Cash extends Base
      */
     public function delBatch()
     {
-        $ids = input("ids/a", []);
+        $ids = inputs("ids/a", []);
         if (empty($ids)) {
             $this->error("请选择要删除的日志！");
         }

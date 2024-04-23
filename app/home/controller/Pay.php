@@ -21,12 +21,12 @@ class Pay extends Base
     public function order(OrderService $orderService)
     {
         // 需要校验的数据
-        $post['goods_id']      = input('goods_id/s', '');
-        $post['contact']       = input('contact/s', '');
-        $post["quantity"]      = input("quantity/d", 0);
-        $post['coupon_code']   = input("coupon_code/s", '');
-        $post['card_password'] = input("pwdforsearch/s", "");
-        $post['pid']           = input("pid/s", "");
+        $post['goods_id']      = inputs('goods_id/s', '');
+        $post['contact']       = inputs('contact/s', '');
+        $post["quantity"]      = inputs("quantity/d", 0);
+        $post['coupon_code']   = inputs("coupon_code/s", '');
+        $post['card_password'] = inputs("pwdforsearch/s", "");
+        $post['pid']           = inputs("pid/s", "");
         $validate              = new \app\home\validate\OrderValidate;
         $validate->scene('create')->failException(true)->check($post);
         $data = $orderService->createOrder($post);
@@ -38,7 +38,7 @@ class Pay extends Base
     // 发起支付
     public function pay(PayService $payService)
     {
-        $trade_no = input("trade_no/s", "");
+        $trade_no = inputs("trade_no/s", "");
         try {
             $order = $payService->loadOrder($trade_no);
         } catch (\Exception $e) {

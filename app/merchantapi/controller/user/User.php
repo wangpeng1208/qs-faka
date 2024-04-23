@@ -25,7 +25,7 @@ class User extends Base
      */
     public function setAvatar()
     {
-        $avatar             = input('avatar', '');
+        $avatar             = inputs('avatar', '');
         $this->user->avatar = $avatar;
         $result             = $this->user->save();
         return $result ? $this->success("保存成功") : $this->error("保存失败");
@@ -39,8 +39,8 @@ class User extends Base
     public function bindEmail()
     {
         $data     = [
-            'email'      => input('email', ''),
-            'email_code' => input('code', '')
+            'email'      => inputs('email', ''),
+            'email_code' => inputs('code', '')
         ];
         $validate = new \app\merchantapi\validate\user\UserValidate;
         $validate->scene('bindEmail')->failException(true)->check($data);
@@ -57,7 +57,7 @@ class User extends Base
     public function sendEmailCode()
     {
         $data     = [
-            'email' => input('email', '')
+            'email' => inputs('email', '')
         ];
         $validate = new \app\merchantapi\validate\user\UserValidate;
         $validate->scene('sendEmailCode')->failException(true)->check($data);
@@ -74,9 +74,9 @@ class User extends Base
     public function resetPassword()
     {
         $data     = [
-            'password'      => input('password', ''),
-            'new_password'  => input('new_password', ''),
-            'new_password2' => input('new_password2', '')
+            'password'      => inputs('password', ''),
+            'new_password'  => inputs('new_password', ''),
+            'new_password2' => inputs('new_password2', '')
         ];
         $validate = new \app\merchantapi\validate\user\UserValidate;
         $validate->scene('resetPassword')->failException(true)->check($data);
@@ -106,7 +106,7 @@ class User extends Base
      */
     public function userDetail()
     {
-        $visitor_id = input('visitor_id/d', 0);
+        $visitor_id = inputs('visitor_id/d', 0);
         if ($visitor_id) {
             $data = array_unique(array_merge(Cache::get($visitor_id) ?? [], [$this->user->id]));
             Cache::set($visitor_id, $data, 300);

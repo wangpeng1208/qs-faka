@@ -40,14 +40,14 @@ class Article extends Base
     private function post()
     {
         $data     = [
-            'id'          => input('id/d', 0),
-            'cate_id'     => input('cate_id/d', 0),
-            'title'       => input('title/s', ''),
-            'title_img'   => input('title_img/s', ''),
-            'content'     => input('content/s', ''),
-            'status'      => input('status/d', 1),
-            'create_at'   => input('create_at/d'),
-            'is_system'   => input('is_system/d', 0),
+            'id'          => inputs('id/d', 0),
+            'cate_id'     => inputs('cate_id/d', 0),
+            'title'       => inputs('title/s', ''),
+            'title_img'   => inputs('title_img/s', ''),
+            'content'     => inputs('content/s', ''),
+            'status'      => inputs('status/d', 1),
+            'create_at'   => inputs('create_at/d'),
+            'is_system'   => inputs('is_system/d', 0),
         ];
         $validate = new \app\adminapi\validate\article\ArticleValidate;
         if ($data['id'] > 0) {
@@ -87,7 +87,7 @@ class Article extends Base
      */
     public function del()
     {
-        $id = input('id/d', 0);
+        $id = inputs('id/d', 0);
         $article = ArticleModel::findOrFail($id);
         if($article->is_system == 1){
             $this->error('文章禁止删除，请先取消系统调用');
