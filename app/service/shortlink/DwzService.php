@@ -29,10 +29,6 @@ class DwzService
     public function create($url, $type = '')
     {
         $type = conf('site_domain_short');
-        record_file_log('trest', $type);
-        if(empty($type)){
-            return '';
-        }
         $dwz = $this->invoke($type);
         return $dwz->create($url) ?? '';
     }

@@ -218,8 +218,6 @@ class User extends Model
 
     public function getShortLinkAttr($value, $data)
     {
-        record_file_log('trest', conf("site_shop_domain"));
-
         return (new ShortLinkService())->getShortLink($data["id"], $data["id"], "user");
     }
 

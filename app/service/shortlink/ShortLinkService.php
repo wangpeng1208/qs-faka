@@ -21,17 +21,18 @@ class ShortLinkService
 
     /**
      * 创建短链接
-     * @param $user_id
-     * @param $relation_id
-     * @param $relation_type
+     * @param $user_id 用户ID
+     * @param $relation_id 关联ID
+     * @param $relation_type 关联类型
      * @return string
      */
-    public function create($user_id, $relation_id, $relation_type)
+    private function create($user_id, $relation_id, $relation_type)
     {
         $token     = substr(md5(uniqid(md5(microtime(true)), true)), 0, 8);
         $url       = conf("site_shop_domain") . "/links/" . $token;
         $short_url = (new DwzService())->create($url);
-        $link      = LinkModel::create([
+        record_file_log('trest', $relation_type);
+        LinkModel::create([
             "user_id"       => $user_id,
             "relation_type" => $relation_type,
             "relation_id"   => $relation_id,
@@ -40,7 +41,8 @@ class ShortLinkService
             "status"        => 1,
             "create_at"     => time()
         ]);
-        return $link->short_url;
+
+        return $short_url;
     }
 
     /**
@@ -48,8 +50,8 @@ class ShortLinkService
      */
     public function getShortLink($user_id, $relation_id, $relation_type)
     {
-        $link = LinkModel::where(["user_id" => $user_id, "relation_type" => $relation_type, "relation_id" => $relation_id])->value("short_url");
-        if (!$link) {
+        $link = LinkModel::where(["user_id" => $user_id, "relation_type" => $relation_type, "relation_id" => $relation_id])->find();
+        if (empty($link)) {
             $link = $this->create($user_id, $relation_id, $relation_type);
         }
         return $link;

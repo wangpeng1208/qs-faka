@@ -31,6 +31,9 @@ class Suo implements Link
 
     public function create($url)
     {
+        if(empty($this->key)){
+            return '未配置短网址配置';
+        }
         $res = HttpService::get(self::API_URL, [
             'url'        => $url,
             'format'     => 'json',
