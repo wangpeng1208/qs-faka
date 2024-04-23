@@ -12,11 +12,8 @@
 
 namespace app\merchantapi\controller\goods;
 
-use app\common\model\Goods;
 use app\common\model\GoodsCard as CardModel;
-use think\facade\Db;
 use app\merchantapi\controller\Base;
-use app\service\message\MessageService;
 
 class Good extends Base
 {
@@ -52,7 +49,7 @@ class Good extends Base
         }
     }
 
-    public function check_post($id)
+    public function check_post($id = '')
     {
         $post = [
             "user_id"                 => $this->user->id,
@@ -150,9 +147,6 @@ class Good extends Base
             }
         }
 
-        /*  if ($post['card_order'] == 3 && $post['selectcard_fee'] < plugconf("selectcard", "selectcard_fee_min")) {
-            $this->error("系统限制选号费最低" . plugconf("selectcard", "selectcard_fee_min") . "元");
-        } */
         // 查询数据放在最后
         $this->user->categorys()->where(["id" => $post["cate_id"]])->find() ?:
             $this->error("不存在该分类！");
@@ -169,18 +163,14 @@ class Good extends Base
         // 是否存在分类
         $this->user->categorys()->find() ?: $this->error('请先添加分类');
 
-        $post              = $this->check_post('');
+        $post              = $this->check_post();
         $post['status']    = 1;
         $post['create_at'] = time();
         if ($post['can_proxy'] == 1)
             $post['proxy_code'] = generateProxyKey();
 
         $res = $this->user->goods()->save($post);
-        if ($res) {
-            $this->success("添加商品成功");
-        } else {
-            $this->error("添加商品失败");
-        }
+        return $res ? $this->success("添加商品成功") : $this->error("添加商品失败");
     }
 
     public function detail()
@@ -198,18 +188,9 @@ class Good extends Base
     {
         $id   = input("id/d", 0);
         $good = $this->user->goods()->withTrashed()->where(["id" => $id])->lock(true)->find() ?: $this->error("商品不存在！");
-        Db::startTrans();
         $post = $this->check_post($id);
         $res  = $good->save($post);
-        if ($res) {
-            $this->check_proxyGoods($post, $good);
-            Db::commit();
-            $this->success("编辑商品成功");
-        } else {
-            Db::rollback();
-            $this->error("保存失败！");
-        }
-
+        return $res ? $this->success("编辑商品成功") : $this->error("编辑商品失败");
     }
 
     /**
@@ -220,57 +201,11 @@ class Good extends Base
     {
         $id   = input("id/d", 0);
         $data = $this->getGoods($id);
-        /**
-         * todo 删除待售卡密 待用优惠券
-         */
-        if ($data->can_proxy == 1) {
-            $proxy_goods = $this->user->goods()->where(["proxy_id" => $id])->select();
-            foreach (collect($proxy_goods) as $value) {
-                MessageService::send(0, $value->user_id, "上级代理商品删除通知", "商家：" . $data->user->username . "删除了商品【" . $data->name . "】,您的代理商品【" . $value->name . "】已被系统自动删除！");
-            }
-            $this->user->goods()->where(["proxy_id" => $id])->delete();
-        }
-        $res = $data->delete();
+        $res  = $data->delete();
         if ($res) {
             $this->success("删除商品成功！");
         } else {
             $this->error("删除失败！");
-        }
-    }
-
-    // 编辑后 下级代理商品 进入审核状态
-    private function check_proxyGoods($post, $good)
-    {
-
-        // 同步代理商品content和remark
-        Goods::where(["proxy_id" => $good->id, "proxy_sync_content" => 1])->update(["content" => $post['content'], "remark" => $post['remark']]);
-        // 同步代理商品售卡顺序和选号费
-        Goods::where(["proxy_id" => $good->id])->update(["card_order" => $post['card_order'], "selectcard_fee" => $post['selectcard_fee']]);
-        if ($good["can_proxy"] == 1 && $post['can_proxy'] != $good["can_proxy"]) {
-            Goods::where(["proxy_id" => $good->id])->update(["status" => 0]);
-            $goods = Goods::where(["proxy_id" => $good->id])->select();
-            foreach (collect($goods) as $good) {
-                MessageService::send(0, $good->user_id, "上级代理商品关闭代理", "商家：" . $good->user->username . "关闭了商品【" . $good->name . "】代理权限,您的代理商品【" . $good->name . "】已被系统自动下架！");
-            }
-        }
-
-        if ($good["can_proxy"] == 1 && $post['proxy_price'] > 0 && ($good["proxy_price"] != $post['proxy_price'] || $good["proxy_price_add"] != $post['proxy_price_add'])) {
-            $goods = Goods::where(["proxy_id" => $good->id])->select();
-            foreach (collect($goods) as $good) {
-                if ($good->proxy_price_diy == 0) {
-                    $good->cost_price = $post['proxy_price'];
-                    if ($good->price < $post['proxy_price'] + $post['proxy_price_add']) {
-                        $good->status = 0;
-                        MessageService::send(0, $good->user_id, "上级代理商品更新了价格", "商家：" . $good->user->username . "更新了商品【" . $good->name . "】代理价格已超过您的最低价，您的代理商品【" . $good->name . "】已被系统自动下架，重新修改价格后可重新上架！");
-                    } else {
-                        // if ($good->price < $post['proxy_price'] + round($good->price / 1000 * (float) plugconf("agentsetting", "min_rate"), 2)) {
-                        //     $good->status = 0;
-                        //     MessageService::send(0, $good->user_id, "上级代理商品更新了价格", "商家：" . $good->user->username . "更新了商品【" . $good->name . "】代理价格，系统限制代理加价不能低于销售价格：" . plugconf("agentsetting", "min_rate") / 10 . "%，已被系统自动下架，重新修改价格后可重新上架！");
-                        // }
-                    }
-                    $good->save();
-                }
-            }
         }
     }
 
@@ -305,12 +240,8 @@ class Good extends Base
         if (empty($ids))
             $this->error('没有选中项！');
         $where[] = ["id", "in", $ids];
-        $result  = $this->user->goods()->onlyTrashed()->update(["delete_at" => null], $where);
-        if ($result) {
-            $this->success("恢复成功！");
-        } else {
-            $this->error("恢复失败！");
-        }
+        $result  = $this->user->goods()->onlyTrashed()->where($where)->update(["delete_at" => null]);
+        return $result ? $this->success("恢复成功") : $this->error("恢复失败");
     }
 
     // 获取商品信息
@@ -330,17 +261,13 @@ class Good extends Base
         $status_text  = $status == 1 ? "上架" : "下架";
         $good->status = $status;
         $res          = $good->save();
-        if ($res) {
-            $this->success($status_text . "成功");
-        } else {
-            $this->error($status_text . "失败");
-        }
+        return $res ? $this->success($status_text . "成功") : $this->error($status_text . "失败");
     }
 
     // 	附加赠送用到的 获取商品列表id+name
     public function goodList()
     {
-        $list = $this->user->goods()->field('id,name')->order("sort desc,id desc")->select();
+        $list = $this->user->goods()->where('is_proxy', 0)->field('id,name')->order("sort desc,id desc")->select();
         $this->success("获取成功", $list);
     }
 
@@ -349,11 +276,7 @@ class Good extends Base
     {
         $id  = input("id/d", 0);
         $res = $card::update(["delete_at" => time()], ["goods_id" => $id, "user_id" => $this->user->id, "status" => 1]);
-        if ($res) {
-            return $this->success("清空商品未售虚拟卡成功");
-        } else {
-            $this->error("清空失败！");
-        }
+        return $res ? $this->success("清空商品未售卡密成功") : $this->error("清空失败！");
     }
 
 }
