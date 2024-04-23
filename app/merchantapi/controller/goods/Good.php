@@ -49,7 +49,7 @@ class Good extends Base
         }
     }
 
-    public function check_post($id = '')
+    private function check_post($id = '')
     {
         $post = [
             "user_id"                 => $this->user->id,
