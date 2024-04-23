@@ -166,8 +166,6 @@ class Good extends Base
         $post              = $this->check_post();
         $post['status']    = 1;
         $post['create_at'] = time();
-        if ($post['can_proxy'] == 1)
-            $post['proxy_code'] = generateProxyKey();
 
         $res = $this->user->goods()->save($post);
         return $res ? $this->success("添加商品成功") : $this->error("添加商品失败");
