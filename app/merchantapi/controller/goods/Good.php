@@ -12,7 +12,7 @@
 
 namespace app\merchantapi\controller\goods;
 
-use app\common\model\GoodsCard as CardModel;
+use app\common\model\GoodsCard;
 use app\merchantapi\controller\Base;
 
 class Good extends Base
@@ -270,7 +270,7 @@ class Good extends Base
     }
 
     // 	清空卡密==把未售卡密放入回收站
-    public function emptiedCards(CardModel $card)
+    public function emptiedCards(GoodsCard $card)
     {
         $id  = input("id/d", 0);
         $res = $card::update(["delete_at" => time()], ["goods_id" => $id, "user_id" => $this->user->id, "status" => 1]);
