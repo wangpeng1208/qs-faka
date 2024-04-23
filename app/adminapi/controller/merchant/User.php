@@ -373,7 +373,7 @@ class User extends Base
     public function unlock()
     {
         $user_id   = inputs('user_id/d', 0);
-        $max_count = conf("wrong_password_times");
+        $max_count = conf("wrong_password_times") ?: 5;
         $res       = UserLoginErrorLog::where([
             "login_name" => $user_id,
             "user_type"  => 0

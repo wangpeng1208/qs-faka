@@ -52,7 +52,7 @@ class UserLoginService
             "login_time" => time()
         ]);
         $error_count = $this->loginErrorCount($username) + 1;
-        $max_count   = conf("wrong_password_times");
+        $max_count   = conf("wrong_password_times") ?: 5;
 
         // 剩余次数
         $surplus_count = $max_count - $error_count;
