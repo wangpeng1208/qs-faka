@@ -29,8 +29,6 @@ class Base extends Api
     {
         parent::__construct();
         $this->checkLogin();
-        // 检查节点权限
-        $this->checkAuth();
         $this->setList();
     }
 
@@ -60,29 +58,6 @@ class Base extends Api
         // 设置request的user , 用于日志记录
         request()->user = $this->user;
 
-    }
-
-    /**
-     * 检查权限
-     */
-    private function checkAuth()
-    {
-        // 如果用户是1则是默认 自己的体验账号，直接通过
-        // if ($this->user->id == 2) {
-        //     return true;
-        // }
-        $action     = request()->action;
-        $controller = request()->controller;
-        $reflection = new \ReflectionMethod($controller, $action);
-        $docComment = $reflection->getDocComment();
-
-        if (strpos($docComment, '@auth true') !== false) {
-            $path = request()->path();
-            $auth = new \app\common\util\RoleMerchantAuth();
-            if (!$auth->check($path, $this->user)) {
-                throw new HttpResponseException(403, ['msg' => '没有权限！']);
-            }
-        }
     }
 
     /**
