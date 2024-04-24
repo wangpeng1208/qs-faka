@@ -21,6 +21,7 @@ use app\home\collection\interfaces\CollectionInterface;
  * @var $order object 订单
  * @var $config array
  * @field params  网关:gateway|pid:pid|key:key|支付类型:type
+ * tips 未经测试
  */
 class Yipay extends PayService implements CollectionInterface
 {
@@ -116,6 +117,7 @@ class Yipay extends PayService implements CollectionInterface
         $para_filter = $this->paraFilter($request);
         $para_sort   = $this->argSort($para_filter);
         $prestr      = $this->createLinkstring($para_sort);
+        $isSgin      = false;
         $isSgin      = $this->md5Verify($prestr, $request['sign'], $order->channelAccount->params->key);
         if ($isSgin) {
             $order->transaction_id = $request['trade_no'];
