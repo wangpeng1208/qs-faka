@@ -49,14 +49,9 @@ class RoleMerchantAuth
         $where[] = ['status', '=', '1'];
         $where[] = ['app', '=', 'merchant'];
         $where[] = ['type', 'in', ['M', 'L', 'B']];
-        if ($user->id === 1) {
-            $data = SystemMenuModel::where($where)->select()->toArray();
-        } else {
-            $roles   = $user->role->toArray();
-            $rules   = $roles['role_pc'];
-            $where[] = ['id', 'in', $rules];
-            $data    = SystemMenuModel::where($where)->select()->toArray();
-        }
+
+        $data = SystemMenuModel::where($where)->select()->toArray();
+
         // M L 的数组
         $menu = array_filter($data, function ($item) {
             return in_array($item['type'], ['M', 'L']);
