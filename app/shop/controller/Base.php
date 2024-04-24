@@ -40,7 +40,7 @@ class Base extends Api
     {
         parent::__construct();
     }
-    
+
     public function init()
     {
         // header('Cache-Control: max-age=0');
@@ -64,7 +64,7 @@ class Base extends Api
         switch ($link->relation_type) {
             case 'user':
                 // $this->user = $link->relation;   
-                if(!$link->relation->shop) {
+                if (!$link->relation->shop) {
                     $this->error("店铺不存在,请先完成店铺审核");
                 }
                 $this->shop = $link->relation->shop->visible($this->shop_visible);
@@ -125,7 +125,7 @@ class Base extends Api
             default:
                 $this->error("链接关联类型错误");
         }
-        if (empty ($this->shop))
+        if (empty($this->shop))
             $this->error("店铺不存在");
         if ($this->shop->shop_status === 0)
             $this->error("店铺未审核!"); // 用户提交 后台审核
@@ -146,10 +146,6 @@ class Base extends Api
     {
         $platform = Channel::where(["status" => 1, "is_custom" => 0, "type" => 1])->field(['id', 'title', 'is_available', 'paytype', 'is_custom', 'lowrate', 'show_name'])->order("sort desc")->select()->filter(
             function ($item) use ($user_id) {
-                // 如果用户自定义了这个通道【状态关闭】，就不显示
-                if (UserChannel::where(['user_id' => $user_id, 'channel_id' => $item->id, 'status' => 0])->find()) {
-                    return false;
-                }
                 $item->user_id      = $user_id;
                 $item->channel_id   = $item->id;
                 $item->rate         = get_user_rate($user_id, $item->id);
@@ -157,57 +153,17 @@ class Base extends Api
                 $item->type_text = $item->type_text;
                 $item->ico = get_paytype($item->paytype)->ico;
                 unset ($item->id);
+                echo  $item->rate;
                 return true;
             }
-        );
-        $custom   = UserChannel::where(['user_id' => $user_id, 'status' => 1])->select()->filter(
-            function ($item) use ($user_id) {
-                // 如果官方通道关闭了，就不显示
-                if ($item->channel->status == 0) {
-                    return false;
-                }
-                $item->title        = $item->channel->title;
-                $item->rate         = get_user_rate($user_id, $item->channel->id);
-                $item->product_name = get_paytype($item->channel->paytype)->name; // 支付类型名
-                $item->type_text    = $item->channel->type_text;
-                $item->ico          = get_paytype($item->channel->paytype)->ico;
-                $item->is_available = $item->channel->is_available;
-                $item->is_custom  = $item->channel->is_custom;
-                $item->channel_id = $item->channel->id;
-                $item->show_name = $item->channel->show_name;
-                // unset ($item->id);
-                return true;
-            }
-        );
-        $res    = array_merge($platform->toArray(), $custom->toArray());
-        $result = [];
-
-        // 创建一个数组来存储已经存在的 channel_id
-        $channel_ids = [];
-
-        // 遍历 $res 数组
-        foreach ($res as $item) {
-            // 如果这个 channel_id 还没有出现过
-            if (!in_array($item['channel_id'], $channel_ids)) {
-                // 将这个 channel_id 添加到 $channel_ids 数组中
-                $channel_ids[] = $item['channel_id'];
-                // 将这个 item 添加到结果数组中
-                $result[] = $item;
-            }
-        }
-        // 电脑Or手机
-        foreach ($result as $key => $item) {
+        )->filter(function ($item) {
             if ($this->request->isMobile()) {
-                if ($item["is_available"] == 2) {
-                    unset($result[$key]);
-                }
+                return $item->is_available != 2;
             } else {
-                if (!$this->request->isMobile() && $item["is_available"] == 1) {
-                    unset($result[$key]);
-                }
+                return $this->request->isMobile() || $item->is_available != 1;
             }
-        }
-        return array_values($result);
+        });
+        return array_values($platform->toArray());
     }
 
 
