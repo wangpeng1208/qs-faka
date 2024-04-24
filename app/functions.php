@@ -134,7 +134,6 @@ function A($code, $msg = '', $data = [], $url = null)
         'url'       => $url,
         'timestamp' => time(),
     ];
-    // 兼容default_ajax_return=json，防止被双重json_encode，添加appliaction/json头
     return $return;
 }
 
@@ -231,6 +230,8 @@ function is_punish($user_id)
  * rate_type = 0时为 查用户权限表里的费率 如果是0 则走支付接口的费率
  * @param int $user_id 用户id
  * @param int $channel_id 通道id
+ * 后台操作说明：编辑商户角色费率时选择 `通道费率` 则意味着 该角色 使用的是对应通道的费率；如果需要自定义该角色的费率 则需把模式改为` 角色费率`
+ * 如果`单独定义`了用户的费率 ,那么使用模式 `用户费率` 优先级最高
  */
 function get_user_rate($user_id, $channel_id)
 {
