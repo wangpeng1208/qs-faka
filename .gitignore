@@ -8,3 +8,6 @@
 /public/web/*
 .env
 .user.ini
+/app/controller
+/app/view
+/public/install
