@@ -74,6 +74,8 @@ class Admin extends Base
             'password' => inputs('password'),
             'nickname' => inputs('nickname'),
             'avatar'   => inputs('avatar'),
+            'email'    => inputs('email'),
+            'mobile'   => inputs('mobile'),
             'status'   => inputs('status'),
         ];
         if ($data['id']) {
