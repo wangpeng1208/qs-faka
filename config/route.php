@@ -15,7 +15,7 @@ Route::group('/', function () {
     return view(public_path() . '/web/index.html', [
       'title'       => conf('site_subtitle') . ' - ' . conf('site_name'),
       'keywords'    => conf('site_keywords'),
-      'description' => conf('site_description'),
+      'description' => conf('site_desc'),
     ]);
   });
 });
