@@ -17,7 +17,7 @@
   ],
   "support": {
     "email": "990504246@qq.com",
-    "wiki": "https://www.qqss.net/doc/"
+    "wiki": "https://www.qqss.net"
   },
   "require": {
     "php": ">=8.0",
@@ -68,7 +68,6 @@
   },
   "config": {
     "allow-plugins": {
-      "easywechat-composer/easywechat-composer": true
     },
     "disable-tls": true
   },
