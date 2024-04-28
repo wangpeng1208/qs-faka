@@ -22,7 +22,6 @@ class Collection extends Base
     /**
      * @notes 收款通道列表
      * @auth true
-     * @author wangPeng
      */
     public function list(ChannelModel $channelModel)
     {
@@ -53,7 +52,6 @@ class Collection extends Base
     /**
      * @notes 通道详情
      * @auth false
-     * @author wangPeng
      */
     public function detail()
     {
@@ -67,7 +65,6 @@ class Collection extends Base
     /**
      * @notes 删除通道
      * @auth true
-     * @author wangPeng
      */
     public function del()
     {
