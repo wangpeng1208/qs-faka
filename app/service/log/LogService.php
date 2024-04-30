@@ -52,7 +52,7 @@ class LogService
     {
         $data = [
             'ip'       => request()->ip(),
-            'params'   => $params,
+            'params'   => $params ?? '',
             'username' => $user->username,
             'action'   => $action,
             'content'  => $content
@@ -65,7 +65,7 @@ class LogService
     {
         $data = [
             'ip'       => request()->ip(),
-            'params'   => $params,
+            'params'   => $params ?? '',
             'username' => $user->username,
             'user_id'  => $user->id,
             'action'   => $action,
