@@ -101,6 +101,7 @@ class MerchantUserService
         $data["create_at"]   = time();
         $data["agent_key"]   = generateProxyKey();
         $data["rate_type"]   = 0;
+        // 是否是商户预留 针对于普通注册用户
         $data["is_merchant"] = 1;
 
         $user = User::create($data);
@@ -123,7 +124,6 @@ class MerchantUserService
     {
         $ip    = request()->ip();
         $count = User::where("ip", $ip)->whereTime("create_at", "today")->count();
-        echo conf("ip_register_limit");
         if ($count <= conf("ip_register_limit")) {
             return $ip;
         } else {
