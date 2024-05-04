@@ -17,7 +17,6 @@ use app\common\model\ShopIplist;
 use app\service\common\Api;
 use app\service\sms\SmsService;
 use app\common\model\Channel;
-use app\common\model\UserChannel;
 
 class Base extends Api
 {
