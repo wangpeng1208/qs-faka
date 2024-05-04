@@ -43,7 +43,7 @@ class Request extends \Webman\Http\Request
 
   public function ip()
   {
-    return $this->getRealIp($safe_mode = true);
+    return $this->getRealIp(true);
   }
 
   public function module()
