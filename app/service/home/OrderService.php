@@ -95,6 +95,7 @@ class OrderService
                 'order'        => $order->visible(['trade_no', 'create_at', 'total_price', 'quantity', 'status']),
                 'goods'        => $order->goods->visible(['content', 'name']),
                 'user'         => $order->user->visible(['id', 'username']),
+                'shop'         => $order->user->shop->visible(['shop_contact']),
                 'paytype'      => get_paytype($order->paytype)->name,
                 'canComplaint' => $this->orderIsComplain($order),
                 'outCards'     => $outCards,
