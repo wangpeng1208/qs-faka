@@ -93,7 +93,7 @@ class OrderService
             $data     = [
                 'pageType'     => $pageType,
                 'order'        => $order->visible(['trade_no', 'create_at', 'total_price', 'quantity', 'status']),
-                'goods'        => $order->goods->visible(['content', 'name']),
+                'goods'        => $order->goods->visible(['content', 'remark', 'name']),
                 'user'         => $order->user->visible(['id', 'username']),
                 'shop'         => $order->user->shop->visible(['shop_contact']),
                 'paytype'      => get_paytype($order->paytype)->name,
