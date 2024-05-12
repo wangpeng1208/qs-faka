@@ -105,6 +105,7 @@ class Cash extends Base
         }
 
         $data["allow_update"] = 0;
+        $data["collect_img"]  = inputs("collect_img/s", '');
         if ($user_collect) {
             $res = $user_collect->update($data, array("user_id" => $this->user->id));
         } else {
