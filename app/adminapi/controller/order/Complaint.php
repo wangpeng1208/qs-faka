@@ -123,7 +123,7 @@ class Complaint extends Base
                     // 资金冻结表处理 
                     $auto_unfreeze = AutoUnfreezeModel::where([
                         "trade_no" => $trade_no,
-                        "stauts"   => -1
+                        "status"   => -1
                     ])->select();
                     if (empty(count($auto_unfreeze))) {
                         throw new \Exception("资金冻结中不存在该订单，无法判决。【资金信息未找到或已被结算】");
