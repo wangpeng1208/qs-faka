@@ -11,3 +11,4 @@
 /app/controller
 /app/view
 /public/install
+*.tar.gz
