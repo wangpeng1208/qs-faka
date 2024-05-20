@@ -64,7 +64,7 @@ class Order extends Base
      * @notes 订单删除
      * @auth true
      */
-    public function del(OrderModel $model)
+    public function del()
     {
         $id    = inputs('id/d', 0);
         $order = OrderModel::findOrFail($id);
@@ -89,9 +89,9 @@ class Order extends Base
         if ($order->status != 0) {
             $this->error("该订单不是未支付状态！");
         }
-        $payService = new PayService();
-        $payService->complete($order);
-        $this->success("补单成功", $order);
+        (new OrderService())->complete($order);
+        $order->status = 1;
+        $this->success("补单成功", $order->toArray());
     }
 
     /**

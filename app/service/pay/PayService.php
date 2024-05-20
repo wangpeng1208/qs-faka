@@ -108,10 +108,4 @@ class PayService
             return $e->getMessage();
         }
     }
-
-    // 完成
-    public function complete(&$order)
-    {
-        return(new OrderService())->complete($order);
-    }
 }
