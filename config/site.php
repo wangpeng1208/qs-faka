@@ -9,7 +9,7 @@ return [
         'original' => '原生风格',
     ],
     // 当前版本号
-    'version'          => '1.2.4',
+    'version'          => '1.2.15',
     // 是否是演示模式
     'is_demo'          => false,
     // 远程api地址
