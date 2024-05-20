@@ -24,7 +24,7 @@ class User
      * @param [type] $userInfo
      * @return void
      */
-    function signinSpread($userInfo)
+    function addAfter($userInfo)
     {
         // 用户组权限
         $this->userRole($userInfo["user_id"]);

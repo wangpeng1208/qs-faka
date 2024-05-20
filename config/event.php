@@ -1,8 +1,8 @@
 <?php
 
 return [
-  'user.register' => [
-    [app\merchantapi\event\User::class, 'signinSpread'],
+  'user.addafter' => [
+    [app\merchantapi\event\User::class, 'addAfter'],
   ],
   'user.login'    => [
   ],

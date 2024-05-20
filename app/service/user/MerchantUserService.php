@@ -107,7 +107,7 @@ class MerchantUserService
         $user = User::create($data);
         if ($user) {
             $data["user_id"] = $user->id;
-            Event::emit('user.register', $data);
+            Event::emit('user.addafter', $data);
             return true;
         } else {
             throw new \Exception("注册失败");
