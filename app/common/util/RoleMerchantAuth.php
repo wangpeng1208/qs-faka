@@ -12,7 +12,6 @@
 namespace app\common\util;
 
 use app\common\model\SystemMenu as SystemMenuModel;
-use support\Cache;
 
 class RoleMerchantAuth
 {
@@ -65,7 +64,6 @@ class RoleMerchantAuth
             'menu'  => $menu,
             'perms' => $perms,
         ];
-        Cache::tag('merchant_user_menu')->set('merchant_user_menu_' . $user->id, $data);
         return $data;
     }
 
