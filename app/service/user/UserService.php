@@ -24,7 +24,8 @@ class UserService
 
     /**
      * 创建token
-     * @param $user
+     * @param array $user 用户信息
+     * @param string $type 场景（admin，merchant）
      * @return array
      */
     public function createToken($user, $type = 'merchant')
