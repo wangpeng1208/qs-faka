@@ -20,7 +20,7 @@
     "wiki": "https://www.qqss.net"
   },
   "require": {
-    "php": ">=8.0",
+    "php": ">=8.1",
     "workerman/webman-framework": "^1.5.16",
     "monolog/monolog": "^2.9.2",
     "webman/think-orm": "^1.1.1",
