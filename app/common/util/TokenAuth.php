@@ -46,6 +46,7 @@ class TokenAuth
         $cache_token       = Cache::get("token_" . $params['jti']);
         $cache_token_arr   = $cache_token ?: [];
         $cache_token_arr[] = $token;
+        Cache::set("token_" . $params['jti'], $cache_token_arr);
         return compact('token', 'params');
     }
 
