@@ -83,7 +83,7 @@ class MerchantUserService
         $validate->scene('register')->failException(true)->check($data);
         // 如果$data 则使用mobile或者email
         // 生成随机用户名
-        $username = '商户' . get_random_string(6);
+        $username         = '商户' . get_random_string(6);
         $data["username"] = $data["username"] ?: $username;
         // 如果手机验证码必填
         if (conf('site_register_need_mobile') && conf('site_register_need_mobile_check')) {
@@ -95,12 +95,12 @@ class MerchantUserService
             // 检查邮箱验证码
             $this->email_code_check($data["email"], $data["email_code"]);
         }
-        $data["password"]    = password_hash($data["password"], PASSWORD_DEFAULT);
-        $data["money"]       = 0;
-        $data["status"]      = conf("site_register_verify") == 1 ? 1 : 0;
-        $data["create_at"]   = time();
-        $data["agent_key"]   = generateProxyKey();
-        $data["rate_type"]   = 0;
+        $data["password"]  = password_hash($data["password"], PASSWORD_DEFAULT);
+        $data["money"]     = 0;
+        $data["status"]    = conf("site_register_verify") == 1 ? 1 : 0;
+        $data["create_at"] = time();
+        $data["agent_key"] = generateProxyKey();
+        $data["rate_type"] = 0;
         // 是否是商户预留 针对于普通注册用户
         $data["is_merchant"] = 1;
 
@@ -181,7 +181,7 @@ class MerchantUserService
         $allowFields = ['id', 'username', 'status', 'mobile', 'lastlogintime', 'is_freeze', 'openid'];
         $user        = array_intersect_key($user, array_flip($allowFields));
         Event::emit('user.login', $user);
-       
+
         return array_merge($user, $token, $shop);
     }
 
@@ -198,16 +198,10 @@ class MerchantUserService
         $validate->scene('mobile')->failException(true)->check([
             'mobile' => $mobile,
         ]);
-
-        $mobile_code_register_today = Cache::get('mobile_code_register_today_' . $mobile);
-        if ($mobile_code_register_today && ($mobile_code_register_today > conf('site_register_smscode_max_count'))) {
-            throw new \Exception('今日发送次数已达上限');
-        }
-
         $code   = rand(1000, 9999);
         $screen = inputs("screen/s", "register");
-        
-        record_file_log('短信注册验证码日志', '手机号'. $mobile. '验证码' . $code);
+
+        record_file_log('短信注册验证码日志', '手机号' . $mobile . '验证码' . $code);
 
         Cache::set('mobile_code_register_' . $mobile, $code, 300);
 
@@ -218,12 +212,6 @@ class MerchantUserService
         }
         // 记录验证码
         Cache::set('mobile_code_register_' . $mobile, $code, 300);
-        // set记录当天发送次数
-        if ($mobile_code_register_today) {
-            Cache::inc('mobile_code_register_today_' . $mobile);
-        } else {
-            Cache::set('mobile_code_register_today_' . $mobile, 1, 86400);
-        }
     }
 
     /**
@@ -232,8 +220,8 @@ class MerchantUserService
     public function sendEmailCode()
     {
         $this->registerStatusCheck();
-        $email   = inputs('email', '');
-        $validate      = new \app\home\validate\UserValidate;
+        $email    = inputs('email', '');
+        $validate = new \app\home\validate\UserValidate;
         $validate->scene('emailCode')->failException(true)->check([
             'email' => $email,
         ]);
