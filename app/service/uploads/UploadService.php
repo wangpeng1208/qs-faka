@@ -51,8 +51,8 @@ class UploadService
                 $allow_type = ['pem', 'crt', 'cer', 'p12', 'pfx', 'der'];
                 $error_msg = '仅支持 pem crt cer p12 pfx der格式的证书文件';
                 // 需要上传到禁止外网访问的目录
-                $view_path = "/runtime/crt/{$app}/{$user_id}/" . date('Ymd');
-                $real_path = app_path() . $view_path;
+                $view_path = "/crt/{$app}/{$user_id}/" . date('Ymd');
+                $real_path = runtime_path() . $view_path;
                 break;
             default:
                 $allow_type = [];
