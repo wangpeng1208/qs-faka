@@ -12,7 +12,7 @@
 
 namespace app\home\controller;
 
-use think\facade\Cache;
+use support\Cache;
 use app\service\pay\PayService;
 use app\service\home\OrderService;
 

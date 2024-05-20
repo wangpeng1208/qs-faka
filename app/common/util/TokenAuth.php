@@ -16,7 +16,7 @@ use Firebase\JWT\Key;
 use Firebase\JWT\BeforeValidException;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\SignatureInvalidException;
-use think\facade\Cache;
+use support\Cache;
 
 class TokenAuth
 {

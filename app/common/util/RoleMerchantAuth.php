@@ -12,7 +12,7 @@
 namespace app\common\util;
 
 use app\common\model\SystemMenu as SystemMenuModel;
-use think\facade\Cache;
+use support\Cache;
 
 class RoleMerchantAuth
 {

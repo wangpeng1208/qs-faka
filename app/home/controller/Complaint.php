@@ -13,7 +13,7 @@
 namespace app\home\controller;
 
 use think\facade\Db;
-use think\facade\Cache;
+use support\Cache;
 use app\service\sms\SmsService;
 use app\common\model\Order as OrderModel;
 use app\common\model\OrderComplaint as ComplaintModel;

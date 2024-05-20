@@ -13,7 +13,7 @@
 namespace app\service\pay;
 
 use support\Container;
-use think\facade\Cache;
+use support\Cache;
 use app\common\model\OrderMaster;
 use app\service\order\OrderService;
 

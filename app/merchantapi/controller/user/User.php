@@ -12,7 +12,7 @@
 
 namespace app\merchantapi\controller\user;
 
-use think\facade\Cache;
+use support\Cache;
 use app\merchantapi\controller\Base;
 use app\common\util\RoleMerchantAuth;
 use app\service\message\EmailMessageService;

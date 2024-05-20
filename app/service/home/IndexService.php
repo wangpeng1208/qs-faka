@@ -13,7 +13,7 @@
 namespace app\service\home;
 
 use app\common\model\{User as UserModel, Order as OrderModel, GoodsCard as GoodsCardModel};
-use think\facade\Cache;
+use support\Cache;
 
 class IndexService
 {

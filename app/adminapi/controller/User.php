@@ -13,7 +13,7 @@
 namespace app\adminapi\controller;
 
 use think\facade\Db;
-use think\facade\Cache;
+use support\Cache;
 use app\common\util\RoleAuth;
 use app\common\model\SystemMenu;
 

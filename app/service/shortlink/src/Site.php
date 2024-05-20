@@ -16,7 +16,7 @@
 
 namespace app\service\shortlink\src;
 use app\common\model\LinkShort;
-use think\facade\Cache;
+use support\Cache;
 use app\service\shortlink\interfaces\Link;
 
 class Mysite implements Link

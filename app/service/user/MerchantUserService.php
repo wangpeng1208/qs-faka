@@ -12,7 +12,7 @@
 
 namespace app\service\user;
 
-use think\facade\Cache;
+use support\Cache;
 use Webman\Event\Event;
 use app\common\model\User;
 use app\service\sms\SmsService;

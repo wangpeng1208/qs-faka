@@ -13,7 +13,7 @@
 namespace app\merchantapi\validate\user;
 
 use taoser\Validate;
-use think\facade\Cache;
+use support\Cache;
 use app\common\model\User as UserModel;
 
 class UserValidate extends Validate
