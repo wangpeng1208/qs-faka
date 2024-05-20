@@ -69,18 +69,24 @@ class User extends Base
 
     /**
      * @notes 商户重置密码
-     * @auth true
+     * @auth false
      */
     public function resetPassword()
     {
         $data     = [
             'password'      => inputs('password', ''),
             'new_password'  => inputs('new_password', ''),
-            'new_password2' => inputs('new_password2', '')
+            'new_password2' => inputs('new_password2', ''),
+            'id'            => $this->user->id
         ];
         $validate = new \app\merchantapi\validate\user\UserValidate;
         $validate->scene('resetPassword')->failException(true)->check($data);
-        $result = $this->user->save();
+        $result = $this->user->update(
+            [
+                'password' => password_hash($data['new_password'], PASSWORD_DEFAULT)
+            ],
+            ['id' => $this->user->id]
+        );
         return $result ? $this->success("重置成功") : $this->error("重置失败");
     }
 
@@ -90,8 +96,8 @@ class User extends Base
      */
     public function loginLog()
     {
-        $time      = strtotime("-30 day");
-        $res       = $this->user->loginLogs()->whereTime("create_at", ">=", $time)->order("id desc")->paginate($this->limit)->each(function ($item) {
+        $time = strtotime("-30 day");
+        $res  = $this->user->loginLogs()->whereTime("create_at", ">=", $time)->order("id desc")->paginate($this->limit)->each(function ($item) {
             $item->username = $this->user->username;
         });
         $this->success('获取成功', [
