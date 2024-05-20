@@ -212,18 +212,6 @@ function record_user_money_log($business_type, $user_id, $money, $balance, $reas
     ]);
 }
 
-
-/**
- * 用户是否被处罚
- * v3 todo 处罚机制
- * @param [type] $user_id
- * @return boolean
- */
-function is_punish($user_id)
-{
-    return 0;
-}
-
 /**
  * 费率计算规则
  * rate_type = 1时为 手动给用户自定义 如果是0  如果是0 则走支付接口的费率
