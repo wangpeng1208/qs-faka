@@ -5,7 +5,7 @@
 
 #### 运行环境要求
 
-*  PHP8.0。 php 安装扩展fileinfo、redis
+* PHP >= 8.1。 php 安装扩展fileinfo、redis
 * nginx 最新版
 * mysql > 5.7 ，推荐MariaDB
 
@@ -47,19 +47,15 @@ http://域名/merchant/login
 
 ## 主要特性
 
-有详细的代码注释，有完整系统手册
-### Webman框架
-使用最新的 Webman 框架开发
-### 前端采用Vue CLI框架
-前端使用Vue CLI框架nodejs打包，页面加载更流畅，用户体验更好
-### 标准接口
-标准接口、前后端分离，二次开发更方便
-### 支持邮件发送
-### 支持短信发送
-### 支持事件机制
-行为扩展更方便，方便二次开发
-### 支持composer
-支持使用composer安装插件
++ 有详细的代码注释，有完整系统手册
++ Webman框架 使用最新的 Webman 框架开发
++ 前端使用Vue CLI框架nodejs打包，页面加载更流畅，用户体验更好
++ 标准接口、前后端分离，二次开发更方便
++  支持邮件发送
++  支持短信发送
++  支持事件机制
++  JWT权限认证
++ 支持使用composer安装插件
 
 
 
@@ -123,6 +119,14 @@ tcp     root            rpc             text://0.0.0.0:3014    8             [OK
 ```
 .
 ├── app                           应用目录
+│   ├── adminapi                  后台应用
+│   ├── merchantapi               商户后台应用
+│   ├── common                      
+│   ├── home                      前台应用
+│   ├── middleware                中间件
+│   ├── service                   服务层
+│   ├── shop                      shop应用
+│   ├── functions.php             公共函数
 ├── public                        静态资源目录
 │   ├── static                    系统初始静态资源目录
 │   ├── upload                    文件上传目录
