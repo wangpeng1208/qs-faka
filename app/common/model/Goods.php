@@ -47,7 +47,7 @@ class Goods extends BaseModel
 		]);
 	}
 
-	public function cards($pk = "goods_id")
+	public function cards($pk = "id")
 	{
 		return $this->hasMany("GoodsCard", 'goods_id', $pk);
 	}
