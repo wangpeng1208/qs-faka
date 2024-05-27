@@ -4,7 +4,7 @@ declare(strict_types=1);
  * 请将该文件放置于config目录
  */
 
-use think\facade\Cache;
+use support\Cache;
 
 return [
     'font_file' => '', //自定义字体包路径， 不填使用默认值

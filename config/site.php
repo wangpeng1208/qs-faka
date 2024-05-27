@@ -15,9 +15,7 @@ return [
     // 远程api地址
     'api_url'   => [
         // 'http://www.qqss.net',
-        // 'http://www.qqss.net',
         // 'http://base.yo0.cn',
-        'http://118.89.92.194:8787',
     ],
     'api_license'     => [
         [
