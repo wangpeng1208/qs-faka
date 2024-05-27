@@ -26,10 +26,10 @@ class DwzService
     /**
      * 创建短链接
      */
-    public function create($url, $type = '')
+    public function create($url)
     {
         $type = conf('site_domain_short');
-        $dwz = $this->invoke($type);
+        $dwz  = $this->invoke($type);
         return $dwz->create($url) ?? '';
     }
 }

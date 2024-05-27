@@ -7,7 +7,7 @@
 // +----------------------------------------------------------------------
 // | 骑士发卡 [ 平顶山若拉网络科技有限公司，并保留所有权利 ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2016~2020 https://www.qqss.net All rights reserved.
+// | Copyright (c) 2022-2025 https://www.qqss.net All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed 骑士软件 并不是自由软件，商业用途务必到官方购买正版授权, 以免引起不必要的法律纠纷.
 // +----------------------------------------------------------------------
@@ -31,8 +31,8 @@ class Suo implements Link
 
     public function create($url)
     {
-        if(empty($this->key)){
-            return '未配置短网址配置';
+        if (empty($this->key)) {
+            throw new \Exception('未配置缩我短网址配置');
         }
         $res = HttpService::get(self::API_URL, [
             'url'        => $url,
@@ -42,14 +42,14 @@ class Suo implements Link
             'domain'     => '21',
         ]);
         if ($res === false) {
-            return false;
+            throw new \Exception('请求失败，请检测缩我客短网址配置（KEY）');
         }
         $json = json_decode($res);
         if (!$json) {
-            return false;
+            throw new \Exception($res);
         }
         if ($json->err != '') {
-            return false;
+            throw new \Exception($json->err);
         }
         return $json->url;
     }
