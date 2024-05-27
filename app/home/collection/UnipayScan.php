@@ -50,7 +50,7 @@ class UnipayScan extends PayService implements CollectionInterface
       'mch_cert_password'       => $this->order->channelAccount->params->mch_cert_password,
       // 必填-银联公钥证书路径
       'unipay_public_cert_path' => $this->order->channelAccount->params->unipay_public_cert_path,
-      'return_url'              => conf('site_shop_domain') . '/callback',
+      'return_url'              => conf('site_domain') . '/callback',
       'notify_url'              => conf('site_domain') . '/home/pay/notify',
       // 选填-商户密钥：为银联条码支付综合前置平台配置：https://up.95516.com/open/openapi?code=unionpay
       'mch_secret_key'          => $this->order->channelAccount->params->mch_secret_key,

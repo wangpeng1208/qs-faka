@@ -34,7 +34,7 @@ class Yipay extends PayService implements CollectionInterface
         $channel_type    = $order->channelAccount->params->type;
         $channel_gateway = $order->channelAccount->params->gateway;
 
-        $callbackurl = conf('site_shop_domain') . '/callback';
+        $callbackurl = conf('site_domain') . '/callback';
         $notifyurl   = conf('site_domain') . '/home/pay/notify';
 
         $native = [

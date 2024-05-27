@@ -62,7 +62,7 @@ class AliTransfer implements SettlementInterface
       'alipay_public_cert_path' => $this->order->channelAccount->params->alipay_public_cert_path,
       // 必填-支付宝根证书 路径
       'alipay_root_cert_path'   => $this->order->channelAccount->params->alipay_root_cert_path,
-      'return_url'              => conf('site_shop_domain') . '/callback',
+      'return_url'              => conf('site_domain') . '/callback',
       'notify_url'              => conf('site_domain') . '/pay/alipay/notify',
       // 选填-第三方应用授权token
       'app_auth_token'          => '',
