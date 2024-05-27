@@ -22,22 +22,17 @@ use app\service\shortlink\interfaces\Link;
 class Suo implements Link
 {
     const API_URL = 'http://api.3wt.cn/api.htm';
-    protected $key;
-
-    public function __construct()
-    {
-        $this->key = conf('suo_app_key');
-    }
 
     public function create($url)
     {
-        if (empty($this->key)) {
+        $key = conf('suo_app_key');
+        if (empty($key)) {
             throw new \Exception('未配置缩我短网址配置');
         }
         $res = HttpService::get(self::API_URL, [
             'url'        => $url,
             'format'     => 'json',
-            'key'        => $this->key,
+            'key'        => $key,
             'expireDate' => date('Y-m-d', strtotime('+1 year')),
             'domain'     => '21',
         ]);
