@@ -239,10 +239,6 @@ function get_user_rate($user_id, $channel_id)
         $rate      = !empty($user_rate) ? $user_rate["rate"] : $lowrate;
     }
 
-    if (is_punish($user_id) == 1) {
-        $rate = $rate + conf("punish")['add_rate'] / 100;
-    }
-
     return round($rate, 4);
 }
 
