@@ -23,7 +23,7 @@ class Link extends Base
     public function index()
     {
         $this->success('获取成功', [
-            'shortLink'   => $this->user->shortLink,
+            'shortLink'   => $this->user->shortLink->short_url ?? '',
             'link_status' => $this->user->link_status,
             'link'        => $this->user->links,
         ]);
