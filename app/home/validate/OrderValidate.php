@@ -83,9 +83,6 @@ class OrderValidate extends Validate
         if ($shop->is_freeze) {
             return '商家店铺已被冻结！';
         }
-        if ($shop->merchant_end_time < time()) {
-            return '商家店铺租期已经到期！';
-        }
         if ($shop->shop_close) {
             return '商家已经主动歇业！';
         }
