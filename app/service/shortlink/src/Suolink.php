@@ -16,7 +16,7 @@ use app\service\shortlink\interfaces\Link;
 
 class Suolink implements Link
 {
-    const API_URL = 'http://api.suolink.cn/api.htm ';
+    const API_URL = 'http://api.suolink.cn/api.htm';
 
     public function create($url)
     {
