@@ -24,7 +24,7 @@ class GoodsSellOutService
         if ($order->sold_notify == 1) {
             EmailMessageService::send(
                 $order->user->email,
-                '【' . conf('site_shop_domain') . "】尊敬的用户，您托管销售的[{$order->goods_name}]商品成功出售！",
+                '【' . conf('site_name') . "】尊敬的用户，您托管销售的[{$order->goods_name}]商品成功出售！",
                 "订单号：{$order->trade_no}<a href=\"{$domain}\" target=\"_blank\">[查看详细]</a><br>数量：{$order->quantity}<br>总价：{$order->total_price}<br>联系方式：{$order->contact}"
             );
         }
@@ -32,7 +32,7 @@ class GoodsSellOutService
         if ($order->email_notify == 1) {
             // 邮件通知
             if (preg_match('/^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/', $order->email)) {
-                EmailMessageService::send($order->email, '【' . conf('site_shop_domain') . '】您的订单已支付成功', "您的订单已支付成功，订单号：{$order->trade_no}<a href=\"{$domain}\" target=\"_blank\">[查看详细]</a><br>，若您付款成功后没有领取虚拟卡信息，请您及时通过订单查询提取。");
+                EmailMessageService::send($order->email, '【' . conf('site_name') . '】您的订单已支付成功', "您的订单已支付成功，订单号：{$order->trade_no}<a href=\"{$domain}\" target=\"_blank\">[查看详细]</a><br>，若您付款成功后没有领取虚拟卡信息，请您及时通过订单查询提取。");
             }
         }
 
