@@ -91,7 +91,6 @@ class AnalysisService
      * @param integer $profit 利润
      * @param integer $order_count 订单数
      * @param integer $time 时间
-     * @return void
      */
     public static function analysis($user_id, $total_price = 0, $finally_amount = 0, $profit = 0, $order_count = 1, $time = 0)
     {
