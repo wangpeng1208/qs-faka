@@ -35,7 +35,9 @@
 + JWT权限认证
 + 支持使用composer安装扩展
 
-### QQ公共交流群：432597073
+### QQ公共交流群：
+
+<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=m7ycKlVT2SjeLcfOQf3Su7_BOMv9iSN6&jump_from=webapi&authKey=1xDLzvf0kS0p8VqJIdDkJPvM25oWDMNfkDUU/V8pdbsRhGdmFswDcJIyPAPZ9415"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="骑士企业发卡系统1群" title="骑士企业发卡系统1群"></a>
 
 * 加群的一个简短的验证：程序标识是？答案： qqss
 
