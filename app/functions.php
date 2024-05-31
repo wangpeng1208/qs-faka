@@ -303,3 +303,18 @@ function check_wordfilter($str)
     }
     return false;
 }
+
+// 过滤 xxs
+function paramFilter($param, bool $filter = true)
+{
+    if (!$param || !$filter || !is_string($param)) {
+        return $param;
+    }
+    $param       = htmlspecialchars_decode($param);
+    $filter_rule = [
+        "/<(\\/?)(script|i?frame|style|html|body|title|link|meta|object|\\?|\\%)([^>]*?)>/isU",
+        "/(<[^>]*)on[a-zA-Z]+\s*=([^>]*>)/isU",
+        "/select|join|where|drop|like|modify|rename|insert|update|table|database|alter|truncate|\'|\/\*|\.\.\/|\.\/|union|into|load_file|outfile/is"
+    ];
+    return preg_replace($filter_rule, '', $param);
+}

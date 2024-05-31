@@ -148,4 +148,14 @@ class Goods extends BaseModel
 		return $this->link()->value("status");
 	}
 
+	public function getContentAttr($value)
+    {
+        return paramFilter($value);
+    }
+
+	public function getRemarkAttr($value)
+    {
+        return paramFilter($value);
+    }
+
 }

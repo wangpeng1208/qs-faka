@@ -27,4 +27,9 @@ class ShopList extends BaseModel
     return $this->hasMany('GoodsCategory', 'user_id', 'user_id');
   }
 
+  public function getShopNoticeAttr($value)
+  {
+      return paramFilter($value);
+  }
+
 }

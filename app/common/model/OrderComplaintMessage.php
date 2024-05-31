@@ -15,4 +15,9 @@ namespace app\common\model;
 class OrderComplaintMessage extends BaseModel
 {
 
+    public function getContentAttr($value)
+    {
+        return paramFilter($value);
+    }
+
 }

@@ -54,7 +54,7 @@ class Article extends BaseModel
 
     public function getContentAttr($value)
     {
-        return htmlspecialchars_decode($value);
+        return paramFilter(htmlspecialchars_decode($value));
     }
 
   
