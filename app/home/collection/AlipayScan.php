@@ -22,7 +22,6 @@ use app\home\collection\interfaces\CollectionInterface;
  * @var  $order object 订单
  * @var $config array 配置
  * @field  params 支付宝app_id:app_id|应用秘钥:app_secret_cert|应用公钥证书:app_public_cert_path|支付宝公钥证书:alipay_public_cert_path|支付宝根证书:alipay_root_cert_path
- * tips 未经测试
  */
 class AlipayScan extends PayService implements CollectionInterface
 {
@@ -79,17 +78,24 @@ class AlipayScan extends PayService implements CollectionInterface
       // 跳过pay 的单例模式，强制更新配置
       Pay::config(array_merge($this->config, ['_force' => true]));
 
-      $data = [
+      $data   = [
         'out_trade_no' => $trade_no,
         'total_amount' => $totalAmount, //单位 元
         'subject'      => $subject . '如有售后请返回购买页咨询', //订单标题
       ];
       $result = Pay::alipay()->scan($data);
-      if($result->code != 10000){
-        return $result->msg;
+      if ($result->code != 10000) {
+        return '请求失败，消息' . $result->msg . '，子消息' . $result->sub_msg;
       }
       // 二维码
-      return $result->qr_code;
+      $encoded_url = urlencode($result->qr_code);
+
+      $qr_url = 'https://api.qrserver.com/v1/create-qr-code/?data=' . $encoded_url . '&amp;size=200x200';
+      // 获取二维码图片内容
+      $qr_image_content = file_get_contents($qr_url);
+      // 将图片内容转换为Base64格式
+      $qr_image_base64 = base64_encode($qr_image_content);
+      return '<img src="data:image/png;base64,' . $qr_image_base64 . '" />';
     } catch (\Exception $e) {
       return $e->getMessage();
     }
