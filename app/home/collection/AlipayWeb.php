@@ -22,7 +22,6 @@ use app\home\collection\interfaces\CollectionInterface;
  * @var  $order object 订单
  * @var $config array 配置
  * @field  params 支付宝app_id:app_id|应用秘钥:app_secret_cert|应用公钥证书:app_public_cert_path|支付宝公钥证书:alipay_public_cert_path|支付宝根证书:alipay_root_cert_path
- * tips 已通过测试
  */
 class AlipayWeb extends PayService implements CollectionInterface
 {
