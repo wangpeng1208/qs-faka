@@ -43,12 +43,15 @@ class User
     // 创建默认店铺
     function createShop($user_id)
     {
+        $merchant_end_day = conf('merchant_end_time') ?? 365 * 10;
         // 创建默认店铺
         $shop = [
-            'user_id'     => $user_id,
-            'shop_verify' => 1,
-            'shop_status' => 1,
-            'create_at'   => time(),
+            'user_id'           => $user_id,
+            'shop_verify'       => 1,
+            'shop_status'       => 1,
+            'create_at'         => time(),
+            'merchant_time'     => time(),
+            'merchant_end_time' => time() + 86400 * $merchant_end_day,
         ];
         $shop = \app\common\model\ShopList::create($shop);
 
