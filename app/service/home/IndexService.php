@@ -13,26 +13,16 @@
 namespace app\service\home;
 
 use app\common\model\{User as UserModel, Order as OrderModel, GoodsCard as GoodsCardModel};
-use support\Cache;
 
 class IndexService
 {
     public function indexCount()
     {
-        // 虚拟数据系数
-        if (!Cache::get('orderCount')) {
-            Cache::set('orderCount', OrderModel::where('status', 1)->count(), 3600);
-            Cache::set('CardsSum', GoodsCardModel::where('status', 2)->count(), 3600);
-            Cache::set('userCount', UserModel::where('status', 1)->count(), 3600);
-        } else {
-            Cache::inc('orderCount', rand(1, 5));
-            Cache::inc('CardsSum', rand(1, 30));
-            Cache::inc('userCount', rand(1, 3));
-        }
         return [
-            'orderCount' => Cache::get('orderCount', OrderModel::where('status', 1)->count()),
-            'CardsSum'   => Cache::get('CardsSum', GoodsCardModel::where('status', 2)->count()),
-            'userCount'  => Cache::get('userCount', UserModel::where('status', 1)->count()),
+            'orderCount' => OrderModel::where('status', 1)->count(),
+            'CardsSum'   => GoodsCardModel::where('status', 2)->count(),
+            'userCount'  => UserModel::where('status', 1)->count(),
+            'startTime'  => strtotime(conf('site_start_time')),
         ];
     }
 
