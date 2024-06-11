@@ -18,6 +18,7 @@ use app\service\message\EmailMessageService;
 use app\common\model\{User as UserModel, UserCollect as UserCollectModel, Channel as ChannelModel, UserLoginLog, UserRate as UserRateModel, UserRoleRelation, UserLoginErrorLog};
 use app\service\message\MessageService;
 use Webman\Event\Event;
+use Webman\RedisQueue\Redis;
 
 /**
  * 商户管理
@@ -132,7 +133,13 @@ class User extends Base
         $id = inputs('id/d', 0);
         UserModel::destroy($id);
         // 删除分组
-        UserRoleRelation::where('user_id', $id)->delete();
+        $queue = 'del-merchant';
+        // 数据，可以直接传数组，无需序列化
+        $data = ['user_id' => $id];
+        // 投递消息
+        Redis::send($queue, $data);
+        // 投递延迟消息，消息会在60秒后处理
+        Redis::send($queue, $data, 60);
         $this->success('操作成功');
     }
 
