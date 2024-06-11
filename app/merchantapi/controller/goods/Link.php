@@ -39,6 +39,8 @@ class Link extends Base
                 $pc_template = $goods->theme ?: 'default';
                 $mobile_template = $goods->mobile_theme ?: 'default';
                 break;
+            default:
+                $this->error("参数错误！");
         }
         $data = ['pc_template' => $pc_template, 'mobile_template' => $mobile_template];
         $this->success('获取成功', $data);
@@ -65,6 +67,8 @@ class Link extends Base
                 $goods->$field = $value;
                 $goods->allowField(['theme', 'mobile_theme'])->save();
                 break;
+            default:
+                $this->error("参数错误！");
         }
         $this->success('修改成功');
     }
@@ -131,6 +135,8 @@ class Link extends Base
                     $goods->shortLink;
                 }
                 break;
+            default:
+                $this->error("参数错误！");
         }
         $this->success("链接重置成功！");
     }
@@ -164,6 +170,8 @@ class Link extends Base
                     return $this->error("该链接" . $status_text . "失败");
                 }
                 break;
+            default:
+                $this->error("参数错误！");
         }
         $this->success("该链接已" . $status_text . "成功！");
     }

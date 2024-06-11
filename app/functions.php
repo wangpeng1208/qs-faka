@@ -3,12 +3,6 @@
 use think\facade\Db;
 use app\common\model\Config;
 
-//  自动导入 各个应用下的函数文件
-$files = glob(__DIR__ . '/*/function.php');
-foreach ($files as $file) {
-    require $file;
-}
-
 // 所有input都需要是post请求
 if (!function_exists('inputs')) {
     /**

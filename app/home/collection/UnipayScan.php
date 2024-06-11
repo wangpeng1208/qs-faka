@@ -139,6 +139,7 @@ class UnipayScan extends PayService implements CollectionInterface
       }
     } catch (\Exception $e) {
       // 处理异常
+      record_file_log("unipay_notify_error", '支付失败，错误信息：' . $e->getMessage());
     }
     return true;
   }

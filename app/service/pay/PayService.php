@@ -60,8 +60,6 @@ class PayService
     public function orderTitle($order)
     {
         switch (conf("order_title_type")) {
-            case 0:
-                return $order->goods_name;
             case 1:
                 return $order->trade_no;
             case 2:
