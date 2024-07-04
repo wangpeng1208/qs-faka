@@ -43,7 +43,7 @@ class User
     // 创建默认店铺
     function createShop($user_id)
     {
-        $merchant_end_day = 365 * 100;
+        $merchant_end_day = 365 * 10;
         // 创建默认店铺
         $shop = [
             'user_id'           => $user_id,
