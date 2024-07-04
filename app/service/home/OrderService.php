@@ -380,8 +380,8 @@ class OrderService
             // 需要承担的手续费
             "fee_player"            => $post["fee_payer"],
             "fee"                   => $post["fee"],
-            // 订单自动关闭时间
-            "order_auto_close_time" => conf("order_auto_close_time") * 60,
+            // 订单10分钟倒计时
+            "order_auto_close_time" => 10 * 60,
             // 购卡协议链接
             "purchase_agreement"    => conf("purchase_agreement"),
         ];
