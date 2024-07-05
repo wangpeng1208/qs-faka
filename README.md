@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="./public/logo.png" alt="PHP" width="200">
+  <img src="./public/logo.png" alt="PHP" width="100">
 </p>
 <p align="center">
   <img src="https://img.shields.io/badge/php-%3E%3D8.1-green.svg" alt="PHP">
@@ -13,7 +13,7 @@
 # 演示地址
 
 + 后台演示：http://f2.qqss.net/admin/login    账号：admin 密码：qqss.net
-+ 商户后台： http://f2.qqss.net/merchant/login 账号：test 密码：test123456
++ 商户后台：http://f2.qqss.net/merchant/login 账号：test 密码：test123456
 + 售卡页面：http://f2.qqss.net/links/aaf36a3b
 
 
