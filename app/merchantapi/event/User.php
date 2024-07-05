@@ -19,32 +19,40 @@ use app\common\model\UserRoleRelation;
 class User
 {
     /**
-     * 注册推广
+     * 注册后置操作
      *
-     * @param [type] $userInfo
-     * @return void
+     * @param int $user_id 商户ID
      */
-    function addAfter($userInfo)
+    function addAfter($user_id)
     {
         // 用户组权限
-        $this->userRole($userInfo["user_id"]);
+        $this->userRole($user_id);
         // 创建默认店铺
-        $this->createShop($userInfo["user_id"]);
+        $this->createShop($user_id);
     }
 
+    /**
+     * 用户组权限
+     *
+     * @param int $user_id
+     * @return void
+     */
     private function userRole($user_id)
     {
-        // 商户默认权限分组
         if (!UserRoleRelation::where(["user_id" => $user_id])->count()) {
             UserRoleRelation::create(["role_id" => 1, "user_id" => $user_id]);
         }
     }
 
-    // 创建默认店铺
+    /**
+     * 创建默认店铺
+     *
+     * @param int $user_id
+     * @return void
+     */
     function createShop($user_id)
     {
         $merchant_end_day = 365 * 10;
-        // 创建默认店铺
         $shop = [
             'user_id'           => $user_id,
             'shop_verify'       => 1,
