@@ -2,7 +2,6 @@
 /.vscode
 /vendor
 *.log
-/runtime/*
 /public/upload
 /public/development
 # /public/web/*
