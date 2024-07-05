@@ -109,7 +109,7 @@ class User extends Base
     {
         $data = $this->post();
         $res  = UserModel::create($data);
-        Event::emit('user.addafter', $res);
+        Event::emit('user.addafter', $res->id);
         return $res ? $this->success("操作成功！") : $this->error("操作失败！");
     }
 
