@@ -1,3 +1,13 @@
+
+<p align="center">
+  <img src="./public/logo.png" alt="PHP" style="width:20%">
+</p>
+<p align="center">
+  <img src="https://img.shields.io/badge/php-%3E%3D8.1-green.svg" alt="PHP">
+  <img src="https://img.shields.io/badge/mysql-%3E%3D5.7-green.svg" alt="mysql">
+  <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="license">
+</p>
+
 虚拟产品寄售商城系统，发卡源码，vue版发卡源码，高性能发卡源码，企业发卡源码
 
 # 演示地址
@@ -5,6 +15,12 @@
 + 后台演示：http://f2.qqss.net/admin/login    账号：admin 密码：qqss.net
 + 商户后台: http://f2.qqss.net/merchant/login 账号：test 密码：test123456
 + 售卡页面：http://f2.qqss.net/links/aaf36a3b
+
+
+# 前端项目
+
+https://gitee.com/wp1208/qs-faka-vue
+
 
 
 > 如果项目对您有所帮助，请给项目一个小星星~
@@ -44,18 +60,9 @@
 
 
 
-
-[前端项目](https://gitee.com/wp1208/qs-faka-vue) ： 2024-4-24日后 不在内置打包后的前端页面 请到仓库  自行下载编译
-
-
-
-
-
 ### 其他
 
-<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=m7ycKlVT2SjeLcfOQf3Su7_BOMv9iSN6&jump_from=webapi&authKey=1xDLzvf0kS0p8VqJIdDkJPvM25oWDMNfkDUU/V8pdbsRhGdmFswDcJIyPAPZ9415"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="骑士企业发卡系统1群" title="骑士企业发卡系统1群"></a>
-
-+ 如果加有验证：程序标识是？答案： qqss
+QQ交流群：432597073
 
 
 + 您可以使用本系统用户学习交流使用，请务必遵守当地法律法规。Enjoy Yourself!!!
