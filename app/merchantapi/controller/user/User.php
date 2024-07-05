@@ -112,11 +112,6 @@ class User extends Base
      */
     public function userDetail()
     {
-        $visitor_id = inputs('visitor_id/d', 0);
-        if ($visitor_id) {
-            $data = array_unique(array_merge(Cache::get($visitor_id) ?? [], [$this->user->id]));
-            Cache::set($visitor_id, $data, 300);
-        }
         $user_visible_field = ['id', 'username', 'status', 'mobile', 'email', 'lastlogintime', 'is_freeze', 'openid', 'create_at', 'avatar'];
 
         $data = [
