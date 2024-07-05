@@ -5,7 +5,7 @@
 /runtime/*
 /public/upload
 /public/development
-/public/web/*
+# /public/web/*
 .env
 .user.ini
 /app/controller
