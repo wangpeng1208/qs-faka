@@ -30,7 +30,7 @@
     "topthink/think-template": "^3.0",
     "symfony/mailer": "^6.0.19",
     "overtrue/easy-sms": "^2.6.0",
-    "yansongda/pay": "~3.6.0",
+    "yansongda/pay": "~3.6.3",
     "guzzlehttp/guzzle": "^7.8.1",
     "defuse/php-encryption": "^2.4",
     "psr/container": "^1.1.1",

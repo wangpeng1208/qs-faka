@@ -13,3 +13,4 @@
 /public/install
 *.tar.gz
 composer.lock
+/runtime
