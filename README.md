@@ -1,14 +1,17 @@
 虚拟产品寄售商城系统，发卡源码，vue版发卡源码，高性能发卡源码，企业发卡源码
 
-# 骑士发卡开源版
+# 演示地址
 
-> 技术栈：Webman + PHP8 + MYSQL8 + Vite +TypeScript + Vue3 + TDesign Starter
++ 后台演示：http://f2.qqss.net/admin/login    账号：admin 密码：qqss.net
++ 商户后台: http://f2.qqss.net/merchant/login 账号：test 密码：test123456
++ 售卡页面：http://f2.qqss.net/links/aaf36a3b
 
-> 后端：[Webman](https://www.workerman.net/webman)，前端：[TDesign](https://tdesign.tencent.com/starter/docs/vue-next/get-started)
 
-> 开发不易，请给项目一个小星星~
+> 如果项目对您有所帮助，请给项目一个小星星~
 
 ## 主要特性
+
+> 技术栈：Webman + PHP8 + MYSQL8 + Vite +TypeScript + Vue3 + TDesign Starter
 
 > 有详细的代码注释，有完整系统手册
 
@@ -40,9 +43,7 @@
 [内置命令行](https://gitee.com/wp1208/faka-qs/wikis/%E5%91%BD%E4%BB%A4%E8%A1%8C)
 
 
-# 演示地址
 
-[演示地址](http://f2.qqss.net ) ：账号名密码详见手册
 
 [前端项目](https://gitee.com/wp1208/qs-faka-vue) ： 2024-4-24日后 不在内置打包后的前端页面 请到仓库  自行下载编译
 
