@@ -72,6 +72,9 @@ class MerchantUserService
         }
     }
 
+    /**
+     * 商户注册
+     */
     public function register()
     {
         $data = inputs("reginfo/a", []);
@@ -106,8 +109,7 @@ class MerchantUserService
 
         $user = User::create($data);
         if ($user) {
-            $data["user_id"] = $user->id;
-            Event::emit('user.addafter', $data);
+            Event::emit('user.addafter', $user->id);
             return true;
         } else {
             throw new \Exception("注册失败");
@@ -118,7 +120,6 @@ class MerchantUserService
      * 检查IP注册次数
      * @dec 限制IP每天注册次数，防止恶意注册;未开启|未满时返回IP
      * @return mixed 
-     * 
      */
     private function registerIpCheck()
     {
