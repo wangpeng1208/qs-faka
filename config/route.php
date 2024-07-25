@@ -1,11 +1,9 @@
 <?php
 use Webman\Route;
 
-// Route::group('/api', function () {
-//   foreach (glob(app_path('/*/route/*.php')) as $filename) {
-//     require_once $filename;
-//   }
-// });
+// 微信支付回调
+Route::post('/wxpay/notify/{id}', [app\home\controller\Pay::class, 'notify']);
+
 Route::options('[{path:.+}]', function () {
   return response('');
 });

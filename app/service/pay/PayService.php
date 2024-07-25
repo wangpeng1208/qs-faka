@@ -15,7 +15,7 @@ namespace app\service\pay;
 use support\Container;
 use support\Cache;
 use app\common\model\OrderMaster;
-use app\service\order\OrderService;
+use app\common\model\ChannelAccount;
 
 class PayService
 {
@@ -92,16 +92,22 @@ class PayService
     }
 
     // 回调
-    public function notify($request)
+    public function notify($request, $account_id)
     {
+
         try {
-            if (!isset($request['out_trade_no'])) {
+            if (isset($request['out_trade_no'])) {
+                $order   = $this->loadOrder($request['out_trade_no']);
+                $channel = $this->invoke($order->channel->code);
+            } else if (!empty($account_id)) {
+                // 通过渠道查找 通道码
+                $account = ChannelAccount::where('status', 1)->findOrFail($account_id);
+                $channel = $this->invoke($account->channel->code);
+            } else {
                 throw new \Exception("缺少参数");
             }
-            $order   = $this->loadOrder($request['out_trade_no']);
-            $channel = $this->invoke($order->channel->code);
             // 对应的支付渠道的支付方法
-            return $channel->notify($request);
+            return $channel->notify($request, $account_id);
         } catch (\Exception $e) {
             return $e->getMessage();
         }

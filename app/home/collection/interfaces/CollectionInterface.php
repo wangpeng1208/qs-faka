@@ -33,8 +33,9 @@ interface CollectionInterface
 
     /**
      * 支付异步回调通知
-     * @param $request
+     * @param $request 请求参数
+     * @param $account_id 支付账号通道ID
      * @return mixed
      */
-    public function notify($request);
+    public function notify($request, $account_id);
 }

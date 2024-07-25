@@ -21,7 +21,6 @@ use app\home\collection\interfaces\CollectionInterface;
  * @var $order object 订单
  * @var $config array
  * @field params  网关:gateway|pid:pid|key:key|支付类型:type
- * tips 未经测试
  */
 class Yipay extends PayService implements CollectionInterface
 {

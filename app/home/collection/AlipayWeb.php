@@ -122,7 +122,7 @@ class AlipayWeb extends PayService implements CollectionInterface
   /**
    * 支付宝回调 v3
    */
-  public function notify($request)
+  public function notify($request, $account_id)
   {
     $this->init($request['out_trade_no']);
     Pay::config($this->config);

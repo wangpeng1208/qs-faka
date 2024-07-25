@@ -122,7 +122,7 @@ class UnipayScan extends PayService implements CollectionInterface
   /**
    * 银联回调
    */
-  public function notify($request)
+  public function notify($request, $account_id)
   {
     $this->init($request['orderId']);
     Pay::config($this->config);

@@ -1,13 +1,13 @@
 <?php
 
 // +----------------------------------------------------------------------
-// | 骑士虚拟产品寄售商城系统开源版 
+// | 骑士发卡 [ 平顶山若拉网络科技有限公司，并保留所有权利 ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2023-2025 https://www.qqss.net All rights reserved.
+// | Copyright (c) 2022-2025 https://www.qqss.net All rights reserved.
 // +----------------------------------------------------------------------
-// | Licensed MIT 本系统开源仅仅是为了新手学习开发商城为目的，使用时请遵循当地法律法规
+// | Licensed 骑士软件 并不是自由软件，商业用途务必到官方购买正版授权, 以免引起不必要的法律纠纷.
 // +----------------------------------------------------------------------
-// | Author: QQSS <990504246@qq.com>
+// | Author: 契约
 // +----------------------------------------------------------------------
 
 namespace app\home\collection;
@@ -122,7 +122,7 @@ class AlipayH5 extends PayService implements CollectionInterface
   /**
    * 支付宝回调 v3
    */
-  public function notify($request)
+  public function notify($request, $account_id)
   {
     $this->init($request['out_trade_no']);
     Pay::config($this->config);
