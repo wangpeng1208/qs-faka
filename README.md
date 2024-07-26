@@ -12,10 +12,7 @@
 
 # 演示地址
 
-+ 后台演示：http://f2.qqss.net/admin/login    账号：admin 密码：qqss.net
-+ 商户后台：http://f2.qqss.net/merchant/login 账号：test 密码：test123456
-+ 售卡页面：http://f2.qqss.net/links/aaf36a3b
-
+登录可见：http://www.qqss.net 
 
 # 前端项目
 
@@ -62,7 +59,7 @@ https://gitee.com/wp1208/qs-faka-vue
 
 ### 其他
 
-QQ交流群：432597073
+QQ：990504246
 
 
 + 您可以使用本系统用户学习交流使用，请务必遵守当地法律法规。Enjoy Yourself!!!
