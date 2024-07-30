@@ -71,12 +71,12 @@ class Pay extends Base
 
     /**
      * 支付回调方法
-     * @param PayService $payService
      * @return void
      */
-    public function notify(PayService $payService)
+    public function notify($requests, $id = '')
     {
-        $request = request()->all();
-        return $payService->notify($request);
+        $payService = new PayService();
+        $request    = request()->all();
+        return $payService->notify($request, $id);
     }
 }
