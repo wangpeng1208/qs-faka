@@ -137,7 +137,7 @@ class Order extends Base
                 }
             } else {
                 $msg       = "解冻";
-                $complaint = Db::name("complaint")->where(["trade_no" => $order->trade_no])->find();
+                $complaint = Db::name("order_complaint")->where(["trade_no" => $order->trade_no])->find();
                 if (empty($complaint) || $complaint["status"] == 1 && $complaint["result"] == 1) {
                     if (empty($auto_unfreeze)) {
                         $user->money += $order->total_price;
