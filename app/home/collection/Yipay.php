@@ -109,7 +109,7 @@ class Yipay extends PayService implements CollectionInterface
     /**
      * 服务器回调
      */
-    public function notify($request)
+    public function notify($request, $account_id)
     {
         $out_trade_no = $request['out_trade_no'];
         $order        = $this->loadOrder($out_trade_no);
