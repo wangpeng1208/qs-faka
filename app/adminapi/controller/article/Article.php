@@ -29,7 +29,7 @@ class Article extends Base
             ['date_range', ''],
         ]);
         $res   = ArticleModel::withSearch($where[0], $where[1])->order('top desc,id desc')->paginate($this->limit)->each(function ($item) {
-            $item->cate_name = $item->category->name;
+            $item->cate_name = $item->category->name ?? '';
         });
         $this->success('获取成功', [
             'list'  => $res->items(),

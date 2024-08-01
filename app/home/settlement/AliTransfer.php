@@ -95,7 +95,7 @@ class AliTransfer implements SettlementInterface
         'payee_info'   => [
           'identity'      => $cash->bank_card,
           'identity_type' => 'ALIPAY_LOGON_ID',
-          'name'          => '结算'
+          'name'          => $cash->realname,
         ]
       ];
 

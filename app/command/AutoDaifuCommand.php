@@ -41,7 +41,7 @@ class AutoDaifuCommand extends Command
             }
         }
         // 随机一个打款账号
-        if (empty ($allAccounts)) {
+        if ($allAccounts->isEmpty()) {
             $output->writeln("没有可用的代付账号");
             return parent::SUCCESS;
         }
