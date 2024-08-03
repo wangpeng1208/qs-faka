@@ -10,6 +10,12 @@
 
 虚拟产品寄售商城系统，发卡源码，vue版发卡源码，高性能发卡源码，企业发卡源码
 
+# 自动安装命令
+
+```
+wget -O install.sh https://www.qqss.net/free-install.sh && bash install.sh
+```
+
 # 演示地址
 
 登录可见：http://www.qqss.net 
