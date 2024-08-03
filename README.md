@@ -10,11 +10,7 @@
 
 虚拟产品寄售商城系统，发卡源码，vue版发卡源码，高性能发卡源码，企业发卡源码
 
-# 自动安装命令
 
-```
-wget -O install.sh https://www.qqss.net/free-install.sh && bash install.sh
-```
 
 # 演示地址
 
@@ -51,7 +47,11 @@ https://gitee.com/wp1208/qs-faka-vue
 > 支持使用composer安装扩展
 
 
+### 自动安装命令
 
+```
+wget -O install.sh https://www.qqss.net/free-install.sh && bash install.sh
+```
 
 # 系统手册
 
@@ -65,7 +65,7 @@ https://gitee.com/wp1208/qs-faka-vue
 
 ### 其他
 
-QQ：990504246
+程序作者 QQ：990504246
 
 
 + 您可以使用本系统用户学习交流使用，请务必遵守当地法律法规。Enjoy Yourself!!!

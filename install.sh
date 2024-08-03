@@ -1,6 +1,9 @@
 #!/bin/bash
 echo "------------骑士发卡开源版 一键安装程序--------------------"
-echo "安装须知：本系统前后端完全开源，仅供学习交流之用。如果有bug请自行修复，此版本无任何技术支持。如线上使用请务必遵守当地法律法规！"
+echo "安装须知：本系统前后端完全开源，仅供学习交流之用！
+如果有bug请自行修复，此版本无任何技术支持！
+如线上使用请务必遵守当地法律法规！
+"
 echo "开始检测环境..."
 # 环境检测 
 # 检测 php环境，且必须 大于等于php8.1
@@ -59,7 +62,7 @@ for port in ${ports[@]}; do
     fi
 done
 
-# 执行删除禁用函数 curl -Ss https://www.workerman.net/webman/fix-disable-functions | php 命令
+# 执行删除禁用函数 
 echo "开始执行删除禁用函数"
 curl -Ss https://www.workerman.net/webman/fix-disable-functions | php
 
