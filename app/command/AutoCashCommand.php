@@ -55,14 +55,12 @@ class AutoCashCommand extends Command
             $leastCashMoney = (int) conf('auto_cash_money');
 
             // 有收款信息的用户且余额大于最低提现金额且付款类型为自动提现的 未冻结 用户
-            $users = UserModel::where('cash_type', 1)
+            $users = UserModel::hasWhere('collect', function ($query) {
+                $query->whereIn('type', [1, 2, 3])->where('status', 1)->whereColumn('user_id', 'User.id');
+            })->where('cash_type', 1)
                 ->where('is_freeze', 0)
                 ->where('money', '>=', $leastCashMoney)
-                ->hasWhere('collect', function ($query) {
-                    $query->whereIn('type', [1, 2, 3])->where('status', 1)->whereColumn('user_id', 'User.id');
-                })
                 ->select();
-            // echo  UserModel::getLastSql();
             if (empty($users)) {
                 $output->writeln("info: 无符合要求的自动提现");
                 return parent::FAILURE;
