@@ -48,6 +48,7 @@ class Article extends Base
             'status'      => inputs('status/d', 1),
             'create_at'   => inputs('create_at/d'),
             'is_system'   => inputs('is_system/d', 0),
+            'top'         => inputs('top/d', 0),
         ];
         $validate = new \app\adminapi\validate\article\ArticleValidate;
         if ($data['id'] > 0) {
