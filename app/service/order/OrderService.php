@@ -43,21 +43,13 @@ class OrderService
         }
 
         $time = time();
-        // 可解冻时间 今日结束时间或者24小时
-        $settlement_frezze_endtime = conf('settlement_frezze_endtime');
-        if ($settlement_frezze_endtime === 2) {
-            $unfreeze_time = time() + 86400;
-        } else {
-            $unfreeze_time = strtotime(date("Y-m-d", $time)) + 86400;
-        }
-
+        
         DB::startTrans();
         try {
-            // 自己商品的订单
+            // 商品的订单
             $total_product_price = $order->total_product_price;
             // 成本 自有商品成本为0
             $order_total_cost_price = 0;
-
 
             // 记录用户资金变动
             $user->money = round($user->money + $total_product_price, 3);
@@ -97,8 +89,8 @@ class OrderService
 
         } catch (\Exception $e) {
             Db::rollback();
-            record_file_log("complete_error", $order->trade_no . $e->getMessage());
-            record_file_log("complete_error", $e->getTraceAsString());
+            // record_file_log("complete_error", $order->trade_no . $e->getMessage());
+            // record_file_log("complete_error", $e->getTraceAsString());
             throw new \Exception($e->getMessage());
         }
 
@@ -179,7 +171,6 @@ class OrderService
     public function select_number_fee($order, $user)
     {
         // 未对这里收取交易手续费
-        // 代理商品不允许选号
         if ($order->selectcard_fee_merchant > 0) {
             // 选号费用由买家承担，卖家收益加上选号费用
             $user->money = round($user->money + $order->selectcard_fee_merchant, 3);
