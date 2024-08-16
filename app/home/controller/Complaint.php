@@ -58,22 +58,16 @@ class Complaint extends Base
                 "buyer_qrcode"         => ''
             ]);
 
-            $user = $order->user()->lock(true)->findOrEmpty();
+            $user = $order->user()->lock(true)->find();
 
             if ($user->isEmpty()) {
                 Db::rollback();
                 $this->error("商户不存在");
             }
 
-            if (!empty ($result)) {
-                // 自动冻结表 冻结所有该订单状态，冻结时间为当前时间+1天
-                $settlement_frezze_endtime = conf('settlement_frezze_endtime');
-                if ($settlement_frezze_endtime === 2) {
-                    $unfreeze_time = time() + 86400;
-                } else {
-                    // 今日24点
-                    $unfreeze_time = strtotime(date('Y-m-d', strtotime('+1 day'))) - 1;
-                }
+            if (!empty($result)) {
+                $unfreeze_time = strtotime(date('Y-m-d', strtotime('+1 day'))) - 1;
+
                 $auto_freeze = AutoUnfreezeModel::update(["status" => -1, "unfreeze_time" => $unfreeze_time], ["trade_no" => $order->trade_no]);
 
                 if ($auto_freeze) {
@@ -113,7 +107,7 @@ class Complaint extends Base
             "trade_no" => $trade_no,
             "pwd"      => $pwd
         ])->find();
-        if (!empty ($complaint)) {
+        if (!empty($complaint)) {
             $post['messages']  = $complaint->messages;
             $post['order']     = $complaint->orders;
             $post['complaint'] = $complaint;
