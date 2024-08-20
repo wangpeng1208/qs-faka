@@ -79,7 +79,6 @@ class RoleMerchantAuth
         $data     = $menuData['menu'];
         foreach ($data as $key => $item) {
             if ($item['pid'] == 0) {
-                // todo /merchant/ 自定义网站后台路径配置 前端路由跳转需要使用别名模式
                 $data[$key]['path'] = '/merchant/' . $item['path'];
 
             } else if (strpos($item['path'], 'http') === 0) {

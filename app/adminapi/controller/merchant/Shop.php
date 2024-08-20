@@ -13,9 +13,7 @@
 namespace app\adminapi\controller\merchant;
 
 use app\adminapi\controller\Base;
-use app\common\model\ShopVerify as ShopVerifyModel;
 use app\common\model\ShopList as ShopListModel;
-use app\service\message\MessageService;
 
 /**
  * 商铺管理

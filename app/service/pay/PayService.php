@@ -13,7 +13,6 @@
 namespace app\service\pay;
 
 use support\Container;
-use support\Cache;
 use app\common\model\OrderMaster;
 use app\common\model\ChannelAccount;
 
@@ -74,9 +73,6 @@ class PayService
     // 支付
     public function pay($order, $trade_no, $total_price)
     {
-        // 记录订单号缓存，方便回调时查询 ;15分钟;
-        // todo 前台打开订单查询页面返回一条请求是否存在该订单号，有的话直接填入订单号
-        Cache::set("order_" . $trade_no, request()->ip(), 60 * 15);
         $title   = $this->orderTitle($order);
         $channel = $this->invoke($order->channel->code);
         // 对应的支付渠道的支付方法

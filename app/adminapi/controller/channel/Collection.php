@@ -58,7 +58,7 @@ class Collection extends Base
         $id   = inputs('id/d', 0);
         $data = ChannelModel::where(['id' => $id])->find();
 
-        $data['lowrate'] = $data['lowrate'] * 1000;
+        $data['lowrate'] *= 1000;
         $this->success('success', $data);
     }
 
@@ -104,7 +104,7 @@ class Collection extends Base
         ];
         $validate = new \app\adminapi\validate\channel\CollectionValidate;
         $validate->scene('collection')->failException(true)->check($data);
-        $data['lowrate'] = $data['lowrate'] / 1000;
+        $data['lowrate'] /= 1000;
         return $data;
     }
 

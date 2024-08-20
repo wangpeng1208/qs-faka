@@ -16,10 +16,7 @@ use think\facade\Db;
 use app\service\sms\SmsService;
 use app\common\model\Order;
 use app\common\model\AutoUnfreeze;
-use app\common\model\GoodsCoupon;
-use app\service\goods\GoodsService;
 use app\service\notify\GoodsSellOutService;
-use app\service\pay\PayService;
 use app\service\analysis\AnalysisService;
 
 class OrderService
@@ -43,7 +40,7 @@ class OrderService
         }
 
         $time = time();
-        
+
         DB::startTrans();
         try {
             // 商品的订单
@@ -64,71 +61,32 @@ class OrderService
                 record_user_money_log("goods_sold", $user->id, -1 * $order->fee, $user->money, "扣除交易手续费，订单：" . $order->trade_no);
             }
 
-            // 推广佣金 - 【平台承担手续费里的推广返佣比例】
-            $this->proxy_fee($order, $user);
             // 扣除短信费后的总金额
             $sms_fee = $this->sms_fee($order, $user);
-            // 选号费 +
-            $select_number_fee = $this->select_number_fee($order, $user);
+
             // 更新订单  finally_money 商户订单最终收入（已扣除短信费，手续费）
             if ($order->fee_payer == 2) {
-                $finally_money = $total_product_price - $sms_fee + $select_number_fee;
+                $finally_money = $total_product_price - $sms_fee;
             } else {
-                $finally_money = $total_product_price - $order->fee - $sms_fee + $select_number_fee;
+                $finally_money = $total_product_price - $order->fee - $sms_fee;
             }
 
             $this->updateOrderStatus($order, $user, $finally_money, $order_total_cost_price);
 
             $this->finally_money($order, $user, $finally_money);
 
-
             AnalysisService::analysis($user->id, $order->total_price, $order->finally_money, $order->finally_money - $order_total_cost_price, 1, $time);
 
             Db::commit();
 
-
         } catch (\Exception $e) {
             Db::rollback();
-            // record_file_log("complete_error", $order->trade_no . $e->getMessage());
-            // record_file_log("complete_error", $e->getTraceAsString());
             throw new \Exception($e->getMessage());
         }
 
-        // 自动发货
-        if ($order->goods->card_order == 3) {
-            (new GoodsService())->sendOut($order->trade_no);
-        }
         // 发起通知
         (new GoodsSellOutService())->notify($order);
         return A(1, "订单设置支付成功");
-    }
-
-    /**
-     * 推广佣金
-     *
-     * @param [type] $order
-     * @param [type] $user
-     */
-    public function proxy_fee($order, $user)
-    {
-        if ($user->parent_id) {
-            $rate = conf('spread_rebate_rate');
-            if ($rate === null || $rate < 0 || $rate > 100) {
-                return 0;
-            }
-            // 返佣比例
-            $get_spread_rebate_rate = round($rate / 100, 4);
-            $parent                 = $user->parentUser()->lock(true)->find();
-            // 佣金
-            $fee = round($order->fee * $get_spread_rebate_rate, 3);
-            if ($fee > 0) {
-                $parent->money = round($parent->money + $fee, 3);
-                // 统计佣金 ， 不参与结算
-                $parent->rebate = round($parent->rebate + $fee, 3);
-                $parent->save();
-            }
-            record_user_money_log("sub_sold_rebate", $parent->id, $fee, $parent->money, "下级[" . $user->username . "]售出商品，返佣" . $fee . "元");
-        }
     }
 
     /**
@@ -159,27 +117,9 @@ class OrderService
                 return $sms_price;
             }
         }
-
         return 0;
     }
 
-    /**
-     * 选号费用
-     * @param [type] $order
-     * @param [type] $user
-     */
-    public function select_number_fee($order, $user)
-    {
-        // 未对这里收取交易手续费
-        if ($order->selectcard_fee_merchant > 0) {
-            // 选号费用由买家承担，卖家收益加上选号费用
-            $user->money = round($user->money + $order->selectcard_fee_merchant, 3);
-            $user->save();
-            record_user_money_log("goods_sold", $user->id, $order->selectcard_fee_merchant, $user->money, "收益选号费" . $order->selectcard_fee_merchant . "元");
-            return $order->selectcard_fee_merchant;
-        }
-        return 0;
-    }
 
     /**
      * 最终结算
@@ -232,18 +172,4 @@ class OrderService
         $order->success_at          = time();
         $order->save();
     }
-
-    /**
-     * 查找
-     */
-    public function findOrder($trade_no)
-    {
-        $order = Order::where(['trade_no' => $trade_no])->find();
-        if (!$order) {
-            throw new \Exception("订单不存在");
-        }
-        return $order;
-    }
-
-
 }

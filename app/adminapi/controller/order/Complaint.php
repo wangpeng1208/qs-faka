@@ -141,7 +141,6 @@ class Complaint extends Base
                     DB::commit();
                 } else {
                     AutoUnfreezeModel::where(["trade_no" => $complaint->trade_no])->delete();
-                    // LogService::write("投诉裁决", "投诉 " . $complaint->trade_no . " 裁决为买家胜诉");
                     // 官方渠道 扣除冻结金额
                     $user = $complaint->user()->lock(true)->find();
                     $user->dec("freeze_money", $order->finally_money)->update();

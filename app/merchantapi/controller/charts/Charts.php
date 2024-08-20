@@ -140,8 +140,6 @@ class Charts extends Base
 
     /**
      * 店铺访问记录
-     * todo前台
-     * todo模型搜索器
      */
     public function iplist()
     {

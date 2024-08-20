@@ -50,19 +50,12 @@ class Role extends Base
     public function detail()
     {
         $id               = inputs('id/d', 0);
-        $user             = $data = UserRoleModel::where('id', $id)->find();
+        $data             = UserRoleModel::where('id', $id)->find();
         $data['role_pc']  = array_map('intval', explode(',', $data['role_pc']));
         $data['role_wap'] = array_map('intval', explode(',', $data['role_wap']));
         $this->success('获取成功', $data);
     }
 
-    // 获取菜单权限名文本 废弃
-    private function getMenuNameById($ids)
-    {
-        $menu = SystemMenuModel::whereIn('id', $ids)->select()->toArray();
-        $menu = array_column($menu, 'title');
-        return implode(',', $menu);
-    }
 
     /**
      * @notes 删除用户分组
@@ -84,7 +77,6 @@ class Role extends Base
     /**
      * @notes 获取商户菜单
      * @auth false
-     * todo 手机版
      */
     public function menu()
     {

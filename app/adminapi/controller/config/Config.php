@@ -18,7 +18,7 @@ use app\service\message\EmailMessageService;
 class Config extends Base
 {
     /**
-     * notes 获取配置
+     * @notes 获取配置
      * @auth true
      */
     public function getConfig()
@@ -28,7 +28,7 @@ class Config extends Base
         foreach ($field as $value) {
             $data[$value] = conf($value);
         }
-        return $this->success('获取成功', $data);
+        $this->success('获取成功', $data);
     }
 
     /**
@@ -41,7 +41,7 @@ class Config extends Base
         foreach ($data as $key => $value) {
             conf($key, $value);
         }
-        return $this->success('编辑成功');
+        $this->success('编辑成功');
     }
 
     /**
@@ -54,9 +54,9 @@ class Config extends Base
         if (!preg_match('/(\w)+(\.\w+)*@(\w)+((\.\w+)+)/', $address)) {
             $this->error('请输入正确的邮箱号！');
         }
-        $res = EmailMessageService::send($address, '邮箱测试', '这是一份来自【' . conf('site_name') . '】的邮箱测试！');
-        if ($res) {
-            return $this->success('发送成功！');
-        } 
+        // 从发送中捕捉异常
+        EmailMessageService::send($address, '邮箱测试', '这是一份来自【' . conf('site_name') . '】的邮箱测试！');
+        $this->success('发送成功！');
+
     }
 }

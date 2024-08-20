@@ -109,7 +109,6 @@ class TokenAuth
     {
         if (!empty($token)) {
             $token_cache = Cache::get("token_" . $id . "_" . $type, []);
-            //todo 也可以通过修改过期时间来实现 todo 单点登录
             if (!empty($token_cache)) {
                 if (($key = array_search($token, $token_cache)) !== false) {
                     array_splice($token_cache, $key, 1);

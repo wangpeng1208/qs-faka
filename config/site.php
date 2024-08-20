@@ -9,22 +9,16 @@ return [
         'original' => '原生风格',
     ],
     // 当前版本号
-    'version'          => '1.4.27',
-    // 是否是演示模式
-    'is_demo'          => false,
-    // 远程api地址
-    'api_url'   => [
-        // 'http://www.qqss.net',
-        // 'http://base.yo0.cn',
-    ],
+    'version'          => '1.4.28',
+    // 版权信息
     'api_license'     => [
         [
             'name' => '使用协议',
-            'url'  => 'https://gitee.com/wp1208/faka-qs/wikis/%E4%BD%BF%E7%94%A8%E5%8D%8F%E8%AE%AE',
+            'url'  => 'https://gitee.com/wp1208/faka-qs/wikis/pages?sort_id=10911613&doc_id=5441578',
         ],
         [
-            'name' => '教程手册',
-            'url'  => 'https://gitee.com/wp1208/faka-qs/wikis/%E7%B3%BB%E7%BB%9F%E4%BB%8B%E7%BB%8D',
+            'name' => '开发手册',
+            'url'  => 'https://gitee.com/wp1208/faka-qs/wikis/pages',
         ],
         [
             'name' => '官网链接',

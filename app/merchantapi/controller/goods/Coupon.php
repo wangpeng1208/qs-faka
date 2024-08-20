@@ -19,7 +19,6 @@ class Coupon extends Base
 {
     /**
      * 优惠券过期 打开时自动标记删除
-     * todo 到定时任务
      */
     private function expire()
     {

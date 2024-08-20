@@ -30,11 +30,10 @@ class goodsService
         if ($order->status == 3) {
             throw new \Exception("订单已经退款，不支持查看详情！");
         }
-        $goods = $order->goods;
+        $goods       = $order->goods;
         $cards_count = $order->cards()->count(); // 已出卡数量
         if (!$cards_count && !$goods) {
             throw new \Exception("商品不存在，请联系客服处理！");
-            // return json(["msg" => "商品不存在，请联系客服处理！", "quantity" => 0, "status" => 0]);
         }
         // 用户设置的库存提醒
         if ($goods->inventory_notify > $goods->cards_stock_count) {
@@ -47,22 +46,11 @@ class goodsService
                 throw new \Exception("商品库存不足，请联系客服补充库存后再取卡密！");
             }
             $limit = $order->quantity - $cards_count;
-            // card_order出卡顺序  先售老卡0 先售新卡1  随机售卡2 自主选号3
-            if ($goods->card_order == 0) {
-                $cards = $goods->cards()->where("status", 1)->lock(true)->limit($limit)->order("unfreeze_at desc,is_first desc,create_at asc,id asc")->select();
-            } elseif ($goods->card_order == 1) {
+            // card_order出卡顺序
+            if ($goods->card_order == 1) {
                 $cards = $goods->cards()->where("status", 1)->lock(true)->limit($limit)->order("unfreeze_at desc,is_first desc,create_at desc,id desc")->select();
             } elseif ($goods->card_order == 2) {
                 $cards = $goods->cards()->where("status", 1)->lock(true)->limit($limit)->order("is_first desc,unfreeze_at desc")->orderRaw("rand()")->select();
-            } elseif ($goods->card_order == 3) {
-                $order->select_cards = $order->select_cards ? $order->select_cards : [];
-                $cards               = $goods->cards()->where("status", 1)->where("id", "in", $order->select_cards)->lock(true)->limit($limit)->order("unfreeze_at desc")->select();
-                // 自主选号的卡密不足时，补充其他卡密
-                if (count($cards) < $limit) {
-                    $tod_limit = $limit - count($cards);
-                    $tod_cards = $goods->cards()->where("status", 1)->where("id", "not in", $order->select_cards)->lock(true)->limit($tod_limit)->order("unfreeze_at desc,create_at asc,id asc")->select();
-                    $cards     = array_merge((array) $cards, (array) $tod_cards);
-                }
             } else {
                 $cards = $goods->cards()->where("status", 1)->lock(true)->limit($limit)->order("unfreeze_at desc,is_first desc,create_at asc,id asc")->select();
             }
@@ -84,11 +72,11 @@ class goodsService
                     }
 
                     $order->sendout = count($data_cards);
-                    $res            = $order->where(["trade_no" => $trade_no])->update(['sendout' => $order->sendout]);
+
+                    $res = $order->where(["trade_no" => $trade_no])->update(['sendout' => $order->sendout]);
 
                     if ($res) {
                         $order_card_quantity = $order->cards()->count();
-                        // echo  $order_card_quantity;
                         if ($order_card_quantity <= $order->quantity) {
                             Db::commit();
                         } else {
@@ -152,7 +140,7 @@ class goodsService
     //  额外卡密信息
     public function goodsAddtionsCard($list, $order_id)
     {
-        foreach ($list as $key => $value) {
+        foreach ($list as $value) {
             $card_list = Db::name('goods_card')->where(['goods_id' => $value['good_id'], 'status' => 1, 'delete_at' => NULL])->limit($value['give_num'])->select();
             // 			halt($card_list);
             foreach ($card_list as $k => $v) {

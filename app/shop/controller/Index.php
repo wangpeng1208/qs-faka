@@ -12,27 +12,11 @@
 
 namespace app\shop\controller;
 
-use app\common\model\{Goods as GoodsModel, User as UserModel, GoodsCoupon};
+use app\common\model\{Goods as GoodsModel, GoodsCoupon};
 use app\service\sms\SmsService;
 
 class Index extends Base
 {
-    /**
-     * todo 购卡协议
-     *
-     * @return void
-     */
-    public function getProtocol()
-    {
-        $user_id = inputs("userid/s");
-        $shop    = UserModel::find($user_id);
-        if ($shop->shop_gouka_protocol_pop) {
-            $buy_protocol = conf("buy_protocol");
-            if (!empty($buy_protocol)) {
-                $this->success(htmlspecialchars_decode($buy_protocol));
-            }
-        }
-    }
 
     public function index()
     {
