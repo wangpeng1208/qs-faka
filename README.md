@@ -10,11 +10,17 @@
 
 虚拟产品寄售商城系统，发卡源码，vue版发卡源码，高性能发卡源码，企业发卡源码
 
-
+<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=keJuTIHDO3yJAvECJ8gxjGvII5GdvxKa&jump_from=webapi&authKey=fj/1IiYxb+yFoE0RpELS/rd3xaAcaWrOJKDIPZDsKpWX/I7lm1305GzMm8bW9t6r"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="骑士发卡软件" title="骑士发卡软件"></a>
 
 # 演示地址
 
 登录可见：http://www.qqss.net 
+
+# 推荐授权版
+
+本仓库为免费开源版，另外推荐一个已经经过二次开发好的授权版本，商户演示图如下：
+
+<img src="./public/v5.png" alt="qqss" >
 
 # 前端项目
 
