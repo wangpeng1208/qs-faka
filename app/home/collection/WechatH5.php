@@ -52,7 +52,7 @@ class WechatH5 extends PayService implements CollectionInterface
                 // 即 API证书 CERTIFICATE，可在 账户中心->API安全->申请API证书 里获得
                 // 文件名形如：apiclient_cert.pem
                 'mch_public_cert_path' => $this->order->channelAccount->params->mch_public_cert_path,
-                'notify_url'           => conf('site_domain') . '/home/pay/notify?account_id=' . $this->order->channel_account_id,
+                'notify_url'           => conf('site_domain') . '/wxpay/notify/' . $this->order->channel_account_id,
                 'service_provider_id'  => '',
                 'attach'               => $this->trade_no,
                 // 选填-默认为正常模式。可选为： MODE_NORMAL, MODE_SANDBOX, MODE_SERVICE
@@ -68,7 +68,7 @@ class WechatH5 extends PayService implements CollectionInterface
                 'mch_secret_key'       => $channelAccount->params->mch_secret_key,
                 'mch_secret_cert'      => $channelAccount->params->mch_secret_cert,
                 'mch_public_cert_path' => $channelAccount->params->mch_public_cert_path,
-                'notify_url'           => conf('site_domain') . '/home/pay/notify?account_id=' . $channelAccount->id,
+                'notify_url'           => conf('site_domain') . '/wxpay/notify/' . $this->order->channel_account_id,
                 'mode'                 => Pay::MODE_NORMAL,
             ];
         }
@@ -92,7 +92,13 @@ class WechatH5 extends PayService implements CollectionInterface
                 'amount'       => [
                     'total' => $totalAmount * 100, //单位 分
                 ],
-                'description'  => $subject . '如有售后请返回购买页咨询', //订单标题
+                'description'  => $subject, //订单标题
+                'scene_info'   => [
+                    'payer_client_ip' => request()->ip(),
+                    'h5_info'         => [
+                        'type' => 'Wap',
+                    ]
+                ],
             ];
             $result = Pay::wechat()->h5($data);
             // 返回要打开的url
