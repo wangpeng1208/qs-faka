@@ -153,7 +153,7 @@ EOF;
     {
         $this->init('trade_no', $order->trade_no);
         try {
-            Pay::config($this->config);
+            Pay::config(array_merge($this->config, ['_force' => true]));
             $res = Pay::wechat()->refund([
                 'out_trade_no'  => $order->trade_no,
                 'out_refund_no' => time(),
@@ -197,7 +197,7 @@ EOF;
             return false;
         }
         $this->init('account_id', $account_id);
-        Pay::config($this->config);
+        Pay::config(array_merge($this->config, ['_force' => true]));
         try {
             $result = Pay::wechat()->callback($request);
             // 根据微信支付回调接口返回的参数进行处理

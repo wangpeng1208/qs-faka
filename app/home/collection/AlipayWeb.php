@@ -99,7 +99,7 @@ class AlipayWeb extends PayService implements CollectionInterface
   {
     $this->init($order->trade_no);
     try {
-      Pay::config($this->config);
+      Pay::config(array_merge($this->config, ['_force' => true]));
       $res = Pay::alipay()->refund([
         'out_trade_no'  => $order->trade_no,
         'refund_amount' => $order->total_price
@@ -125,7 +125,7 @@ class AlipayWeb extends PayService implements CollectionInterface
   public function notify($request, $account_id)
   {
     $this->init($request['out_trade_no']);
-    Pay::config($this->config);
+    Pay::config(array_merge($this->config, ['_force' => true]));
     try {
       $result = Pay::alipay()->callback($request);
       if ($result['trade_status'] == 'TRADE_SUCCESS') {

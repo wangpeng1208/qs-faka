@@ -96,7 +96,7 @@ class UnipayScan extends PayService implements CollectionInterface
   {
     $this->init($order->trade_no);
     try {
-      Pay::config($this->config);
+      Pay::config(array_merge($this->config, ['_force' => true]));
       $res = Pay::unipay()->refund([
         'txnTime' => date('YmdHis'),
         'orderId'   => 'refund' . date('YmdHis'),
@@ -125,7 +125,7 @@ class UnipayScan extends PayService implements CollectionInterface
   public function notify($request, $account_id)
   {
     $this->init($request['orderId']);
-    Pay::config($this->config);
+    Pay::config(array_merge($this->config, ['_force' => true]));
     try {
       $result = Pay::unipay()->callback($request);
       // 根据银联支付回调接口返回的参数进行处理
