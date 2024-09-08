@@ -102,7 +102,7 @@ class Complaint extends Base
     {
         $id        = inputs("id/d");
         $complaint = OrderComplaint::where(["id" => $id])->find();
-        if ($complaint->isEmpty()) {
+        if (!$complaint) {
             $this->error("投诉不存在");
         }
         if ($complaint->status != 0) {
@@ -176,12 +176,12 @@ class Complaint extends Base
         } catch (\Exception $e) {
             DB::rollback();
             if ($e->getMessage()) {
-                return $this->error($e->getMessage());
+                $this->error($e->getMessage());
             } else {
-                return $this->error("判决失败");
+                $this->error("判决失败");
             }
         }
-        return $this->success("判决成功");
+        $this->success("判决成功");
     }
 
     public function del()
