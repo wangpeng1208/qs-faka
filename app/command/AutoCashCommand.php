@@ -93,9 +93,9 @@ class AutoCashCommand extends Command
                                 $collect_info .= "身份证号：{$collect->info->idcard_number}";
                                 break;
                             case 3: //银行
-                                $collect_info .= "开户银行：{$collect->info->bank_nam}<br>";
+                                $collect_info .= "开户银行：{$collect->info->bank_name}<br>";
                                 $collect_info .= "开户地址：{$collect->info->bank_branch}<br>";
-                                $collect_info .= "收款账号：{$collect->info->bank_card}<br>";
+                                $collect_info .= "收款账号：{$collect->info->account}<br>";
                                 $collect_info .= "真实姓名：{$collect->info->realname}<br>";
                                 $collect_info .= "身份证号：{$collect->info->idcard_number}";
                                 break;
@@ -191,7 +191,7 @@ class AutoCashCommand extends Command
 
     private function shouldExecuteAutoCashTask($lastTriggerTime, $todayTime, $autoCashTime)
     {
-        return (empty ($lastTriggerTime) || $lastTriggerTime < $todayTime) && conf('cash_status') == 1 && time() > $autoCashTime;
+        return (empty ($lastTriggerTime) || $lastTriggerTime < $todayTime) && conf('auto_cash') && time() > $autoCashTime;
     }
 
     // 获取自动提现手续费
@@ -205,10 +205,7 @@ class AutoCashCommand extends Command
         }
 
         if ($type === 100) { // 百分比
-            if ($fee < 0 || $fee > 100) {
-                return 0;
-            }
-            return round($fee / 100 * $money, 2);
+            return  ($fee < 0 || $fee > 100) ? 0 : round($fee / 100 * $money, 2);
         }
 
         return 0;
