@@ -61,6 +61,6 @@ class Article extends BaseModel
 
     public static function onAfterRead($article)
     {
-        $article->inc('views')->update();
+        $article->inc('views')->save();
     }
 }

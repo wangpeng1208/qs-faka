@@ -143,8 +143,9 @@ class Complaint extends Base
                     AutoUnfreezeModel::where(["trade_no" => $complaint->trade_no])->delete();
                     // 官方渠道 扣除冻结金额
                     $user = $complaint->user()->lock(true)->find();
-                    $user->dec("freeze_money", $order->finally_money)->update();
-                    $user->refresh();
+
+                    $user->freeze_money = round($user->freeze_money - $order->finally_money, 3);
+                    $user->save();
                     // $user->money 应该显示对应的 比如 余额 保证金 预存款的剩余 ；不然操作 保证金 预存款 ，用的的余额资金明细没有任何变化
                     record_user_money_log("goods_refund", $order->user_id, -1 * $order->finally_money, $user->money, "订单败诉，扣除冻结金额，扣除金额：" . $order->finally_money . "元");
 
