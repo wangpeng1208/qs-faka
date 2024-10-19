@@ -29,7 +29,7 @@ class ShortLinkService
         // 链接关系不存在则创建
         if (!$res) {
             $token = substr(md5(uniqid(md5(microtime(true)), true)), 0, 8);
-            $url   = conf("site_shop_domain") . '/' . conf('shop_link_str') . '/' . $token;
+            $url   = conf("site_shop_domain") . '/links/' . $token;
             try {
                 $short_url = (new DwzService())->create($url);
             } catch (\Exception $e) {
@@ -48,7 +48,7 @@ class ShortLinkService
             ]);
         } else {
             if (empty($res->short_url)) {
-                $url = conf("site_shop_domain") . '/' . conf('shop_link_str') . '/' . $res->token;
+                $url = conf("site_shop_domain") . '/links/' . $res->token;
                 try {
                     $short_url = (new DwzService())->create($url);
                 } catch (\Exception $e) {
@@ -71,7 +71,7 @@ class ShortLinkService
     {
         $link = LinkModel::where(["user_id" => $user_id, "relation_type" => $relation_type, "relation_id" => $relation_id])->field('token')->find();
         if ($link) {
-            $url             = conf("site_shop_domain") . '/' . conf('shop_link_str') . '/' . $link->token;
+            $url             = conf("site_shop_domain") . '/links/' . $link->token;
             $short_url       = (new DwzService())->create($url);
             $link->short_url = $short_url;
             $link->save();
