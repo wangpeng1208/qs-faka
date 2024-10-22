@@ -40,10 +40,4 @@ return [
             ]
         ]
     ],
-    // 新增的RPC进程
-    'rpc'  => [
-        'handler' => process\Rpc::class,
-        'listen'  => 'text://0.0.0.0:3014', // 这里用了text协议，也可以用frame或其它协议
-        'count'   => 8, // 可以设置多进程
-    ]
 ];
