@@ -18,6 +18,6 @@ return [
         'password' => null,
         'port' => 6379,
         'database' => 2,
-        'prefix' => 'qsky:',
+        'prefix' => 'qsky-',
     ],
 ];
