@@ -1,0 +1,38 @@
+body{
+  background-color: #fafafa;
+
+}
+.risk-top{
+  padding: 30px 0;
+}
+.risk-top h1{
+  font-size: 42px;
+  font-weight: 600;
+  color: #494949;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.risk-desc{
+  color: #999;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  width: 60%;
+  margin: 0 auto;
+}
+::-webkit-scrollbar-track-piece {
+  background-color: #f8f8f8
+}
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px
+}
+::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  background-clip: padding-box;
+  min-height: 28px
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #bbb
+}

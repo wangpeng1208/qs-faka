@@ -1,0 +1,22 @@
+{
+    "plugins": [
+      [
+        "import",
+        {
+          "libraryName": "tdesign-vue-next",
+          "libraryDirectory": "lib",
+          "style": true
+        },
+        "tdesign-vue-next"
+      ],
+      [
+        "import",
+        {
+          "libraryName": "tdesign-icons-vue-next",
+          "libraryDirectory": "lib",
+          "style": true
+        },
+        "tdesign-icons-vue-next"
+      ]
+    ]
+  }

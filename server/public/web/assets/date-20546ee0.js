@@ -1,0 +1,1 @@
+import{d as Y}from"./libs-51817cd7.js";const o=[Y().subtract(7,"day").format("YYYY-MM-DD"),Y().subtract(1,"day").format("YYYY-MM-DD")];Y().subtract(30,"day").format("YYYY-MM-DD"),Y().subtract(1,"day").format("YYYY-MM-DD");const a="YYYY-MM-DD HH:mm:ss",s=(r,t=a)=>r?typeof r!="number"?Y(r).format(t):Y(r*1e3).format(t):"";export{o as L,s as f};
