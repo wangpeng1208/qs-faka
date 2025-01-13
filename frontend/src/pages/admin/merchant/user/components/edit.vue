@@ -1,10 +1,6 @@
 <template>
   <t-dialog v-model:visible="visible" :close-on-overlay-click="false" :destroy-on-close="true" :header="title" :on-confirm="onSubmit">
     <t-form ref="formRef" label-align="left" :data="formData" :rules="FORM_RULES" :label-width="80">
-      <t-form-item label="上级商户" name="parent_id">
-        <t-input v-model="formData.parent_id" clearable placeholder="请选择上级用户" @click="showSelectPrent" />
-        <user-search ref="userSearchRef" @success="onUserSearchSuccess" />
-      </t-form-item>
       <t-form-item label="结算周期" name="settlement_type">
         <t-radio-group v-model="formData.settlement_type" :options="settlementTypeOption" />
       </t-form-item>
@@ -42,16 +38,6 @@ import { reactive, ref } from 'vue';
 
 import { add, detail, edit } from '@/api/admin/merchant/user';
 
-import UserSearch from './user-search.vue';
-
-// 上级用户
-const userSearchRef = ref();
-const showSelectPrent = () => {
-  userSearchRef.value.init(formData.id);
-};
-const onUserSearchSuccess = (id: any) => {
-  formData.parent_id = id;
-};
 const options = [
   { label: '启用', value: 1 },
   { label: '禁用', value: 0 },
@@ -62,7 +48,6 @@ const settlementTypeOption = [
 ];
 const DATA = {
   id: 0,
-  parent_id: '',
   lowrate: '',
   settlement_type: 1,
   username: '',

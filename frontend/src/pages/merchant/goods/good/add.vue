@@ -147,9 +147,6 @@ const formData = ref({
   cate_id: '', // 分类id
   name: '', // 商品名
   price: '', // 商品价格
-  can_proxy: 0, // 是否开启代理
-  proxy_price: '',
-  proxy_price_add: '',
   event_give: [], // 活动赠送
   addtion_give: [], // 附加赠送
   sms_payer: 0, // 短信费承担者 1:商家 0:用户
