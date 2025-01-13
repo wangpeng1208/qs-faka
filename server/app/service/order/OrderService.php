@@ -70,7 +70,7 @@ class OrderService
                 $finally_money = $total_product_price - $order->fee - $sms_fee;
             }
 
-            $this->updateOrderStatus($order, $user, $finally_money, $order_total_cost_price);
+            $this->updateOrderStatus($order, $finally_money);
 
             $this->finally_money($order, $user, $finally_money);
 
@@ -160,14 +160,12 @@ class OrderService
      * 更新订单状态
      * @param [type] $order 订单实例
      * @param [type] $finally_money 最终结算金额
-     * @param [type] $proxy_finally_money 代理最终结算金额
      */
-    public function updateOrderStatus($order, $user, $finally_money, $proxy_finally_money)
+    public function updateOrderStatus($order, $finally_money)
     {
-        $order->finally_money       = $finally_money;
-        $order->proxy_finally_money = $proxy_finally_money;
-        $order->status              = 1;
-        $order->success_at          = time();
+        $order->finally_money = $finally_money;
+        $order->status        = 1;
+        $order->success_at    = time();
         $order->save();
     }
 }

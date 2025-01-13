@@ -58,11 +58,6 @@ class Channel extends BaseModel
     return $this->hasMany('UserRate', 'channel_id');
   }
 
-  public function paySafe()
-  {
-    return $this->hasOne('PluginPaysafe', 'channel_id');
-  }
-
   private static function updateChannel($id, $data)
   {
     try {

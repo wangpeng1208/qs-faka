@@ -57,16 +57,6 @@ class Goods extends BaseModel
 		return $this->hasMany("Order", "goods_id");
 	}
 
-	public function pgoods()
-	{
-		return $this->belongsTo("Goods",  "proxy_id");
-	}
-
-	public function cross()
-	{
-		return $this->belongsTo("PluginCross", "cross_id");
-	}
-
 	public function link()
 	{
 		return $this->morphOne("Link", "relation", "goods")->order("id desc");
@@ -117,16 +107,13 @@ class Goods extends BaseModel
 
 	public function getCardsStockCountAttr($value, $data)
 	{
-		$pk = !empty($data['proxy_id']) ? "proxy_id" : "id";
-		// ->where("unfreeze_at", "<", time()) 锁卡机制停用
 		// todo 可以考虑 总数量小于某个值的时候使用锁卡机制
-		return $this->cards($pk)->where("status", 1)->count();
+		return $this->cards('id')->where("status", 1)->count();
 	}
 
 	protected function getCardsSoldCountAttr($value, $data)
 	{
-		$pk = !empty($data['proxy_id']) ? "proxy_id" : "id";
-		return $this->cards($pk)->where("status", 2)->count();
+		return $this->cards('id')->where("status", 2)->count();
 	}
 
 	public function getLinksAttr($value, $data)

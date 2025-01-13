@@ -39,7 +39,6 @@ class User extends Base
             ['date_range', ''],
         ]);
         $res   = UserModel::withSearch($where[0], $where[1])->order("id desc")->paginate($this->limit)->each(function ($item) {
-            $item->sub_user_count = UserModel::where('parent_id', $item->id)->count();
             $user_collect = UserCollectModel::where("user_id", $item->id)->find();
             if (!empty($user_collect)) {
                 $item->idcard_number = $user_collect->info->idcard_number;
@@ -68,7 +67,6 @@ class User extends Base
     {
         $data     = [
             'id'              => inputs('id/d', 0),
-            'parent_id'       => inputs('parent_id/d', 0),
             'username'        => inputs('username/s', ''),
             'email'           => inputs('email/s', ''),
             'mobile'          => inputs('mobile/s', ''),
@@ -254,21 +252,6 @@ class User extends Base
                 $user->fee_money -= $money;
                 $reason = "扣除预存金额" . $money . "元，备注：" . $mark;
                 $business_type = "admin_fee_money_dec";
-                $operation = -1;
-                break;
-            case "customchanneldepositadd": // 加保证金
-                $user->deposit_money += $money;
-                $reason = "增加保证金" . $money . "元，备注：" . $mark;
-                $business_type = "admin_deposit_money_inc";
-                $operation = 1;
-                break;
-            case "customchanneldepositdec": // 扣保证金
-                if ($user->deposit_money < $money) {
-                    $this->error("可用余额不足！");
-                }
-                $user->deposit_money -= $money;
-                $reason = "扣除保证金金额" . $money . "元，备注：" . $mark;
-                $business_type = "admin_deposit_money_dec";
                 $operation = -1;
                 break;
             default:

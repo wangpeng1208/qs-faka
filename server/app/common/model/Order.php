@@ -34,29 +34,9 @@ class Order extends BaseModel
 	{
 		return $this->belongsTo("ShopList", "user_id", "user_id");
 	}
-
-	// 通过中间表获取用户信息
-	// order表中 proxy_id 是Goods表中的id；Goods表中的user_id是User表中的id
-	public function proxyUser()
-	{
-		return $this->hasOneThrough("User", "Goods", "id", "id", "proxy_id", "user_id");
-	}
 	public function goods()
 	{
 		return $this->belongsTo("Goods", "goods_id");
-	}
-	// 代理商品
-	public function pgoods()
-	{
-		return $this->belongsTo("Goods", "proxy_id");
-	}
-	public function proxy()
-	{
-		return $this->belongsTo("Goods", "proxy_id");
-	}
-	public function cross()
-	{
-		return $this->belongsTo("PluginCross", "cross_id");
 	}
 	public function cards()
 	{
@@ -139,16 +119,6 @@ class Order extends BaseModel
 			$query->whereBetweenTime('create_at', $value[0], $value[1]);
 		}
 	}
-
-	public function searchOrderTypeAttr($query, $value, $data)
-	{
-		if ($value != "" && $value == 0) {
-			$query->where("is_proxy", 0);
-		} elseif ($value != "" && $value == 1) {
-			$query->where("is_proxy", 1);
-		}
-	}
-
 
 	// 商户搜索
 	public function searchTypeAttr($query, $value, $data)

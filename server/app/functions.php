@@ -137,8 +137,6 @@ function business_types()
     return [
         'unfreeze'                => '解冻金额',
         'freeze'                  => '冻结金额',
-        'sub_sold_rebate'         => '下级卖出商品返佣',
-        'sub_fee_rebate'          => '下级手续费返佣',
         'cash_notpass'            => '提现未通过',
         'cash_success'            => '提现成功',
         'apply_cash'              => '申请提现',
@@ -151,8 +149,6 @@ function business_types()
         'reward'                  => '奖励金',
         'admin_fee_money_inc'     => '管理员手动操作增加预存',
         'admin_fee_money_dec'     => '管理员手动操作扣除预存',
-        'admin_deposit_money_inc' => '管理员手动操作增加保证金',
-        'admin_deposit_money_dec' => '管理员手动操作扣除保证金',
         'gatewaygoods_sold'       => '网关产品卖出'
     ];
 }

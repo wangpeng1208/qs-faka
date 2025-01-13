@@ -44,7 +44,6 @@ class Complaint extends Base
             $pwd    = rand(100000, 999999);
             $result = ComplaintModel::create([
                 "user_id"              => $order->user_id,
-                "proxy_parent_user_id" => $order->proxy_parent_user_id,
                 "trade_no"             => $post['trade_no'],
                 "type"                 => $post['type'],
                 "qq"                   => $post['qq'],

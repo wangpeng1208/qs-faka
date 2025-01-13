@@ -18,11 +18,7 @@ class OrderComplaint extends BaseModel
     {
         return $this->belongsTo('User', 'user_id');
     }
-
-    public function parentUser()
-    {
-        return $this->belongsTo('User', 'proxy_parent_user_id');
-    }
+    
     // 不得使用order 避免被识别成排序
     public function orders()
     {

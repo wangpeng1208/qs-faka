@@ -50,7 +50,7 @@ class GoodsCategory extends BaseModel
     $goods = $this->goods()->select();
     $i = 0;
     foreach (collect($goods) as $good) {
-      if ($good->status == 0 || ($good->is_proxy == 1 && (!$good->pgoods || $good->pgoods->status == 0))) {
+      if ($good->status == 0) {
         continue;
       }
       $i++;

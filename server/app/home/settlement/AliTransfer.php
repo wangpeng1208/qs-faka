@@ -103,7 +103,6 @@ class AliTransfer implements SettlementInterface
 
       if ($result['code'] == 10000) {
         $cash->status       = 1;
-        $cash->daifu_status = 1;
         $cash->complete_at  = time();
         $cash->save();
         return [

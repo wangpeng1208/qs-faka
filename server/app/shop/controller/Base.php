@@ -28,7 +28,7 @@ class Base extends Api
     public $goods_category;
     public $pcTemplate;
     public $mobileTemplate;
-    protected $shop_visible = ['id', 'user_id', 'parent_id', 'qq', 'shop_name', 'shop_notice', 'statis_code', 'pay_theme', 'pay_theme_mobile', 'stock_display', 'status', 'is_freeze', 'website', 'shop_close', 'cash_type', 'login_auth', 'shop_gouka_protocol_pop', 'user_notice_auto_pop', 'music', 'mobile_template', 'shop_notice_show', 'show_contact', 'shop_contact', 'shop_logo', 'fee_payer'];
+    protected $shop_visible = ['id', 'user_id', 'qq', 'shop_name', 'shop_notice', 'pay_theme', 'pay_theme_mobile', 'stock_display', 'status', 'is_freeze', 'website', 'shop_close', 'cash_type', 'login_auth', 'shop_gouka_protocol_pop', 'user_notice_auto_pop', 'mobile_template', 'shop_notice_show', 'show_contact', 'shop_contact', 'shop_logo', 'fee_payer'];
     protected $goods_visible = ['id', 'coupon_type', 'wholesale_discount', 'visit_type', 'take_card_type', 'limit_quantity', 'limit_quantity_max', 'price', 'contact_limit', 'sms_payer', 'sms_price', 'name', 'card_order', 'stockStr', 'content', 'cards_stock_count', 'event_give', 'addtion_give', 'wholesale_discount_list'];
 
     /**
@@ -151,8 +151,8 @@ class Base extends Api
                 $item->product_name = get_paytype($item->paytype)->name; // 支付类型名
                 $item->type_text = $item->type_text;
                 $item->ico = get_paytype($item->paytype)->ico;
-                unset ($item->id);
-                echo  $item->rate;
+                unset($item->id);
+                echo $item->rate;
                 return true;
             }
         )->filter(function ($item) {

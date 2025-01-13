@@ -39,7 +39,6 @@ class Complaint extends Base
         ]);
         $res   = OrderComplaint::withSearch($where[0], $where[1])->order("id desc")->paginate($this->limit)->each(function ($item) {
             $item->username   = $item->user->username;
-            $item->parentname = $item->user->parent->username ?? "";
         });
         return $this->success("获取成功", [
             'list'  => $res->items(),

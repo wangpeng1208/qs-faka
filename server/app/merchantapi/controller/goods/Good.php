@@ -75,9 +75,6 @@ class Good extends Base
             "remark"                  => inputs("remark/s", ""),
             "sms_payer"               => inputs("sms_payer/d", 0),
             "card_order"              => inputs("card_order/d", 0),
-            "can_proxy"               => inputs("can_proxy/d", 0),
-            "proxy_price"             => inputs("proxy_price", 0),
-            "proxy_price_add"         => inputs("proxy_price_add", 0),
             "selectcard_fee"          => inputs("selectcard_fee", 0),
             // 叠加赠送
             "event_give"              => inputs("event_give/a", null),
@@ -89,12 +86,6 @@ class Good extends Base
             $this->error("商品价格必须大于成本价");
         }
 
-        if ($post['can_proxy'] == 1) {
-            if ($post['proxy_price'] <= 0)
-                $this->error("代理成本价必须大于0！");
-            if ($post['proxy_price_add'] <= 0)
-                $this->error("代理最低加价金额不能小于0元");
-        }
         $this->checkWordfilter($post["name"]);
         $this->checkWordfilter($post["content"]);
         $this->checkWordfilter($post["remark"]);
@@ -265,7 +256,7 @@ class Good extends Base
     // 	附加赠送用到的 获取商品列表id+name
     public function goodList()
     {
-        $list = $this->user->goods()->where('is_proxy', 0)->field('id,name')->order("sort desc,id desc")->select();
+        $list = $this->user->goods()->field('id,name')->order("sort desc,id desc")->select();
         $this->success("获取成功", $list);
     }
 

@@ -101,7 +101,6 @@ class Link extends Base
             'short_link' => $good->short_link,
             'link'       => $good->links,
             'status'     => $good->link_status,
-            'src'        => $good->can_proxy,
         ]);
     }
 

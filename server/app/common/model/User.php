@@ -21,7 +21,6 @@ class User extends Model
         'freeze_money'  => 'float',
         'money'         => 'float',
         'fee_money'     => 'float',
-        'deposit_money' => 'float',
     ];
     public function role()
     {
@@ -31,11 +30,6 @@ class User extends Model
     public function userMoneyLog()
     {
         return $this->hasMany('UserMoneyLog', 'user_id');
-    }
-
-    public function parentUser()
-    {
-        return $this->hasOne('User', 'id', 'parent_id');
     }
 
     /**
@@ -147,16 +141,6 @@ class User extends Model
         return  $value;
     }
 
-    public function getParentAttr($value, $data)
-    {
-        return $this->where(['id' => $data['parent_id']])->find();
-    }
-
-    public function getSubUserCountAttr($value, $data)
-    {
-        return $this->where(['parent_id' => $data['id']])->count();
-    }
-
     public function rate()
     {
         return $this->hasMany('UserRate', 'user_id');
@@ -165,11 +149,6 @@ class User extends Model
     public function cashs()
     {
         return $this->hasMany('Cash', 'user_id');
-    }
-
-    public function rebates()
-    {
-        return $this->hasMany('UserRebate', 'user_id');
     }
 
     public function complaints()
