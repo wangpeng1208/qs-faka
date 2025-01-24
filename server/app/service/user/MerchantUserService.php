@@ -175,7 +175,6 @@ class MerchantUserService
 
         $user  = $user->toArray();
         $token = (new UserService())->createToken($user, 'merchant');
-        echo $token;
         $allowFields = ['id', 'username', 'status', 'mobile', 'lastlogintime', 'is_freeze'];
         $user        = array_intersect_key($user, array_flip($allowFields));
         Event::emit('user.login', $user);
