@@ -9,7 +9,7 @@ return [
         'original' => '原生风格',
     ],
     // 当前版本号
-    'version'          => '1.5.0',
+    'version'          => '1.5.1',
     // 版权信息
     'api_license'     => [
         [
