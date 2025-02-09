@@ -18,9 +18,9 @@ use app\service\shortlink\ShortLinkService;
 class User extends Model
 {
     protected $type = [
-        'freeze_money'  => 'float',
-        'money'         => 'float',
-        'fee_money'     => 'float',
+        'freeze_money' => 'float',
+        'money'        => 'float',
+        'fee_money'    => 'float',
     ];
     public function role()
     {
@@ -92,37 +92,16 @@ class User extends Model
     }
 
     // 搜索器开始
-    public function searchFieldAttr($query, $value, $data)
+    public function searchUsernameAttr($query, $value, $data)
     {
-        if (empty($data['keyword'])) {
-            return;
-        }
-        if ($value == 'username') {
-            $query->where('username', 'like', '%' . $data['keyword'] . '%');
-        }
+        $query->where('username', 'like', '%' . $value . '%');
+    }
 
-        if ($value == 'id') {
-            $query->where('id', $data['keyword']);
-        }
-        if ($value == 'mobile') {
-            $query->where('mobile', $data['keyword']);
-        }
+    public function searchMobileAttr($query, $value, $data)
+    {
+        $query->where('mobile', 'like', '%' . $value . '%');
+    }
 
-        if ($value == 'qq') {
-            $query->where('qq', $data['keyword']);
-        }
-    }
-    public function searchKeywordAttr($query, $value, $data)
-    {
-    }
-    public function searchStatusAttr($query, $value, $data)
-    {
-        $query->where('status', $value);
-    }
-    public function searchIsFreezeAttr($query, $value, $data)
-    {
-        $query->where('is_freeze', $value);
-    }
     public function searchDateRangeAttr($query, $value, $data)
     {
         if (empty($value) || empty($value[0]) || empty($value[1])) {
@@ -135,10 +114,10 @@ class User extends Model
     // avatar
     public function getAvatarAttr($value, $data)
     {
-        if(empty($value)){
+        if (empty($value)) {
             return conf('site_domain') . '/static/common/images/noavatar.svg';
         }
-        return  $value;
+        return $value;
     }
 
     public function rate()

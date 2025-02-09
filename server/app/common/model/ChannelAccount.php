@@ -15,9 +15,10 @@ namespace app\common\model;
 class ChannelAccount extends BaseModel
 {
   protected $name = 'pay_channel_account';
+
   public function channel()
   {
-    return $this->belongsTo('Channel');
+    return $this->belongsTo('Channel', 'channel_id');
   }
 
   protected function setParamsAttr($value)

@@ -32,10 +32,8 @@ class User extends Base
     public function list()
     {
         $where = $this->request->params([
-            ['field', ''],
-            ['keyword', ''],
-            ['status', ''],
-            ['is_freeze', ''],
+            ['username', ''],
+            ['mobile', ''],
             ['date_range', ''],
         ]);
         $res   = UserModel::withSearch($where[0], $where[1])->order("id desc")->paginate($this->limit)->each(function ($item) {
@@ -360,7 +358,7 @@ class User extends Base
     {
         $user_id   = inputs('user_id/d', 0);
         $username  = UserModel::where('id', $user_id)->value('username');
-        $max_count = conf("wrong_password_times");
+        $max_count = conf("wrong_password_times") ?: 5;
         $res       = UserLoginErrorLog::where([
             "login_name" => $username,
             "user_type"  => 0

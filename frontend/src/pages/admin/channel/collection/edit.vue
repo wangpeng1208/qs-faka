@@ -16,9 +16,6 @@
       <t-form-item label="账户字段" name="account_fields" tips="含证书字符的将自动识别为证书上传框">
         <t-textarea v-model="formData.account_fields" clearable placeholder="用户添加渠道账户所需的字段，用“|”分割字段,用:分隔名称，如：应用号:appid|应用秘钥:appsecret" />
       </t-form-item>
-      <t-form-item label="申请地址" name="applyurl">
-        <t-input v-model="formData.applyurl" clearable placeholder="请输入账户申请地址" />
-      </t-form-item>
       <!-- 分类 -->
       <t-form-item label="分类" name="paytype">
         <t-select v-model="formData.paytype" clearable placeholder="请选择分类">
@@ -74,7 +71,6 @@ const DATA = {
   code: '',
   show_name: '',
   account_fields: '',
-  applyurl: '',
   status: 1,
   is_available: 1,
   sort: 0,
