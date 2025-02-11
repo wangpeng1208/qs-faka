@@ -27,7 +27,7 @@ class Shop extends Base
     public function list()
     {
         $list = ShopListModel::order('id desc')->paginate($this->limit)->each(function ($item, $key) {
-            $item->username = $item->user->username;
+            $item->username = $item?->user?->username;
         });
         $this->success('获取成功', [
             'list'  => $list->items(),
