@@ -46,6 +46,8 @@ class ArticleService
         if ($detail->isEmpty()) {
             throw new \Exception('文章不存在!');
         }
+        // 文字阅读量 +1
+        $detail->inc('views', 1)->save();
         return [
             'category' => $detail->category,
             'detail'   => $detail
