@@ -116,7 +116,7 @@ class System extends Base
             ],
             // redis扩展是否开启
             ['option' => 'Redis扩展',
-                'require' => '缓存使用redis时需要开启',
+                'require' => '缓存使用redis时、使用Redis队列时 按需开启',
                 'status'  => extension_loaded('redis') ? true : false,
                 'remark'  => ''
             ],
