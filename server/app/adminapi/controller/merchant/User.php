@@ -379,9 +379,10 @@ class User extends Base
      */
     public function collectDetail()
     {
-        $id           = inputs('id/d', 0);
-        $user_collect = UserCollectModel::where('user_id', $id)->find() ?? [];
-        return $this->success('success', $user_collect);
+        $user_id           = inputs('id/d', 0);
+        $data = UserCollectModel::where('user_id', $user_id)->find() ?? [];
+        $data['user_id'] = $user_id;
+        return $this->success('success', $data);
     }
 
     /**
