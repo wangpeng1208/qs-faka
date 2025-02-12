@@ -152,7 +152,6 @@ class Base extends Api
                 $item->type_text = $item->type_text;
                 $item->ico = get_paytype($item->paytype)->ico;
                 unset($item->id);
-                echo $item->rate;
                 return true;
             }
         )->filter(function ($item) {
