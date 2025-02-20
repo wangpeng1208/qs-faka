@@ -20,19 +20,7 @@ class Pay extends Base
     // 订单生成
     public function order(OrderService $orderService)
     {
-        // 需要校验的数据
-        $post['goods_id']      = inputs('goods_id/s', '');
-        $post['contact']       = inputs('contact/s', '');
-        $post["quantity"]      = inputs("quantity/d", 0);
-        $post['coupon_code']   = inputs("coupon_code/s", '');
-        $post['card_password'] = inputs("pwdforsearch/s", "");
-        $post['pid']           = inputs("pid/s", "");
-        $validate              = new \app\home\validate\OrderValidate;
-        $validate->scene('create')->failException(true)->check($post);
-        $data = $orderService->createOrder($post);
-        // v4版本 是否同步创建 支付
-        // v4 pid 查询是否是二维码返回 如果是 需要 是否返回二维码；免去跳转支付页面
-        $this->success("订单创建成功！", $data);
+        $this->success("订单创建成功！", $orderService->createOrder());
     }
 
     // 发起支付
