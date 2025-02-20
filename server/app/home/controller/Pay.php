@@ -14,7 +14,7 @@ namespace app\home\controller;
 
 use app\service\common\PayService;
 use app\service\home\OrderService;
-
+use support\Request;
 class Pay extends Base
 {
     // 订单生成
@@ -72,10 +72,10 @@ class Pay extends Base
      * 支付回调方法
      * @return void
      */
-    public function notify($requests, $id = '')
+    public function notify(Request $request, $id = '')
     {
         $payService = new PayService();
-        $request    = request()->all();
+        $request    = $request->all();
         return $payService->notify($request, $id);
     }
 }
