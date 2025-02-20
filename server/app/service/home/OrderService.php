@@ -196,10 +196,19 @@ class OrderService
 
     /**
      * 创建订单
-     * @param array $post
      */
-    public function createOrder(array $post)
+    public function createOrder()
     {
+        // 需要校验的数据
+        $post['goods_id']      = inputs('goods_id/s', '');
+        $post['contact']       = inputs('contact/s', '');
+        $post["quantity"]      = inputs("quantity/d", 0);
+        $post['coupon_code']   = inputs("coupon_code/s", '');
+        $post['card_password'] = inputs("pwdforsearch/s", "");
+        $post['pid']           = inputs("pid/s", "");
+        $validate              = new \app\home\validate\OrderValidate;
+        $validate->scene('create')->failException(true)->check($post);
+
         $goods = Goods::find($post['goods_id']);
         $user  = $goods->user;
 
@@ -218,7 +227,7 @@ class OrderService
             $post["take_card_password"] = $post['card_password'];
             $post["take_card_type"]     = 2;
         }
-        
+
         // 批发优惠
         $post["goods_price_old"] = $post["goods_price"];
         if ($goods->wholesale_discount_list != null) {
@@ -233,7 +242,7 @@ class OrderService
             $coupon->save();
             // 计算优惠券价格金额
             // 优惠券 折扣
-            $post['coupon_price'] = $coupon->type == 100 ? $goods->goods_price * $post['quantity'] * $coupon->amount / 100 : $coupon->amount;
+            $post['coupon_price'] = $coupon->type == 100 ? $post["goods_price"] * $post['quantity'] * $coupon->amount / 100 : $coupon->amount;
             $post['coupon_id']    = $coupon->id;
         } else {
             $post['coupon_price'] = 0;
