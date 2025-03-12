@@ -20,7 +20,7 @@ class Sms extends Base
     public function list()
     {
         $list = SmsConfigService::list();
-        return $this->success('获取成功', [
+        $this->success('获取成功', [
             'list'  => $list,
             'total' => count($list),
         ]);
@@ -77,7 +77,7 @@ class Sms extends Base
             // 按自己需求配置更多 配置教程 https://github.com/overtrue/easy-sms
         }
 
-        return $this->success('获取成功', $config);
+        $this->success('获取成功', $config);
     }
 
     // 获取短信配置信息
@@ -85,7 +85,7 @@ class Sms extends Base
     {
         $type = inputs('type');
         $data = conf('sms.' . $type);
-        return $this->success('获取成功', $data);
+        $this->success('获取成功', $data);
     }
 
     // 设置短信配置信息
@@ -97,7 +97,7 @@ class Sms extends Base
         $data = inputs('data/a', []);
         // 保存到 sms.配置名
         conf('sms.' . $type, $data);
-        return $this->success('设置成功');
+        $this->success('设置成功');
     }
 
 }

@@ -67,10 +67,7 @@ class PayType extends Base
   {
     $data = array_diff_key($this->post(), ['id' => 0]);
     $res  = PayTypeModel::create($data);
-    if ($res) {
-      return $this->success('操作成功');
-    }
-    return $this->error('操作失败');
+    return $res ? $this->success('操作成功') : $this->error('操作失败');
   }
 
   /**
@@ -81,10 +78,7 @@ class PayType extends Base
   {
     $data = $this->post();
     $res  = PayTypeModel::update($data);
-    if ($res) {
-      return $this->success('操作成功');
-    }
-    return $this->error('操作失败');
+    return $res ? $this->success('操作成功') : $this->error('操作失败');
   }
 
   /**
@@ -95,10 +89,7 @@ class PayType extends Base
   {
     $id  = inputs('id/d', 0);
     $res = PayTypeModel::destroy($id);
-    if ($res) {
-      return $this->success('操作成功');
-    }
-    return $this->error('操作失败');
+    return $res ? $this->success('操作成功') : $this->error('操作失败');
   }
 
   /**

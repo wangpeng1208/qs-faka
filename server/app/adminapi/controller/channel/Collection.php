@@ -72,10 +72,7 @@ class Collection extends Base
         UserRoleRateModel::where('channel_id', $id)->delete();
         // 删除通道时删除通道下的所有账号
         ChannelAccountModel::where('channel_id', $id)->delete();
-        if ($res) {
-            $this->success('操作成功');
-        }
-        $this->error('操作失败');
+        return $res ? $this->success('操作成功') : $this->error('操作失败');
     }
 
     /**

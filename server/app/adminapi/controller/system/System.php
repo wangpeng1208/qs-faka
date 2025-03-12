@@ -75,7 +75,7 @@ class System extends Base
         }
         // 删除$dir目录下的所有文件及文件夹
         $this->delDir($dir);
-        return $this->success('清除成功');
+        $this->success('清除成功');
     }
     // delDir
     private function delDir($dir)
