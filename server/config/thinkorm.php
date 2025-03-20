@@ -1,28 +1,28 @@
 <?php
 
 return [
-    'default'     => getenv('DATABASETYPE'),
+    'default'     => getenv('DB_TYPE'),
     'connections' => [
         'mysql' => [
             // 数据库类型
             'type'            => 'mysql',
             // 服务器地址
-            'hostname'        => getenv('HOSTNAME'),
+            'hostname'        => getenv('DB_HOSTNAME'),
             // 数据库名
-            'database'        => getenv('DATABASE'),
+            'database'        => getenv('DB_DATABASE'),
             // 数据库用户名
-            'username'        => getenv('USERNAME'),
+            'username'        => getenv('DB_USERNAME'),
             // 数据库密码
-            'password'        => getenv('PASSWORD'),
+            'password'        => getenv('DB_PASSWORD'),
             // 数据库连接端口
-            'hostport'        => getenv('HOSTPORT'),
+            'hostport'        => getenv('DB_HOSTPORT'),
             // 数据库连接参数
             'params'          => [
                 // 连接超时3秒
                 \PDO::ATTR_TIMEOUT => 3,
             ],
             // 数据库编码默认采用utf8
-            'charset'         => getenv('CHARSET'),
+            'charset'         => getenv('DB_CHARSET'),
             // 数据库表前缀
             'prefix'          => '',
             // 断线重连
