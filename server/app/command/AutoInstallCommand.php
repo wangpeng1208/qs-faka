@@ -21,11 +21,11 @@ use Illuminate\Support\Str;
 class AutoInstallCommand extends Command
 {
     protected static $defaultName = 'auto:install';
-    protected static $defaultDescription = '自动安装辅助工具';
+    protected static $defaultDescription = '安装辅助工具';
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln("自动安装辅助工具");
+        $output->writeln("安装辅助工具");
         $output->writeln("");
         // 如果存在 .env 文件 则退出
         if (file_exists(base_path(false) . DIRECTORY_SEPARATOR . '.env')) {
