@@ -22,7 +22,7 @@ class UnfreezeMoneyCommand extends Command
     protected static $defaultName = 'unfreeze:money';
     protected static $defaultDescription = '自动解冻订单金额';
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln("========== " . date('Y-m-d H:i:s') . " 自动解冻任务开始 ========== ");
         $time = time();

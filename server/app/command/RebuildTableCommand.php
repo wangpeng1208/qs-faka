@@ -22,7 +22,7 @@ class RebuildTableCommand extends Command
     protected static $defaultName = 'rebuild:table';
     protected static $defaultDescription = '删库重建';
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln("========== " . date('Y-m-d H:i:s') . " 删库重建开始执行 ========== ");
         $triggerTime = time();

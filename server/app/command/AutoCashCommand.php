@@ -25,7 +25,7 @@ class AutoCashCommand extends Command
     protected static $defaultDescription = '创建自动提现';
     private $lockFileName;
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
 
         $this->lockFileName = runtime_path() . '/logs/' . 'auto_cash.lock';

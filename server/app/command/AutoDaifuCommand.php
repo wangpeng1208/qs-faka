@@ -26,7 +26,7 @@ class AutoDaifuCommand extends Command
     protected static $defaultName = 'auto:daifu';
     protected static $defaultDescription = '自动代付任务';
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $channels    = Channel::where('type', 2)->where('is_custom', 0)->where('status', 1)->select();
         $allAccounts = collect([]);
@@ -100,5 +100,6 @@ class AutoDaifuCommand extends Command
             $output->writeln("运行结束，全部完成");
             return parent::SUCCESS;
         }
+        return parent::SUCCESS;
     }
 }
