@@ -1,0 +1,26 @@
+{
+    "name": "taoser/webman-validate",
+    "description": "The webman Validate Package",
+    "license": "mit",
+    "authors": [
+        {
+            "name": "taoser",
+            "email": "changlin_zhao@qq.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2.0",
+        "symfony/translation": "^5.4|^6.0",
+        "topthink/think-container": "~2.0",
+        "topthink/think-helper":"^3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "taoser\\": "src/"
+        },
+        "files": [
+            "src/helper.php"
+        ]
+    }
+    
+}

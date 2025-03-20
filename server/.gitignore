@@ -1,6 +1,6 @@
 /.idea
 /.vscode
-/vendor
+# /vendor
 *.log
 /public/upload
 /public/development
