@@ -4,7 +4,7 @@ import { LocationQueryRaw, RouteRecordName } from 'vue-router';
 import STYLE_CONFIG from '@/config/style';
 
 export interface RouteMeta {
-  title?: string;
+  title?: string | Record<string, string>;
   icon?: string;
   expanded?: boolean;
   orderNo?: number;
@@ -17,7 +17,7 @@ export interface RouteMeta {
 }
 
 export interface MenuRoute {
-  path: string;
+  path: any;
   title?: string;
   name?: string;
   icon?:
