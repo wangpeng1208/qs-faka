@@ -7,7 +7,7 @@
         <span>
           <t-space>
             {{ workbenchData?.version }}
-            <t-tag v-if="workbenchData?.authorize?.status" theme="success" hover="color" variant="light"> 免费授权版 </t-tag>
+            <t-tag v-if="workbenchData?.authorize?.status" theme="success" hover="color" variant="light"> 免费开源版（多商户） </t-tag>
           </t-space>
         </span>
       </div>
