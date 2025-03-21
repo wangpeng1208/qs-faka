@@ -1745,63 +1745,6 @@
             "install-path": "../illuminate/pipeline"
         },
         {
-            "name": "illuminate/redis",
-            "version": "v10.48.28",
-            "version_normalized": "10.48.28.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/illuminate/redis.git",
-                "reference": "446d36aeb21fd2b6719293a8d930ae9ac8135be0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/redis/zipball/446d36aeb21fd2b6719293a8d930ae9ac8135be0",
-                "reference": "446d36aeb21fd2b6719293a8d930ae9ac8135be0",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/collections": "^10.0",
-                "illuminate/contracts": "^10.0",
-                "illuminate/macroable": "^10.0",
-                "illuminate/support": "^10.0",
-                "php": "^8.1"
-            },
-            "suggest": {
-                "ext-redis": "Required to use the phpredis connector (^4.0|^5.0).",
-                "predis/predis": "Required to use the predis connector (^2.0.2)."
-            },
-            "time": "2025-01-21T16:06:22+00:00",
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "10.x-dev"
-                }
-            },
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "Illuminate\\Redis\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Taylor Otwell",
-                    "email": "taylor@laravel.com"
-                }
-            ],
-            "description": "The Illuminate Redis package.",
-            "homepage": "https://laravel.com",
-            "support": {
-                "issues": "https://github.com/laravel/framework/issues",
-                "source": "https://github.com/laravel/framework"
-            },
-            "install-path": "../illuminate/redis"
-        },
-        {
             "name": "illuminate/support",
             "version": "v10.48.28",
             "version_normalized": "10.48.28.0",
@@ -2046,17 +1989,17 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "2.72.6",
-            "version_normalized": "2.72.6.0",
+            "version": "2.73.0",
+            "version_normalized": "2.73.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CarbonPHP/carbon.git",
-                "reference": "1e9d50601e7035a4c61441a208cb5bed73e108c5"
+                "reference": "9228ce90e1035ff2f0db84b40ec2e023ed802075"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/1e9d50601e7035a4c61441a208cb5bed73e108c5",
-                "reference": "1e9d50601e7035a4c61441a208cb5bed73e108c5",
+                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/9228ce90e1035ff2f0db84b40ec2e023ed802075",
+                "reference": "9228ce90e1035ff2f0db84b40ec2e023ed802075",
                 "shasum": ""
             },
             "require": {
@@ -2084,7 +2027,7 @@
                 "phpunit/phpunit": "^7.5.20 || ^8.5.26 || ^9.5.20",
                 "squizlabs/php_codesniffer": "^3.4"
             },
-            "time": "2024-12-27T09:28:11+00:00",
+            "time": "2025-01-08T20:10:23+00:00",
             "bin": [
                 "bin/carbon"
             ],
@@ -4529,17 +4472,17 @@
         },
         {
             "name": "symfony/translation",
-            "version": "v6.4.13",
-            "version_normalized": "6.4.13.0",
+            "version": "v6.4.19",
+            "version_normalized": "6.4.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/translation.git",
-                "reference": "bee9bfabfa8b4045a66bf82520e492cddbaffa66"
+                "reference": "3b9bf9f33997c064885a7bfc126c14b9daa0e00e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/translation/zipball/bee9bfabfa8b4045a66bf82520e492cddbaffa66",
-                "reference": "bee9bfabfa8b4045a66bf82520e492cddbaffa66",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/3b9bf9f33997c064885a7bfc126c14b9daa0e00e",
+                "reference": "3b9bf9f33997c064885a7bfc126c14b9daa0e00e",
                 "shasum": ""
             },
             "require": {
@@ -4576,7 +4519,7 @@
                 "symfony/service-contracts": "^2.5|^3",
                 "symfony/yaml": "^5.4|^6.0|^7.0"
             },
-            "time": "2024-09-27T18:14:25+00:00",
+            "time": "2025-02-13T10:18:43+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -4607,7 +4550,7 @@
             "description": "Provides tools to internationalize your application",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/translation/tree/v6.4.13"
+                "source": "https://github.com/symfony/translation/tree/v6.4.19"
             },
             "funding": [
                 {
@@ -5333,79 +5276,6 @@
             "install-path": "../webman/event"
         },
         {
-            "name": "webman/redis",
-            "version": "v2.1.1",
-            "version_normalized": "2.1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webman-php/redis.git",
-                "reference": "ea9661840ce85ade400fa84a847d3c1658703000"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webman-php/redis/zipball/ea9661840ce85ade400fa84a847d3c1658703000",
-                "reference": "ea9661840ce85ade400fa84a847d3c1658703000",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/redis": "^10.0 || ^11.0",
-                "workerman/webman-framework": "^2.1 || dev-master"
-            },
-            "time": "2025-02-09T04:52:20+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "support\\": "src/support",
-                    "Webman\\Redis\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Webman redis",
-            "support": {
-                "issues": "https://github.com/webman-php/redis/issues",
-                "source": "https://github.com/webman-php/redis/tree/v2.1.1"
-            },
-            "install-path": "../webman/redis"
-        },
-        {
-            "name": "webman/redis-queue",
-            "version": "v1.3.2",
-            "version_normalized": "1.3.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/webman-php/redis-queue.git",
-                "reference": "80b9ddca0405bbb6d02e6b368e8036b3b1a13814"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/webman-php/redis-queue/zipball/80b9ddca0405bbb6d02e6b368e8036b3b1a13814",
-                "reference": "80b9ddca0405bbb6d02e6b368e8036b3b1a13814",
-                "shasum": ""
-            },
-            "require": {
-                "workerman/redis-queue": "^1.2"
-            },
-            "time": "2024-04-03T02:00:20+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "Webman\\RedisQueue\\": "./src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "description": "Redis message queue plugin for webman.",
-            "support": {
-                "issues": "https://github.com/webman-php/redis-queue/issues",
-                "source": "https://github.com/webman-php/redis-queue/tree/v1.3.2"
-            },
-            "install-path": "../webman/redis-queue"
-        },
-        {
             "name": "webman/think-orm",
             "version": "v2.1.0",
             "version_normalized": "2.1.0.0",
@@ -5486,84 +5356,6 @@
                 "source": "https://github.com/workerman-php/coroutine/tree/v1.1.1"
             },
             "install-path": "../workerman/coroutine"
-        },
-        {
-            "name": "workerman/redis",
-            "version": "v2.0.3",
-            "version_normalized": "2.0.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/walkor/redis.git",
-                "reference": "4e910d4b0c2f2101a1f8dbd28be79fd864f7aab8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/walkor/redis/zipball/4e910d4b0c2f2101a1f8dbd28be79fd864f7aab8",
-                "reference": "4e910d4b0c2f2101a1f8dbd28be79fd864f7aab8",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7",
-                "workerman/workerman": "^4.1.0||^5.0.0"
-            },
-            "time": "2024-08-01T03:38:26+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "Workerman\\Redis\\": "./src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "homepage": "http://www.workerman.net",
-            "support": {
-                "issues": "https://github.com/walkor/redis/issues",
-                "source": "https://github.com/walkor/redis/tree/v2.0.3"
-            },
-            "install-path": "../workerman/redis"
-        },
-        {
-            "name": "workerman/redis-queue",
-            "version": "v1.2.1",
-            "version_normalized": "1.2.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/walkor/redis-queue.git",
-                "reference": "75dbf7ed2ea228c45dc0df82c0fea35879b715d0"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/walkor/redis-queue/zipball/75dbf7ed2ea228c45dc0df82c0fea35879b715d0",
-                "reference": "75dbf7ed2ea228c45dc0df82c0fea35879b715d0",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0",
-                "workerman/redis": "^1.0||^2.0",
-                "workerman/workerman": ">=4.0.20"
-            },
-            "time": "2025-01-02T09:21:45+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "Workerman\\RedisQueue\\": "./src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Message queue system written in PHP based on workerman and backed by Redis.",
-            "homepage": "http://www.workerman.net",
-            "support": {
-                "issues": "https://github.com/walkor/redis-queue/issues",
-                "source": "https://github.com/walkor/redis-queue/tree/v1.2.1"
-            },
-            "install-path": "../workerman/redis-queue"
         },
         {
             "name": "workerman/webman-framework",
