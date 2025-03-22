@@ -2,21 +2,21 @@
 
 use think\facade\Db;
 use app\common\model\Config;
+use app\common\model\UserMoneyLog;
 
-// 所有input都需要是post请求
+/**
+ * 获取输入参数 支持默认值和过滤
+ * @param string $name 变量名
+ * @param mixed  $default 默认值
+ * @return mixed
+ */
 if (!function_exists('inputs')) {
-    /**
-     * 获取输入参数 支持默认值和过滤
-     * @param string $name 变量名
-     * @param mixed  $default 默认值
-     * @return mixed
-     */
     function inputs(string $name, $default = null)
     {
         if (strpos($name, '/') !== false) {
             [$name, $type] = explode('/', $name);
             if ($type && in_array($type, ['d', 'a', 'f', 's'])) {
-                $default = match($type) {
+                $default = match ($type) {
                     'd' => intval($default),
                     'a' => (array) $default,
                     'f' => floatval($default),
@@ -129,31 +129,6 @@ function get_random_string($length = 32)
 }
 
 /**
- * 资金操作类型
- * @return array
- */
-function business_types()
-{
-    return [
-        'unfreeze'                => '解冻金额',
-        'freeze'                  => '冻结金额',
-        'cash_notpass'            => '提现未通过',
-        'cash_success'            => '提现成功',
-        'apply_cash'              => '申请提现',
-        'admin_inc'               => '后台操作加钱',
-        'admin_dec'               => '后台操作扣钱',
-        'fee'                     => '手续费',
-        'goods_sold'              => '卖出商品',
-        'goods_refund'            => '商品退款',
-        'sub_register'            => '推广注册奖励',
-        'reward'                  => '奖励金',
-        'admin_fee_money_inc'     => '管理员手动操作增加预存',
-        'admin_fee_money_dec'     => '管理员手动操作扣除预存',
-        'gatewaygoods_sold'       => '网关产品卖出'
-    ];
-}
-
-/**
  * 记录用户金额变动日志
  * @param string    $business_type 业务类型
  * @param int    $user_id 用户id
@@ -161,18 +136,22 @@ function business_types()
  * @param float  $balance 余额
  * @param string $reason 原因
  */
-function record_user_money_log($business_type, $user_id, $money, $balance, $reason)
+function record_user_money_log($business_type, $user_id, $money, $balance, $reason): void
 {
-    $businessTypes = business_types();
-    $tag           = isset($businessTypes[$business_type]) ? "【{$businessTypes[$business_type]}】" : '';
-    Db::name('UserMoneyLog')->insert([
-        'business_type' => $business_type,
-        'user_id'       => $user_id,
-        'money'         => round($money, 3),
-        'balance'       => round($balance, 3),
-        'reason'        => $tag . $reason,
-        'create_at'     => time(),
-    ]);
+    try {
+        Db::startTrans();
+        UserMoneyLog::create([
+            'business_type' => $business_type,
+            'user_id'       => $user_id,
+            'money'         => round($money, 3),
+            'balance'       => round($balance, 3),
+            'reason'        => $reason,
+        ]);
+        Db::commit();
+    } catch (\Exception $e) {
+        Db::rollback();
+        throw new \Exception($e->getMessage());
+    }
 }
 
 /**
@@ -206,8 +185,11 @@ function get_user_rate($user_id, $channel_id)
 }
 
 
-// 生成代理码 全球唯一的识别码
-function generateProxyKey()
+/**
+ * 生成订单号后缀 - 用于防止订单号扫描
+ * @return string
+ */
+function generate_trade_no_suffix()
 {
     $key = md5(uniqid(md5(microtime(true)), true));
     return substr($key, 0, 8) . '-' . substr($key, 8, 4) . '-' . substr($key, 12, 4) . '-' . substr($key, 16, 4) . '-' . substr($key, 20, 12);
@@ -224,9 +206,9 @@ function generate_trade_no($flag = 'A', $userid = 0)
 {
     //订单自定义
     if (conf('order_trade_no_type') == 0) {
-        $trade_no = conf('order_trade_no_profix') . date('ymdHis') . explode('-', generateProxyKey())[0];
+        $trade_no = conf('order_trade_no_profix') . date('ymdHis') . explode('-', generate_trade_no_suffix())[0];
     } else {
-        $trade_no = $userid . date('ymdHis') . explode('-', generateProxyKey())[0];
+        $trade_no = $userid . date('ymdHis') . explode('-', generate_trade_no_suffix())[0];
     }
     // 打款订单号
     if ($flag == 'G') {
@@ -267,7 +249,12 @@ function check_wordfilter($str)
     return false;
 }
 
-// 过滤 xxs
+/**
+ * 过滤 xss 攻击
+ * @param string $param 参数
+ * @param bool   $filter 是否过滤
+ * @return string
+ */
 function paramFilter($param, bool $filter = true)
 {
     if (!$param || !$filter || !is_string($param)) {
