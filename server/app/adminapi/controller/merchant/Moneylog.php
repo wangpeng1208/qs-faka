@@ -33,7 +33,7 @@ class MoneyLog extends Base
         $res   = UserMoneyLog::withSearch($where[0], $where[1])->order("id desc")->paginate($this->limit)->each(function ($item) {
             $item->username      = $item->user->username;
             $item->hander        = $item->from_user_id == 0 ? '管理员' : '未知';
-            $item->business_type = business_types()[$item->business_type];
+            $item->business_type = UserMoneyLog::$businessTypeDict[$item->business_type];
         });
         $this->success('获取成功', [
             'list'  => $res->items(),
@@ -48,7 +48,6 @@ class MoneyLog extends Base
      */
     public function businessTypes()
     {
-        $business_types = business_types();
-        $this->success('获取成功', $business_types);
+        $this->success('获取成功', UserMoneyLog::$businessTypeDict);
     }
 }
