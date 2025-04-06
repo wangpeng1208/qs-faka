@@ -59,7 +59,6 @@ class Handler extends ExceptionHandler
      */
     protected function solveAllException(Throwable $e)
     {
-        // echo 'Class of $e: ' . get_class($e) . PHP_EOL;
         $errorMessage = $e->getMessage();
         if ($e instanceof HttpResponseException) {
             $this->statusCode = $e->statusCode;

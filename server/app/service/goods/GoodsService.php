@@ -66,7 +66,6 @@ class goodsService
                     $res = $order->cards()->saveAll($data_cards);
                     // goods_card表更新数据
                     $goods->cards()->where("id", "in", array_column($data_cards, "card_id"))->update(["status" => 2, "sell_time" => time()]);
-                    // echo 'ress'. $ress;
                     if (!$res) {
                         throw new \Exception("服务器繁忙，请稍候刷新页面");
                     }

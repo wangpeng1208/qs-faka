@@ -29,7 +29,6 @@ class RoleMerchantAuth
         $menuData  = $this->getUserMenuData($user);
         $permsData = $menuData['perms'];
         $roles     = $user->role->toArray();
-        // echo $roles['role_pc'];
         // roles数组的每一项里的rules进行过滤合并
         $rules = explode(',', $roles['role_pc']);
         // $permsData里与$rules里的id相同的perms，只返回$permsData里的perms

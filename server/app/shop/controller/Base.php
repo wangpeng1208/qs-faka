@@ -94,7 +94,6 @@ class Base extends Api
                 $this->goods_category[0]->goodsCount = $link->relation->category->count;
 
                 $this->goods = [$link->relation->visible($this->goods_visible)];
-                // echo $link->relation->is_freeze;
                 if ($link->relation->status === 0 || $link->relation->is_freeze === 1) {
                     $this->goods = [];
                 } else {
@@ -124,14 +123,10 @@ class Base extends Api
             default:
                 $this->error("链接关联类型错误");
         }
-        if (empty($this->shop))
-            $this->error("店铺不存在");
-        if ($this->shop->shop_status === 0)
-            $this->error("店铺未审核!"); // 用户提交 后台审核
-        if ($this->shop->shop_close === 1)
-            $this->error($this->shop->shop_close_notice); // 用户自己关闭
-        if ($this->shop->shop_freeze === 1)
-            $this->error("店铺已冻结"); // 管理员冻结店铺
+        empty($this->shop) && $this->error("店铺不存在");
+        empty($this->shop->shop_status) && $this->error("店铺未审核!"); // 用户提交 后台审核
+        $this->shop->shop_close && $this->error($this->shop->shop_close_notice); // 用户自己关闭
+        $this->shop->shop_freeze && $this->error("店铺已冻结"); // 管理员冻结店铺
         ShopIplist::visit($this->shop->id, $this->request->ip());
     }
 

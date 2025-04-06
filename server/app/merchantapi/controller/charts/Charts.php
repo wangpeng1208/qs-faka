@@ -14,7 +14,6 @@ namespace app\merchantapi\controller\charts;
 
 use app\merchantapi\controller\Base;
 use app\common\model\Order as OrderModel;
-use app\common\model\ShopIplist as ShopIplistModel;
 
 class Charts extends Base
 {
@@ -116,7 +115,7 @@ class Charts extends Base
         $totals["unpaid"]           = array_sum(array_column($data, "unpaid"));
         $totals["sum_money"]        = array_sum(array_column($data, "sum_money"));
         $totals["sum_actual_money"] = array_sum(array_column($data, "sum_actual_money"));
-        $data = array_values($data);
+        $data                       = array_values($data);
         $this->success('获取成功', [
             'list' => $data
         ]);
@@ -124,53 +123,18 @@ class Charts extends Base
 
     public function rankList()
     {
-        $where  = $this->request->params([
+        $where = $this->request->params([
             ['date_range', ''],
             ['keywords', ''],
             ['type', 0],
             ['user_id', $this->user->id],
             ['status', 1]
         ]);
-        $res = OrderModel::withSearch($where[0], $where[1])->field("contact,sum(total_price) as money,count(*) as times")->group("contact")->order("money desc")->paginate($this->limit);
+        $res   = OrderModel::withSearch($where[0], $where[1])->field("contact,sum(total_price) as money,count(*) as times")->group("contact")->order("money desc")->paginate($this->limit);
         $this->success('获取成功', [
             'list'  => $res->items(),
             'total' => $res->total(),
         ]);
     }
 
-    /**
-     * 店铺访问记录
-     */
-    public function iplist()
-    {
-        $params = ["date_range" => inputs("date_range/s", ""), "keywords" => inputs("keywords/s", "")];
-        if ($this->request->isPost()) {
-            if (inputs("action/s") == "del") {
-                $id   = inputs("id/d", 0);
-                $data = ShopIplistModel::where(["id" => $id, "user_id" => $this->user->id])->find();
-                if (empty($data))
-                    $this->error("不存在该IP！");
-                $res = $data->delete();
-                if ($res !== false) {
-                    $this->success("删除成功！");
-                } else {
-                    $this->error("删除失败！");
-                }
-            }
-        }
-        $where   = [];
-        $where[] = ['user_id', '=', $this->user->id];
-        if ($params["keywords"] !== "") {
-            $where[] = ['ip', 'like', "%" . $params["keywords"] . "%"];
-        }
-
-        if ($params["date_range"] && $params["date_range"][0] && $params["date_range"][1]) {
-            $where[] = ['create_at', 'between', [strtotime($params["date_range"][0]), strtotime($params["date_range"][1])]];
-        }
-        $list = ShopIplistModel::where($where)->order("id", "desc")->paginate($this->limit);
-        $this->success('获取成功', [
-            'list'  => $list->items(),
-            'total' => $list->total(),
-        ]);
-    }
 }
