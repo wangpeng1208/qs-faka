@@ -27,9 +27,7 @@ class Collection extends Base
     {
         //  type 1收款 2打款
         $type = inputs('type', 1);
-        // is_custom 0官方渠道
-        $is_custom = inputs('is_custom', 0);
-        $res       = $channelModel->where(['type' => $type, 'is_custom' => $is_custom])->paginate($this->limit);
+        $res  = $channelModel->where(['type' => $type])->paginate($this->limit);
         $this->success('获取成功', [
             'list'  => $res->items(),
             'total' => $res->total(),
@@ -43,7 +41,7 @@ class Collection extends Base
     public function listSimple()
     {
         $type = inputs('type', 1);
-        $res  = ChannelModel::where(['type' => $type, 'is_custom' => 0])->field('id as value,title as label')->order('sort asc')->select()->toArray();
+        $res  = ChannelModel::where(['type' => $type])->field('id as value,title as label')->order('sort asc')->select()->toArray();
         $this->success('获取成功', $res);
     }
 
@@ -94,7 +92,6 @@ class Collection extends Base
             'account_fields' => inputs('account_fields'),
             'default_fields' => inputs('default_fields', ''),
             'applyurl'       => inputs('applyurl'),
-            'is_custom'      => inputs('is_custom', 0),
         ];
         $validate = new \app\adminapi\validate\channel\CollectionValidate;
         $validate->scene('collection')->failException(true)->check($data);
