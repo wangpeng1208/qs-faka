@@ -13,7 +13,6 @@
 namespace app\merchantapi\controller\goods;
 
 use app\merchantapi\controller\Base;
-use app\service\merchant\ShopService;
 
 class category extends Base
 {
@@ -46,27 +45,19 @@ class category extends Base
         $this->success('获取成功', ['list' => $list]);
     }
 
-    private function post()
+    private function post($type = 'add')
     {
         $data = [
             'id'           => inputs('id/d', 0),
             'name'         => inputs('name/s', ''),
             'sort'         => inputs('sort/d', 0),
             'is_show'      => inputs('is_show/d', 1),
-            'theme'        => inputs('theme/s', 'default'),
-            'mobile_theme' => inputs('mobile_theme/s', 'default'),
             'status'       => inputs('status/d', 1),
             'create_at'    => time()
         ];
         // 数据校验
         $validate = new \app\merchantapi\validate\goods\CategoryValidate;
-        if ($data['id'] > 0) {
-            $validate->scene('edit')->failException(true)->check($data);
-        } else {
-            unset($data['id']);
-            $validate->scene('add')->failException(true)->check($data);
-        }
-        return $data;
+        return $validate->data($type, $data);
     }
 
     /**
@@ -75,12 +66,12 @@ class category extends Base
      */
     public function add()
     {
-        $data = $this->post();
+        $data = $this->post('add');
         $res  = $this->user->categorys()->save($data);
         if (empty($res->sort)) {
             $res::update(['sort' => $res->id], ['id' => $res->id]);
         }
-        $this->success("添加成功！");
+        return $res ? $this->success("添加成功！") : $this->error("添加失败！");
     }
 
     /**
@@ -89,7 +80,8 @@ class category extends Base
      */
     public function edit()
     {
-        $data = $this->post();
+        $data = $this->post('edit');
+        print_r($data);
         $res  = $this->getCategory($data['id'])->save($data);
         return $res ? $this->success("保存成功！") : $this->error("保存失败！");
     }
@@ -116,12 +108,7 @@ class category extends Base
         $field = inputs("field/s");
         $value = inputs("value/d");
         $res   = $cate->allowField(['status', 'sort', 'is_show'])->save([$field => $value]);
-        if ($res) {
-            $this->success("操作成功！");
-        } else {
-            $this->error("操作失败！");
-        }
-
+        return $res ? $this->success("操作成功！") : $this->error("操作失败！");
     }
 
     // 获取分类
