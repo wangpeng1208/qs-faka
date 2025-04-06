@@ -16,16 +16,6 @@ if ((major < 8 || (major == 8 && minor < 1))); then
     echo "PHP版本必须大于等于8.1，当前版本为 $php_version"
     exit 1
 fi
-# 检测 php是否安装了redis扩展
-if ! php -m | grep -i redis > /dev/null; then
-    echo "PHP没有安装Redis扩展，自动安装已经退出"
-    exit 1
-fi
-# 检查Redis是否已经安装运行
-if ! redis-cli ping > /dev/null 2>&1; then
-    echo "Redis没有安装或运行，自动安装已经退出"
-    exit 1
-fi
 # 检查MySQL是否已经安装运行
 which mysql > /dev/null
 if [ $? -ne 0 ]; then
@@ -74,7 +64,7 @@ echo "提示：请确认已经创建了mysql数据库"
 
 echo "环境通过检测，开始获取远程安装包..."
 # 获取最新版本号
-version=v1.4.23
+version=v1.5.2
 if [ $? -ne 0 ]; then
     echo "获取远程版本号失败"
     exit 1
