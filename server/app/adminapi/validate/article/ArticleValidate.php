@@ -12,14 +12,20 @@
 
 namespace app\adminapi\validate\article;
 
-use taoser\Validate;
+use app\adminapi\validate\Base;
 
-class ArticleValidate extends Validate
+
+class ArticleValidate extends Base
 {
 	protected $rule = [
 		'id'      => 'require',
 		'title'   => 'require',
 		'cate_id' => 'require',
+		'content' => '',
+		'status'  => '',
+		'create_at' => '',
+		'is_system' => '',
+		'top' => '',
 	];
 
 	protected $message = [
