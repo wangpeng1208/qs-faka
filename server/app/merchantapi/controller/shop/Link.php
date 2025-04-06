@@ -63,7 +63,7 @@ class Link extends Base
      */
     public function getTemplate()
     {
-        if(empty($this->user->shop)){
+        if (empty($this->user->shop)) {
             $this->error('请先完成店鋪审核');
         }
         $this->success('获取成功', $this->user->shop->visible(['pc_template', 'mobile_template']));
@@ -77,10 +77,8 @@ class Link extends Base
     {
         $field = inputs('field', '');
         $value = inputs('value', '');
-        if (empty($field) || empty($value))
-            $this->error('参数错误');
-        if (empty($this->user->shop))
-            $this->error('请先完成店鋪审核');
+        (empty($field) || empty($value)) && $this->error('参数错误');
+        empty($this->user->shop) && $this->error('请先完成店鋪审核');
         $this->user->shop->$field = $value;
         $this->user->shop->allowField(['pc_template', 'mobile_template'])->save();
         $this->success('修改成功');

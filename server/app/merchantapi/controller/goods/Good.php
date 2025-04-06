@@ -44,9 +44,7 @@ class Good extends Base
     private function checkWordfilter($name)
     {
         $check_name = check_wordfilter($name);
-        if ($check_name) {
-            $this->error("分类名包含敏感词汇“" . $check_name . "”！");
-        }
+        $check_name && $this->error("分类名包含敏感词汇“" . $check_name . "”！");
     }
 
     private function check_post($id = '')
@@ -191,11 +189,7 @@ class Good extends Base
         $id   = inputs("id/d", 0);
         $data = $this->getGoods($id);
         $res  = $data->delete();
-        if ($res) {
-            $this->success("删除商品成功！");
-        } else {
-            $this->error("删除失败！");
-        }
+        return $res ? $this->success("删除商品成功！") : $this->error("删除失败！");
     }
 
     /**
@@ -226,8 +220,7 @@ class Good extends Base
     public function recover()
     {
         $ids = inputs("ids/a", []);
-        if (empty($ids))
-            $this->error('没有选中项！');
+        empty($ids) && $this->error('没有选中项！');
         $where[] = ["id", "in", $ids];
         $result  = $this->user->goods()->onlyTrashed()->where($where)->update(["delete_at" => null]);
         return $result ? $this->success("恢复成功") : $this->error("恢复失败");
@@ -243,8 +236,7 @@ class Good extends Base
     {
         $id   = inputs("id/d", 0);
         $good = $this->getGoods($id);
-        if ($good->is_freeze == 1)
-            $this->error("该商品已被冻结，如果要上架，请修改相关商品信息再上架");
+        $good->is_freeze == 1 && $this->error("该商品已被冻结，如果要上架，请修改相关商品信息再上架");
         $status       = inputs("val/d", 0);
         $status       = $status ? 1 : 0;
         $status_text  = $status == 1 ? "上架" : "下架";

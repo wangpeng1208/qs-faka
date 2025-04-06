@@ -17,7 +17,7 @@ use app\merchantapi\controller\Base;
 
 class Account extends Base
 {
-    protected $noLoginAction = ['registerConfig', 'register', 'login', 'sendSmsCode', 'sendEmailCode', 'createVerify', 'checkVerify'];
+    protected $noLoginAction = ['registerConfig', 'register', 'login', 'sendSmsCode', 'sendEmailCode'];
 
     /**
      * 注册配置
@@ -41,10 +41,8 @@ class Account extends Base
      */
     public function login(MerchantUserService $merchantUserService)
     {
-        $params   = $this->request->post();
-        $username = $params['username'];
-        $password = $params['password'];
-        $user     = $merchantUserService->login($username, $password);
+        $params = $this->request->post();
+        $user   = $merchantUserService->login($params['username'], $params['password']);
         $this->success('登录成功', $user);
     }
 
@@ -54,9 +52,7 @@ class Account extends Base
      */
     private function registerStatusCheck()
     {
-        if (conf("site_register_status") == 0) {
-            $this->error("抱歉，目前站点禁止新用户注册");
-        }
+        conf("site_register_status") == 0 && $this->error("抱歉，目前站点禁止新用户注册");
     }
 
     /**

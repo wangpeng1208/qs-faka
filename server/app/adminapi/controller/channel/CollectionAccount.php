@@ -45,18 +45,18 @@ class CollectionAccount extends Base
     $channel_id = inputs('channel_id/d', 0);
     $data       = [];
     $res        = ChannelModel::find($channel_id);
-    if ($res) {
-      if ($res->account_fields != '') {
-        $account_fields = explode('|', $res->account_fields);
-        foreach ($account_fields as $key => $value) {
-          [$label, $name] = explode(':', $value);
-          if (isset($name)) {
-            $data[$key]['label'] = $label;
-            $data[$key]['name']  = $name;
-          }
+
+    if (!empty($res?->account_fields)) {
+      $account_fields = explode('|', $res->account_fields);
+      foreach ($account_fields as $key => $value) {
+        [$label, $name] = explode(':', $value);
+        if (isset($name)) {
+          $data[$key]['label'] = $label;
+          $data[$key]['name']  = $name;
         }
       }
     }
+
     $this->success('success', $data);
   }
 

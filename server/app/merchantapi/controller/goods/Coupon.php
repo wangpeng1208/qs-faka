@@ -96,14 +96,7 @@ class Coupon extends Base
             return $item;
         }, $post);
         $result = $this->user->goodsCoupon()->saveAll($post);
-        // 获取刚添加的数据
-        $import_coupon = inputs("import_coupon/d", '');
-        if ($result !== false) {
-            $count = count($result);
-            $this->success("成功添加" . $count . "张优惠券！");
-        } else {
-            $this->error("添加失败！");
-        }
+        return $result ? $this->success("成功添加" . count($result) . "张优惠券！") : $this->error("添加失败！");
     }
 
     /**
@@ -113,18 +106,10 @@ class Coupon extends Base
     public function batchDel()
     {
         $ids = inputs("ids/a", []);
-        if (count($ids) == 0)
-            $this->error("没有选中项！");
-        $where[] = ["id", "in", $ids];
+        count($ids) == 0 && $this->error("没有选中项！");
 
-
-        $result = $this->user->goodsCoupon()->where($where)->update(["delete_at" => time()]);
-
-        if ($result) {
-            $this->success("批量删除优惠券成功");
-        } else {
-            $this->error("删除失败！");
-        }
+        $result = $this->user->goodsCoupon()->where(["id", "in", $ids])->update(["delete_at" => time()]);
+        return $result ? $this->success("批量删除优惠券成功") : $this->error("删除失败！");
     }
 
     /**
@@ -134,15 +119,9 @@ class Coupon extends Base
     public function restore()
     {
         $ids = inputs("ids/a", []);
-        if (empty($ids))
-            $this->error('没有选中项！');
-        $where[] = ["id", "in", $ids];
-        $result  = $this->user->goodsCoupon()->onlyTrashed()->where($where)->update(["delete_at" => null]);
-        if ($result) {
-            $this->success("恢复成功！");
-        } else {
-            $this->error("恢复失败！");
-        }
+        empty($ids) && $this->error('没有选中项！');
+        $result = $this->user->goodsCoupon()->onlyTrashed()->where(["id", "in", $ids])->update(["delete_at" => null]);
+        return $result ? $this->success("恢复成功！") : $this->error("恢复失败！");
     }
 
     /**
@@ -158,11 +137,7 @@ class Coupon extends Base
                 $item->force()->delete();
             }
         });
-        if ($result) {
-            $this->success("删除成功！");
-        } else {
-            $this->error("删除失败！");
-        }
+        return $result ? $this->success("删除成功！") : $this->error("删除失败！");
     }
 
 }

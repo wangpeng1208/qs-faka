@@ -99,9 +99,7 @@ class Cash extends Base
             "create_at" => time()
         ];
         foreach ($data['info'] as $val) {
-            if (empty($val)) {
-                $this->error("资料填写不完整或存在非法字符！");
-            }
+            empty($val) && $this->error("资料填写不完整或存在非法字符！");
         }
 
         $data["allow_update"] = 0;
@@ -174,14 +172,11 @@ class Cash extends Base
         $cash_limit_time_end   = intval(conf("cash_limit_time_end"));
 
         // 系统关闭 提现
-        if (conf("cash_status") == 0)
-            $this->error(conf("cash_close_tips"));
+        conf("cash_status") == 0 && $this->error(conf("cash_close_tips"));
         // 检查用户状态
-        if ($this->user->is_freeze == 1)
-            $this->error("无法申请提现操作，您的账户已被冻结！");
+        $this->user->is_freeze == 1 && $this->error("无法申请提现操作，您的账户已被冻结！");
         // 检查用户是否设置收款信息
-        if (!$this->user->collect)
-            $this->error("您还未设置收款信息！");
+        !$this->user->collect && $this->error("您还未设置收款信息！");
 
         // 检查是否在允许提现时间
         $h = intval(date("H"));

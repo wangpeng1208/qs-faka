@@ -90,9 +90,7 @@ class News extends Base
             ->select();
         foreach (collect($articles) as $key => $value) {
             $res = Db::table('article_read')->where(['user_id' => $this->user->id, 'news_id' => $value->id])->find();
-            if (empty($res)) {
-                Db::table('article_read')->insert(['user_id' => $this->user->id, 'news_id' => $value->id, 'create_time' => time()]);
-            }
+            empty($res) && Db::table('article_read')->insert(['user_id' => $this->user->id, 'news_id' => $value->id, 'create_time' => time()]);
         }
         $this->success('标记成功');
     }

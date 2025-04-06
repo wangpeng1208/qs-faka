@@ -33,14 +33,10 @@ class Config extends Base
     {
         $shop_name = inputs("shop_name/s", "");
         $res       = check_wordfilter($shop_name);
-        if ($res) {
-            $this->error("店铺名称包含敏感词汇“" . $res . "”！");
-        }
+        $res && $this->error("店铺名称包含敏感词汇“" . $res . "”！");
         $shop_notice = inputs("shop_notice/s", "");
         $res         = check_wordfilter($shop_notice);
-        if ($res) {
-            $this->error("店铺公告包含敏感词汇“" . $res . "”！");
-        }
+        $res && $this->error("店铺公告包含敏感词汇“" . $res . "”！");
 
         $shop                       = $this->user->shop;
         $shop->shop_close           = inputs("shop_close/d", 0);
@@ -54,7 +50,8 @@ class Config extends Base
         $shop->shop_close_notice    = inputs("shop_close_notice/s", "");
         $shop->user_notice_auto_pop = inputs("user_notice_auto_pop/d", 0);
         $shop->shop_logo            = inputs("shop_logo/s", "");
-        $result                     = $shop->save();
+
+        $result = $shop->save();
         return $result ? $this->success("保存成功") : $this->error("保存失败");
     }
 
