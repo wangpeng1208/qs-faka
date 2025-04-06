@@ -16,11 +16,11 @@ use app\service\order\OrderService;
 
 class Order extends BaseModel
 {
-	// protected $autoWriteTimestamp = true;
-	// protected $createTime         = 'create_at';
 	public function channel()
 	{
-		return $this->belongsTo("Channel", "channel_id");
+		return $this->belongsTo("Channel", "channel_id")->withDefault([
+			'title' => '',
+		]);
 	}
 	public function channelAccount()
 	{
@@ -32,7 +32,9 @@ class Order extends BaseModel
 	}
 	public function shop()
 	{
-		return $this->belongsTo("ShopList", "user_id", "user_id");
+		return $this->belongsTo("ShopList", "user_id", "user_id")->withDefault([
+			'shop_name' => '',
+		]);
 	}
 	public function goods()
 	{
@@ -46,6 +48,7 @@ class Order extends BaseModel
 	{
 		return $this->hasOne("AutoUnfreeze", "trade_no", "trade_no");
 	}
+
 	// 搜索器
 	public function searchUserIdAttr($query, $value, $data)
 	{
@@ -69,48 +72,46 @@ class Order extends BaseModel
 	{
 		$query->where("trade_no", $value);
 	}
-	// transaction_id
+
 	public function searchTransactionIdAttr($query, $value, $data)
 	{
 		$query->where("transaction_id", $value);
 	}
-	// channel_id
+
 	public function searchChannelIdAttr($query, $value, $data)
 	{
 		$query->where("channel_id", $value);
 	}
-	// is_freeze
+
 	public function searchIsFreezeAttr($query, $value, $data)
 	{
 		$query->where("is_freeze", $value);
 	}
-	// card
+
 	public function searchCardAttr($query, $value, $data)
 	{
 		$query->hasWhere('OrderCard', function ($query) use ($value) {
 			$query->where('number|secret', 'like', '%' . $value . '%');
 		});
 	}
-	// contact
+
+	
 	public function searchContactAttr($query, $value, $data)
 	{
-		$query->where("contact", "like", "%" . $value . "%");
+		$query->where("contact", "like", "%{$value}%");
 	}
-	// date_type
+
 	public function searchDateTypeAttr($query, $value, $data)
 	{
-		if ($value == 1) {
-			$query->whereTime("create_at", "today");
-		} elseif ($value == 2) {
-			$query->whereTime("create_at", "yesterday");
-		} elseif ($value == 3) {
-			$query->whereTime("create_at", "week");
-		} elseif ($value == 4) {
-			$query->whereTime("create_at", "month");
-		} elseif ($value == 5) {
-			$query->whereTime("create_at", "year");
-		}
+		match ($value) {
+			1 => $query->whereTime("create_at", "today"),
+			2 => $query->whereTime("create_at", "yesterday"),
+			3 => $query->whereTime("create_at", "week"),
+			4 => $query->whereTime("create_at", "month"),
+			5 => $query->whereTime("create_at", "year"),
+		};
 	}
+
 	public function searchDateRangeAttr($query, $value, $data)
 	{
 		if (empty($value) || empty(trim($value[0])) || empty(trim($value[1]))) {
@@ -129,15 +130,15 @@ class Order extends BaseModel
 		if ($value == 'trade_no') {
 			$query->where("trade_no", $data['keywords']);
 		} elseif ($value == 'goods_name') {
-			$query->where("goods_name", "like", "%" . $data['keywords'] . "%");
+			$query->where("goods_name", "like", "%{$data['keywords']}%");
 		} elseif ($value == 'contact') {
-			$query->where("contact", "like", "%" . $data['keywords'] . "%");
+			$query->where("contact", "like", "%{$data['keywords']}%");
 		}
 	}
 	public function searchKeywordsAttr($query, $value, $data)
 	{
 	}
-	// cid
+
 	public function searchCidAttr($query, $value, $data)
 	{
 		$query->hasWhere('goods', function ($query) use ($value) {
@@ -145,10 +146,8 @@ class Order extends BaseModel
 		});
 	}
 
-	// date
 	public function searchDateAttr($query, $value, $data)
 	{
-		// create_at 等于 $value当天时间段
 		$query->whereTime("create_at", "between", [$value . " 00:00:00", $value . " 23:59:59"]);
 	}
 
