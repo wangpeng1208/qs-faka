@@ -41,9 +41,14 @@ class Order extends Base
             ['card', ''],
             ['order_type', ''],
         ]);
-        $res   = $model->with(['channel', 'user', 'shop'])->withSearch($where[0], $where[1])->order("id desc")->paginate($limit)->each(function ($item, $key) {
-            $item->cards_count = $item->cards()->count();
-        });
+        $res   = $model->with(['channel', 'user', 'shop'])
+            ->visible(['shop' => ['shop_name'], 'channel' => ['title']])
+            ->withCache(30)
+            ->withSearch($where[0], $where[1])->order("id desc")
+            ->paginate($this->limit)
+            ->each(function ($item, $key) {
+                $item->cards_count = $item->cards()->count();
+            });
         $this->success('获取成功', [
             'list'  => $res->items(),
             'total' => $res->total(),
