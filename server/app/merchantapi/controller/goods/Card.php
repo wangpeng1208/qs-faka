@@ -18,7 +18,6 @@ use app\merchantapi\controller\Base;
 
 class Card extends Base
 {
-
     public function list()
     {
         $withSearch = $this->request->params([
@@ -36,9 +35,9 @@ class Card extends Base
             ->order("id desc")
             ->paginate($this->limit)
             ->each(function ($item) {
-                $item->good_price    = $item->goods->price ?? 0;
-                $item->good_name     = $item->goods->name ?? '商品已删除';
-                $item->category_name = $item->goods->category->name ?? '栏目已删除';
+                $item->good_price    = $item?->goods?->price ?? 0;
+                $item->good_name     = $item?->goods?->name ?? '商品已删除';
+                $item->category_name = $item?->goods?->category?->name ?? '栏目已删除';
             });
         $this->success('获取成功', [
             'list'  => $res->items(),
@@ -159,11 +158,7 @@ class Card extends Base
             }
             Db::commit();
             $count_ok = count($res);
-            if ($res) {
-                $this->success("添加成功", "共" . $content_arr_count . "张卡密，成功添加" . $count_ok . "张卡密！");
-            } else {
-                $this->error("添加失败！");
-            }
+            return $res ? $this->success("添加成功", "共" . $content_arr_count . "张卡密，成功添加" . $count_ok . "张卡密！") : $this->error("添加失败！");
         }
     }
 
@@ -175,11 +170,8 @@ class Card extends Base
     public function del()
     {
         $ids = inputs("ids/a");
-        if (empty(count($ids))) {
-            $this->error("没有选中项！");
-        }
-        $where[] = ["id", "in", $ids];
-        $res     = $this->user->cards()->where($where)->update(["delete_at" => time()]);
+        empty($ids) && $this->error("没有选中项！");
+        $res = $this->user->cards()->where(["id", "in", $ids])->update(["delete_at" => time()]);
         return $res ? $this->success("删除成功！") : $this->error("删除失败！");
     }
 
@@ -205,9 +197,9 @@ class Card extends Base
             ['cate_id', ''],
         ]);
         $res   = $this->user->cards()->with('goods')->withSearch($where[0], $where[1])->onlyTrashed()->order("delete_at desc, id desc")->paginate($this->limit)->each(function ($item) {
-            $item->goods_name = $item->goods->name ?? '商品已删除';
-            $item->cate_name = $item->goods->category->name ?? '栏目已删除';
-            $item->price = $item->goods->price ?? '商品价格未知';
+            $item->goods_name = $item?->goods?->name ?? '商品已删除';
+            $item->cate_name = $item?->goods?->category?->name ?? '栏目已删除';
+            $item->price = $item?->goods?->price ?? 0;
         });
         $this->success('获取成功', [
             'list'  => $res->items(),
@@ -223,9 +215,7 @@ class Card extends Base
     public function trashBatchDel()
     {
         $ids = inputs("ids/a");
-        if (empty($ids)) {
-            $this->error("没有选中项！");
-        }
+        empty($ids) && $this->error("没有选中项！");
         $where[] = ["id", "in", $ids];
         $where[] = ["user_id", "=", $this->user->id];
         $where[] = ["delete_at", ">", 0];
@@ -234,11 +224,7 @@ class Card extends Base
                 $item->force()->delete();
             }
         });
-        if ($result) {
-            return $this->success("删除成功！");
-        } else {
-            return $this->error("删除失败！");
-        }
+        return $result ? $this->success("删除成功！") : $this->error("删除失败！");
     }
 
     /**
@@ -253,11 +239,7 @@ class Card extends Base
                 $item->force()->delete();
             }
         });
-        if ($result) {
-            return $this->success("清空虚拟卡回收站成功");
-        } else {
-            $this->error("删除失败！");
-        }
+        return $result ? $this->success("清空虚拟卡回收站成功") : $this->error("删除失败！");
     }
 
     public function trashBatchRestore()
@@ -268,11 +250,7 @@ class Card extends Base
         }
         $where[] = ["id", "in", $ids];
         $result  = $this->user->cards()->onlyTrashed()->where($where)->update(["delete_at" => null]);
-        if ($result) {
-            $this->success("恢复虚拟卡成功，ID:" . json_encode($ids));
-        } else {
-            $this->error("恢复失败！");
-        }
+        return $result ? $this->success("恢复虚拟卡成功，ID:" . json_encode($ids)) : $this->error("恢复失败！");
     }
 
     public function first()
@@ -280,11 +258,7 @@ class Card extends Base
         $id     = inputs("id/d", 0);
         $status = inputs("status/d", 0);
         $res    = $this->user->cards()->where(["id" => $id])->update(["is_first" => $status]);
-        if ($res !== false) {
-            $this->success("修改成功！");
-        } else {
-            $this->error("修改失败！");
-        }
+        return $res ? $this->success("修改成功！") : $this->error("修改失败！");
     }
 
     public function delete_card_right()
@@ -303,10 +277,6 @@ class Card extends Base
         $res    = GoodsCardModel::withSearch($withSearch[0], $withSearch[1])->where($where);
         $count  = $res->count();
         $result = $res->delete();
-        if ($result) {
-            $this->success("成功删除" . $count . "条已售出卡密记录");
-        } else {
-            $this->error("删除失败");
-        }
+        return $result ? $this->success("成功删除" . $count . "条已售出卡密记录") : $this->error("删除失败");
     }
 }
