@@ -51,7 +51,6 @@ export default ({ mode }: ConfigEnv): UserConfig => {
         ],
       }),
     ],
-    // const API_URL = process.env.VITE_API_URL || window.location.origin;
     server: {
       port: 3003,
       host: '0.0.0.0',
@@ -63,14 +62,9 @@ export default ({ mode }: ConfigEnv): UserConfig => {
       assetsDir: 'web/assets',
       rollupOptions: {
         output: {
-          // chunkFileNames: 'js/[name]-[hash].js', // 引入文件名的名称
-          // entryFileNames: 'js/[name]-[hash].js', // 包的入口文件名称
-          // assetFileNames: '[ext]/[name]-[hash].[ext]', // 资源文件像 字体，图片等
           manualChunks: {
             vue: ['vue', 'vue-router', 'vue-i18n', 'vue-clipboard3'],
             libs: ['axios', 'dayjs', 'lodash', 'nprogress', 'qs'],
-            ui: ['tdesign-vue-next'],
-            icons: ['tdesign-icons-vue-next'],
             echarts: ['vue-echarts'],
             wangeditor: ['@wangeditor/editor', '@wangeditor/editor-for-vue'],
             plugins: ['pinia', 'pinia-plugin-persistedstate'],
