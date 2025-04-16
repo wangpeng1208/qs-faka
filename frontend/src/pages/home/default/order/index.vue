@@ -97,15 +97,25 @@
                   <t-button v-if="outCards" tip="点击复制" @click="constOutCards">复制卡密</t-button>
                 </t-space>
               </div>
-              <div style="text-align: center; padding: 20px; margin: 20px">
+              <div style="">
                 <div id="copyText" v-html="outCardsHtml"></div>
                 <div class="remark">
-                  使用说明：
+                  <span>使用说明</span>
                   <div v-html="goods.remark"></div>
                 </div>
                 <div class="remark">
-                  联系商家:
-                  <div v-for="(item, index) in shopContact" :key="index">{{ index }} : {{ item }}</div>
+                  <span>联系商家</span>
+                  <div class="contact-content">
+                    <div v-if="shopContact.mobile">
+                      <span>手机号：{{ shopContact.mobile }}</span>
+                    </div>
+                    <div v-if="shopContact.qq">
+                      <span>QQ号：{{ shopContact.qq }}</span>
+                    </div>
+                    <div v-if="shopContact.wechat">
+                      <span>微信号：{{ shopContact.wechat }}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -362,8 +372,20 @@ const constOutCards = () => {
     0 1px 4px rgba(0, 0, 0, 0.117647);
 }
 .remark {
-  padding: 10px;
+  padding: 10px 20px;
+  display: flex;
+  span {
+    margin-right: 10px;
+  }
+}
+
+#copyText {
+  text-align: center;
+  padding: 20px;
+  margin: 20px;
+
   background: #f5f5f5;
   border-top: 1px solid #f2f2f2;
+  border-radius: 10px;
 }
 </style>
