@@ -112,7 +112,7 @@ class RoleMerchantAuth
             $tree[$item['pid']]['children'][] = &$tree[$key];
         }
 
-        $tree = isset($tree[0]['children']) ? $tree[0]['children'] : [];
+        $tree = $tree[0]['children'] ?? [];
         return $tree;
     }
 

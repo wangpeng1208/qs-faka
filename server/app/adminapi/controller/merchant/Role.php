@@ -92,7 +92,8 @@ class Role extends Base
             $tree[$value['pid']]['children'][] = &$tree[$key];
         }
 
-        $pc = isset($tree[0]['children']) ? $tree[0]['children'] : [];
+        $pc = $tree[0]['children'] ?? [];
+        
         $this->success('获取成功', [
             'pc'  => $pc,
             'wap' => [],
