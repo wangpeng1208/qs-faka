@@ -15,6 +15,7 @@ namespace app\home\collection;
 use Yansongda\Pay\Pay;
 use app\service\common\PayService;
 use app\home\collection\interfaces\CollectionInterface;
+use support\Log;
 
 /**
  * @note 支付宝扫码支付
@@ -122,7 +123,7 @@ class AlipayScan extends PayService implements CollectionInterface
         $res['code'] = 1;
       }
       // 记录退款日志
-      record_file_log("pay_alipay_refund", "【API退款】支付宝用户名：$res[buyer_logon_id]，支付宝用户ID：$res[buyer_user_id]，退款金额：$res[refund_fee]，退款时间：$res[gmt_refund_pay]，订单号：$res[out_trade_no]，交易号：$res[trade_no]，退款状态：$res[fund_change]");
+      config('app.debug') && Log::channel('pay')->info("【API退款】支付宝用户名：$res[buyer_logon_id]，支付宝用户ID：$res[buyer_user_id]，退款金额：$res[refund_fee]，退款时间：$res[gmt_refund_pay]，订单号：$res[out_trade_no]，交易号：$res[trade_no]，退款状态：$res[fund_change]");
       return $res;
     } catch (\Exception $e) {
       $res['code'] = 0;
@@ -143,13 +144,13 @@ class AlipayScan extends PayService implements CollectionInterface
       if ($result['trade_status'] == 'TRADE_SUCCESS') {
         // 在订单模型中添加一个完成订单方法
         $this->order->completeOrder($this->order);
-        record_file_log("pay_alipay_notify_right", $result['out_trade_no'] . '支付成功');
+        config('app.debug') && Log::channel('pay')->info($result['out_trade_no'] . '支付成功');
       } else {
         $result = json_encode($result);
-        record_file_log("pay_alipay_notify_error", $result);
+        config('app.debug') && Log::channel('pay')->error($result);
       }
     } catch (\Exception $e) {
-      record_file_log("pay_alipay_notify_error", $request['out_trade_no'] . '支付失败，错误信息：' . $e->getMessage());
+      config('app.debug') && Log::channel('pay')->error($request['out_trade_no'] . '支付失败，错误信息：' . $e->getMessage());
     }
     return true;
   }

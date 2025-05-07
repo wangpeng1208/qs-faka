@@ -15,6 +15,7 @@ namespace app\home\collection;
 use Yansongda\Pay\Pay;
 use app\service\common\PayService;
 use app\home\collection\interfaces\CollectionInterface;
+use support\Log;
 
 /**
  * @note 银联扫码支付
@@ -139,7 +140,7 @@ class UnipayScan extends PayService implements CollectionInterface
       }
     } catch (\Exception $e) {
       // 处理异常
-      record_file_log("unipay_notify_error", '支付失败，错误信息：' . $e->getMessage());
+      config('app.debug') && Log::channel('pay')->error('支付失败，错误信息：' . $e->getMessage());
     }
     return true;
   }

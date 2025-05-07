@@ -16,6 +16,7 @@ use Yansongda\Pay\Pay;
 use app\service\common\PayService;
 use app\home\collection\interfaces\CollectionInterface;
 use app\common\model\ChannelAccount;
+use support\Log;
 
 /**
  * @note 微信H5支付 
@@ -199,7 +200,7 @@ class WechatH5 extends PayService implements CollectionInterface
                 // 在订单模型中添加一个完成订单方法
                 $this->order->completeOrder($this->order);
             } else {
-                record_file_log('wechat_native_error_notify', $result);
+                config('app.debug') && Log::channel('pay')->error($result);
                 return false;
             }
         } catch (\Exception $e) {
