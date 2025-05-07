@@ -34,23 +34,19 @@ class PayService
         }
         $order_master = OrderMaster::where("trade_no", $trade_no)->find();
         if (!$order_master) {
-            record_file_log("pay_error", $trade_no . "不存在该订单号！");
             throw new \Exception("不存在该订单号！");
         }
         $order = $order_master->loadModel;
         if (!$order) {
-            record_file_log("pay_error", $trade_no . "不存在该订单！");
             throw new \Exception("不存在该订单！");
         }
         $channel = $order->channel;
         if (!$channel) {
-            record_file_log("pay_error", $trade_no . "不存在该支付渠道！");
             throw new \Exception("不存在该支付渠道！");
         }
         $account = $order->channelAccount;
         if (!$account) {
-            record_file_log("pay_error", $trade_no . "不存在支付渠道：" . $channel->title . "的账号！");
-            throw new \Exception("不存在支付渠道：" . $channel->title . "的账号！");
+            throw new \Exception("不存在支付渠道：{$channel->title}的账号！");
         }
         return $order;
     }

@@ -198,8 +198,6 @@ class MerchantUserService
         $code   = rand(1000, 9999);
         $screen = inputs("screen/s", "register");
 
-        record_file_log('短信注册验证码日志', '手机号' . $mobile . '验证码' . $code);
-
         Cache::set('mobile_code_register_' . $mobile, $code, 300);
 
         $sms = new SmsService();
