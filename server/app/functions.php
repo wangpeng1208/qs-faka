@@ -61,29 +61,6 @@ function conf($name, $value = null)
 }
 
 /**
- * 记录文件日志
- * @param string $filename 文件名
- * @param string $content 内容
- * @return void
- */
-function record_file_log($filename, $content)
-{
-    if (!is_dir(runtime_path())) {
-        mkdir(runtime_path(), 0755, true);
-    }
-    $log_path = runtime_path() . '/logs/';
-    if (!is_dir($log_path)) {
-        mkdir($log_path, 0755, true);
-    }
-    // 如果$content是数组或者对象，转换成json
-    if (is_array($content)) {
-        $content = json_encode($content, JSON_UNESCAPED_UNICODE);
-    }
-    file_put_contents($log_path . $filename . '.log', date('【Y-m-d H:i:s】') . "{$content}" . PHP_EOL, FILE_APPEND);
-}
-
-
-/**
  * 返回接口数据
  * @param int    $code 状态码
  * @param string $msg  信息
