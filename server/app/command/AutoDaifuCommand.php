@@ -24,7 +24,7 @@ use support\Container;
 class AutoDaifuCommand extends Command
 {
     protected static $defaultName = 'auto:daifu';
-    protected static $defaultDescription = '自动代付任务';
+    protected static $defaultDescription = '支付宝自动转账任务';
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -43,7 +43,7 @@ class AutoDaifuCommand extends Command
         // 随机一个打款账号
         if ($allAccounts->isEmpty()) {
             $output->writeln("没有可用的代付账号");
-            return parent::SUCCESS;
+            return parent::FAILURE;
         }
         $account = $allAccounts[array_rand($allAccounts->toArray())];
         $channel = $account->channel;
