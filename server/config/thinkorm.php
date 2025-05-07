@@ -1,11 +1,11 @@
 <?php
 
 return [
-    'default'     => getenv('DB_TYPE'),
+    'default'     => 'mysql',
     'connections' => [
         'mysql' => [
             // 数据库类型
-            'type'            => 'mysql',
+            'type'            => getenv('DB_TYPE'),
             // 服务器地址
             'hostname'        => getenv('DB_HOSTNAME'),
             // 数据库名
