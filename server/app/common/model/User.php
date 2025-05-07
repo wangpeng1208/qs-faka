@@ -190,10 +190,4 @@ class User extends Model
     {
         return $this->link()->value('status');
     }
-
-    // test 用户资金更新
-    public static function onAfterUpdate($user)
-    {
-        record_file_log("user", "用户{$user->id} 资金更新：" . $user->money);
-    }
 }
