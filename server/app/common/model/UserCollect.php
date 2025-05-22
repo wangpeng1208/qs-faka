@@ -13,11 +13,18 @@ namespace app\common\model;
 
 class UserCollect extends BaseModel
 {
-    protected $json = ['info'];
+    protected function getOptions(): array
+    {
+        return [
+            'type'      => [
+                'info' => 'json',
+            ],
+            'jsonAssoc' => true,
+        ];
+    }
     public function user()
     {
-        return $this->belongsTo('User','user_id');
+        return $this->belongsTo('User', 'user_id');
     }
-
 
 }

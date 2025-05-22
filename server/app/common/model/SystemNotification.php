@@ -15,5 +15,13 @@ namespace app\common\model;
 
 class SystemNotification extends BaseModel
 {
-    protected $json = ['sms_config'];
+    protected function getOptions(): array
+    {
+      return [
+        'type'      => [
+          'sms_config' => 'json',
+        ],
+        'jsonAssoc' => true,
+      ];
+    }
 }

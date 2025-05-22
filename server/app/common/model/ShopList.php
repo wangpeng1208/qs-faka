@@ -15,7 +15,15 @@ namespace app\common\model;
 
 class ShopList extends BaseModel
 {
-  protected $json = ['shop_contact'];
+  protected function getOptions(): array
+  {
+    return [
+      'type'      => [
+        'shop_contact' => 'json',
+      ],
+      'jsonAssoc' => true,
+    ];
+  }
 
   public function user()
   {

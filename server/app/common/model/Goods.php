@@ -25,10 +25,17 @@ class Goods extends BaseModel
 	protected $updateTime = false;
 
 	// 设置json类型字段
-	protected $json = ['wholesale_discount_list', 'event_give', 'addtion_give'];
-
-	// 设置JSON数据返回数组
-	protected $jsonAssoc = true;
+	protected function getOptions(): array
+    {
+        return [
+            'type' => [
+				'wholesale_discount_list' => 'json',
+				'event_give' => 'json',
+				'addtion_give' => 'json',
+            ],
+            'jsonAssoc'    => true,
+        ];
+    }
 
 	public function user()
 	{
