@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit233d5eb76b6ffead3b0a183f81998e40
+class ComposerStaticInitbcefff344b8bbdb44a59e36673811fa3
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -14,8 +14,8 @@ class ComposerStaticInit233d5eb76b6ffead3b0a183f81998e40
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         '72579e7bd17821bb1321b87411366eae' => __DIR__ . '/..' . '/illuminate/support/helpers.php',
-        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '9b552a3cc426e3287cc811caefa3cf53' => __DIR__ . '/..' . '/topthink/think-helper/src/helper.php',
+        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
@@ -181,10 +181,10 @@ class ComposerStaticInit233d5eb76b6ffead3b0a183f81998e40
         ),
         'think\\' => 
         array (
-            0 => __DIR__ . '/..' . '/topthink/think-container/src',
-            1 => __DIR__ . '/..' . '/topthink/think-helper/src',
-            2 => __DIR__ . '/..' . '/topthink/think-orm/src',
-            3 => __DIR__ . '/..' . '/topthink/think-template/src',
+            0 => __DIR__ . '/..' . '/topthink/think-template/src',
+            1 => __DIR__ . '/..' . '/topthink/think-orm/src',
+            2 => __DIR__ . '/..' . '/topthink/think-container/src',
+            3 => __DIR__ . '/..' . '/topthink/think-helper/src',
         ),
         'taoser\\' => 
         array (
@@ -192,8 +192,8 @@ class ComposerStaticInit233d5eb76b6ffead3b0a183f81998e40
         ),
         'support\\' => 
         array (
-            0 => __DIR__ . '/..' . '/webman/cache/src/support',
-            1 => __DIR__ . '/..' . '/webman/think-orm/src/support',
+            0 => __DIR__ . '/..' . '/webman/think-orm/src/support',
+            1 => __DIR__ . '/..' . '/webman/cache/src/support',
             2 => __DIR__ . '/..' . '/workerman/webman-framework/src/support',
         ),
         'app\\View\\Components\\' => 
@@ -222,8 +222,8 @@ class ComposerStaticInit233d5eb76b6ffead3b0a183f81998e40
         ),
         'Workerman\\' => 
         array (
-            0 => __DIR__ . '/..' . '/workerman/coroutine/src',
-            1 => __DIR__ . '/..' . '/workerman/workerman/src',
+            0 => __DIR__ . '/..' . '/workerman/workerman/src',
+            1 => __DIR__ . '/..' . '/workerman/coroutine/src',
         ),
         'Webman\\ThinkOrm\\' => 
         array (
@@ -392,10 +392,10 @@ class ComposerStaticInit233d5eb76b6ffead3b0a183f81998e40
         ),
         'Illuminate\\Support\\' => 
         array (
-            0 => __DIR__ . '/..' . '/illuminate/collections',
-            1 => __DIR__ . '/..' . '/illuminate/conditionable',
-            2 => __DIR__ . '/..' . '/illuminate/macroable',
-            3 => __DIR__ . '/..' . '/illuminate/support',
+            0 => __DIR__ . '/..' . '/illuminate/support',
+            1 => __DIR__ . '/..' . '/illuminate/collections',
+            2 => __DIR__ . '/..' . '/illuminate/conditionable',
+            3 => __DIR__ . '/..' . '/illuminate/macroable',
         ),
         'Illuminate\\Pipeline\\' => 
         array (
@@ -535,11 +535,11 @@ class ComposerStaticInit233d5eb76b6ffead3b0a183f81998e40
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit233d5eb76b6ffead3b0a183f81998e40::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit233d5eb76b6ffead3b0a183f81998e40::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInit233d5eb76b6ffead3b0a183f81998e40::$fallbackDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit233d5eb76b6ffead3b0a183f81998e40::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit233d5eb76b6ffead3b0a183f81998e40::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitbcefff344b8bbdb44a59e36673811fa3::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitbcefff344b8bbdb44a59e36673811fa3::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInitbcefff344b8bbdb44a59e36673811fa3::$fallbackDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitbcefff344b8bbdb44a59e36673811fa3::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitbcefff344b8bbdb44a59e36673811fa3::$classMap;
 
         }, null, ClassLoader::class);
     }

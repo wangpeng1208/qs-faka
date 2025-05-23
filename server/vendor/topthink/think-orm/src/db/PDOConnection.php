@@ -301,19 +301,18 @@ abstract class PDOConnection extends Connection
         $type = strtolower($type);
 
         return match (true) {
-            str_starts_with($type, 'set') => 'set',
-            str_starts_with($type, 'enum') => 'enum',
-            str_starts_with($type, 'bigint') => 'bigint',
-            str_contains($type, 'float') || str_contains($type, 'double') ||
-            str_contains($type, 'decimal') || str_contains($type, 'real') ||
-            str_contains($type, 'numeric') => 'float',
+            str_starts_with($type, 'set')           => 'set',
+            str_starts_with($type, 'enum')          => 'enum',
+            str_starts_with($type, 'bigint')        => 'bigint',
+            str_contains($type, 'float') || str_contains($type, 'double') || str_contains($type, 'real') || str_contains($type, 'numeric')          => 'float',
             str_contains($type, 'int') || str_contains($type, 'serial') ||
-            str_contains($type, 'bit') => 'int',
-            str_contains($type, 'bool') => 'bool',
-            str_starts_with($type, 'timestamp') => 'timestamp',
-            str_starts_with($type, 'datetime') => 'datetime',
-            str_starts_with($type, 'date') => 'date',
-            default => 'string',
+            str_contains($type, 'bit')              => 'int',
+            str_contains($type, 'bool')             => 'bool',
+            str_contains($type, 'json')             => 'json',
+            str_starts_with($type, 'timestamp')     => 'timestamp',
+            str_starts_with($type, 'datetime')      => 'datetime',
+            str_starts_with($type, 'date')          => 'date',
+            default                                 => 'string',
         };
     }
 
@@ -389,6 +388,9 @@ abstract class PDOConnection extends Connection
         if ($this->config['fields_cache'] && !empty($this->cache) && !$force) {
             $info = $this->cache->get($cacheKey);
             if (!empty($info)) {
+                if (is_object($info)) {
+                    $info = get_object_vars($info);
+                }
                 return $info;
             }
         }
@@ -424,7 +426,7 @@ abstract class PDOConnection extends Connection
 
         $info = $this->getSchemaInfo($tableName);
 
-        return $fetch && isset($info[$fetch]) ? $info[$fetch] : $info;
+        return $fetch && array_key_exists($fetch, $info) ? $info[$fetch] : $info;
     }
 
     /**
@@ -482,7 +484,7 @@ abstract class PDOConnection extends Connection
      *
      * @param mixed $tableName 数据表名
      *
-     * @return string
+     * @return string|null
      */
     public function getAutoInc($tableName)
     {
@@ -718,15 +720,15 @@ abstract class PDOConnection extends Connection
         $query->parseOptions();
         $bind = $query->getBind();
 
-        if ($query->getOptions('cache')) {
+        if ($query->getOption('cache')) {
             // 检查查询缓存
-            $cacheItem = $this->parseCache($query, $query->getOptions('cache'));
-            if (!$query->getOptions('force_cache')) {
+            $cacheItem = $this->parseCache($query, $query->getOption('cache'));
+            if (!$query->getOption('force_cache')) {
                 $key = $cacheItem->getKey();
 
                 if ($this->cache->has($key)) {
                     $data = $this->cache->get($key);
-                    if (null !== $data) {
+                    if (null !== $data && is_array($data)) {
                         return $data;
                     }
                 }
@@ -739,15 +741,15 @@ abstract class PDOConnection extends Connection
         }
 
         if (!isset($master)) {
-            $master = (bool) $query->getOptions('master');
+            $master = (bool) $query->getOption('master');
         }
 
-        $procedure = $query->getOptions('procedure') || in_array(strtolower(substr(trim($sql), 0, 4)), ['call', 'exec']);
+        $procedure = $query->getOption('procedure') || in_array(strtolower(substr(trim($sql), 0, 4)), ['call', 'exec']);
 
         $this->getPDOStatement($sql, $bind, $master, $procedure);
 
         $resultSet    = $this->getResult($procedure);
-        $requireCache = $query->getOptions('cache_always') || !empty($resultSet);
+        $requireCache = $query->getOption('cache_always') || !empty($resultSet);
 
         if (isset($cacheItem) && $requireCache) {
             // 缓存数据集
@@ -869,9 +871,9 @@ abstract class PDOConnection extends Connection
 
         $this->numRows = $this->PDOStatement->rowCount();
 
-        if ($query->getOptions('cache')) {
+        if ($query->getOption('cache')) {
             // 清理缓存数据
-            $cacheItem = $this->parseCache($query, $query->getOptions('cache'));
+            $cacheItem = $this->parseCache($query, $query->getOption('cache'));
             $key       = $cacheItem->getKey();
             $tag       = $cacheItem->getTag();
 
@@ -1260,7 +1262,7 @@ abstract class PDOConnection extends Connection
 
         $result       = $pdo->fetchColumn();
         $result       = false !== $result ? $result : $default;
-        $requireCache = $query->getOptions('cache_always') || !empty($result);
+        $requireCache = $query->getOption('cache_always') || !empty($result);
 
         if (isset($cacheItem) && $requireCache) {
             // 缓存数据
@@ -1386,7 +1388,7 @@ abstract class PDOConnection extends Connection
             $result = $resultSet;
         }
 
-        $requireCache = $query->getOptions('cache_always') || !empty($result);
+        $requireCache = $query->getOption('cache_always') || !empty($result);
 
         if (isset($cacheItem) && $requireCache) {
             // 缓存数据
@@ -1415,8 +1417,8 @@ abstract class PDOConnection extends Connection
             $param = is_numeric($key) ? $key + 1 : ':' . $key;
 
             if (is_array($val)) {
-                if (self::PARAM_INT == $val[1] && '' === $val[0]) {
-                    $val[0] = 0;
+                if (self::PARAM_INT == $val[1]) {
+                    $val[0] = (int) $val[0];
                 } elseif (self::PARAM_FLOAT == $val[1]) {
                     $val[0] = is_string($val[0]) ? (float) $val[0] : $val[0];
                     $val[1] = self::PARAM_STR;

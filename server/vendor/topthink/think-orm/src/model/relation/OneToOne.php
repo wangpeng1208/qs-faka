@@ -16,7 +16,6 @@ use Closure;
 use think\db\BaseQuery as Query;
 use think\db\exception\DbException as Exception;
 use think\db\exception\InvalidArgumentException;
-use think\Entity;
 use think\helper\Str;
 use think\model\contract\Modelable as Model;
 use think\model\Relation;
@@ -81,8 +80,8 @@ abstract class OneToOne extends Relation
             $table = $query->getTable();
             $query->table([$table => $name]);
 
-            if ($query->getOptions('field')) {
-                $masterField = $query->getOptions('field');
+            if ($query->getOption('field')) {
+                $masterField = $query->getOption('field');
                 $query->removeOption('field');
             } else {
                 $masterField = true;
@@ -95,6 +94,13 @@ abstract class OneToOne extends Relation
         $joinTable = $this->query->getTable();
         $joinAlias = Str::snake($relation);
         $joinType  = $joinType ?: $this->joinType;
+        if (true !== $field) {
+            $joinField = $field;
+        } elseif ($this->query->getOption('field')) {
+            $joinField = $this->query->getOption('field');
+        } else {
+            $joinField = $field;
+        }
 
         $query->via($joinAlias);
 
@@ -120,15 +126,16 @@ abstract class OneToOne extends Relation
             // 执行闭包查询
             $closure($query);
 
-            // 使用withField指定获取关联的字段
-            $withField = $this->query->getOptions('field');
+            // 使用field指定获取关联的字段
+            $withField = $query->getOption('field');
             if ($withField) {
-                $field = $withField;
+                $joinField = $withField;
             }
+            $query->removeOption('field');
         }
 
         $query->join([$joinTable => $joinAlias], $joinOn, $joinType)
-            ->tableField($field, $joinTable, $joinAlias, $joinAlias . '__');
+            ->tableField($joinField, $joinTable, $joinAlias, $joinAlias . '__');
     }
 
     /**
@@ -252,16 +259,6 @@ abstract class OneToOne extends Relation
     }
 
     /**
-     * 获取绑定属性.
-     *
-     * @return array
-     */
-    public function getBindAttr(): array
-    {
-        return $this->bindAttr;
-    }
-
-    /**
      * 一对一 关联模型预查询拼装.
      *
      * @param string $model    模型名称
@@ -272,85 +269,13 @@ abstract class OneToOne extends Relation
      */
     protected function match(string $model, string $relation, Model $result): void
     {
-        if ($result->getEntity()) {
-            $data = $result->getEntity()->getRelation($relation);
-            if (!empty($data)) {
-                $relationModel = (new $model())->newInstance($data);
-                if ($this->bindAttr) {
-                    $result->getEntity()->bindRelationAttr($data, $this->bindAttr);
-                } else {
-                    $result->setRelation($relation, $relationModel);
-                }
-            }
-        } else {
-            // 重新组装模型数据
-            foreach ($result->getData() as $key => $val) {
-                if (str_contains($key, '__')) {
-                    [$name, $attr] = explode('__', $key, 2);
-                    if (Str::snake($relation) == $name) {
-                        $list[$relation][$attr] = $val;
-                        unset($result->$key);
-                    }
-                }
-            }
-
-            if (isset($list[$relation])) {
-                $array = array_unique($list[$relation]);
-
-                if (count($array) == 1 && null === current($array)) {
-                    $relationModel = null;
-                } else {
-                    $relationModel = new $model($list[$relation]);
-                    $relationModel->setParent(clone $result);
-                    $relationModel->exists(true);
-                }
-
-                if (!empty($this->bindAttr)) {
-                    $this->bindAttr($result, $relationModel);
-                }
+        $data = $result->getRelation($relation);
+        if (!empty($data)) {
+            if ($this->bindAttr) {
+                $result->bindRelationAttr($data, $this->bindAttr);
             } else {
-                $relationModel = null;
-            }
-
-            $result->setRelation($relation, $relationModel);
-        }
-    }
-
-    /**
-     * 绑定关联属性到父模型.
-     *
-     * @param Model $result 父模型对象
-     * @param Model $model  关联模型对象
-     *
-     * @throws Exception
-     *
-     * @return void
-     */
-    protected function bindAttr(Model $result, ?Model $model = null): void
-    {
-        if ($result instanceof Entity && $model) {
-            $result->bindRelationAttr($model, $this->bindAttr);
-        } else {
-            foreach ($this->bindAttr as $key => $attr) {
-                if (is_numeric($key)) {
-                    if (!is_string($attr)) {
-                        throw new InvalidArgumentException('bind attr must be string:' . $key);
-                    }
-
-                    $key = $attr;
-                }
-
-                if (null !== $result->getOrigin($key)) {
-                    throw new Exception('bind attr has exists:' . $key);
-                }
-
-                if ($attr instanceof Closure) {
-                    $value = $attr($model, $key, $result);
-                } else {
-                    $value = $model?->getAttr($attr);
-                }
-
-                $result->setAttr($key, $value);
+                $relationModel = new $model($data);
+                $result->setRelation($relation, $relationModel);
             }
         }
     }

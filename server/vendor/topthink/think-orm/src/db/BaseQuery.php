@@ -93,7 +93,11 @@ abstract class BaseQuery
     public function __construct(ConnectionInterface $connection)
     {
         $this->connection = $connection;
-        $this->prefix     = $this->connection->getConfig('prefix');
+        $this->prefix     = $this->getConfig('prefix');
+        $timeRule         = $this->getConfig('time_query_rule');
+        if (!empty($timeRule)) {
+            $this->timeRule($timeRule);
+        }
     }
 
     /**
@@ -150,11 +154,16 @@ abstract class BaseQuery
     /**
      * 创建一个新的查询对象
      *
+     * @param string|null $class 查询对象类名
      * @return BaseQuery
      */
-    public function newQuery(): BaseQuery
+    public function newQuery(?string $class = null): BaseQuery
     {
-        $query = new static($this->connection);
+        if (null === $class) {
+            $query = new static($this->connection);
+        } else {
+            $query = new $class($this->connection);
+        }
 
         if ($this->model) {
             $query->model($this->model);
@@ -171,7 +180,7 @@ abstract class BaseQuery
         }
 
         if (isset($this->options['field_type'])) {
-            $query->setFieldType($this->options['field_type']);
+            $query->schema($this->options['field_type']);
         }
 
         if (isset($this->options['lazy_fields'])) {
@@ -261,7 +270,7 @@ abstract class BaseQuery
             return $id;
         }
 
-        return $this->getOptions('key');
+        return $this->getOption('key');
     }
 
     /**
@@ -298,13 +307,14 @@ abstract class BaseQuery
     /**
      * 设置字段类型信息.
      *
-     * @param array $type 字段类型信息
+     * @param string $field 字段
+     * @param string $type 字段类型
      *
      * @return $this
      */
-    public function setFieldType(array $type)
+    public function setFieldType(string $field, string $type)
     {
-        $this->options['field_type'] = $type;
+        $this->options['field_type'][$field] = $type;
 
         return $this;
     }
@@ -388,7 +398,7 @@ abstract class BaseQuery
             if (!empty($this->options['json'])) {
                 $this->jsonModelResult($array);
             }
-            return $this->model->newInstance($array)->getAttr($field);
+            return $this->model->newInstance($array)->get($field);
         }
 
         if (!empty($this->options['json'])) {
@@ -446,7 +456,7 @@ abstract class BaseQuery
                 if (!empty($this->options['json'])) {
                     $this->jsonModelResult($array);
                 }
-                return $this->model->newInstance($array)->getAttr($field);
+                return $this->model->newInstance($array)->get($field);
             }
             if (!empty($this->options['json'])) {
                 $this->jsonResult($array);
@@ -600,6 +610,10 @@ abstract class BaseQuery
         // 添加统一的前缀
         $prefix = $prefix ?: $tableName;
         foreach ($field as $key => &$val) {
+            if (strpos($val, '.')) {
+                continue;
+            }
+
             if (is_numeric($key) && $alias) {
                 $field[$prefix . '.' . $val] = $alias . $val;
                 unset($field[$key]);
@@ -627,25 +641,6 @@ abstract class BaseQuery
     public function data(array $data)
     {
         $this->options['data'] = $data;
-
-        return $this;
-    }
-
-    /**
-     * 去除查询参数.
-     *
-     * @param string $option 参数名 留空去除所有参数
-     *
-     * @return $this
-     */
-    public function removeOption(string $option = '')
-    {
-        if ('' === $option) {
-            $this->options = [];
-            $this->bind    = [];
-        } elseif (isset($this->options[$option])) {
-            unset($this->options[$option]);
-        }
 
         return $this;
     }
@@ -962,7 +957,7 @@ abstract class BaseQuery
         $key = $key ?: $this->getPk();
 
         if (is_null($sort)) {
-            $order = $this->getOptions('order');
+            $order = $this->getOption('order');
             if (!empty($order)) {
                 $sort = $order[$key] ?? 'desc';
             } else {
@@ -1017,7 +1012,7 @@ abstract class BaseQuery
             $key    = true;
         }
 
-        $this->options['cache'] = [$key, $expire, $tag ?: var_export($this->getTable(), true)];
+        $this->options['cache'] = [$key, $expire, $tag ?: $this->getTable()];
         return $this;
     }
 
@@ -1088,6 +1083,22 @@ abstract class BaseQuery
         }
 
         return $this;
+    }
+
+    /**
+     * 获取数据表别名.
+     *
+     * @param string $table 数据表（留空取当前表）
+     *
+     * @return string
+     */
+    public function getAlias(string $table = '')
+    {
+        if ('' === $table) {
+            $table = $this->getTable();
+        }
+
+        return $this->options['alias'][$table] ?? '';
     }
 
     /**
@@ -1165,11 +1176,11 @@ abstract class BaseQuery
     /**
      * 指定数据表主键.
      *
-     * @param string|array|bool $pk 主键
+     * @param string|array|bool|null $pk 主键
      *
      * @return $this
      */
-    public function pk(string | array | bool $pk)
+    public function pk(string | array | bool | null $pk)
     {
         $this->pk = $pk;
 
@@ -1191,19 +1202,26 @@ abstract class BaseQuery
     }
 
     /**
-     * 获取当前的查询参数.
-     *
-     * @param string $name 参数名
+     * 获取所有查询参数.
      *
      * @return mixed
      */
-    public function getOptions(string $name = '')
+    public function getOptions(): array
     {
-        if ('' === $name) {
-            return $this->options;
-        }
+        return $this->options;
+    }
 
-        return $this->options[$name] ?? null;
+    /**
+     * 获取查询参数.
+     *
+     * @param string $name 参数名
+     * @param mixed  $default 默认值
+     *
+     * @return mixed
+     */
+    public function getOption(string $name, $default = null)
+    {
+        return $this->options[$name] ?? $default;
     }
 
     /**
@@ -1217,6 +1235,25 @@ abstract class BaseQuery
     public function setOption(string $option, $value)
     {
         $this->options[$option] = $value;
+
+        return $this;
+    }
+
+    /**
+     * 去除查询参数.
+     *
+     * @param string $option 参数名 留空去除所有参数
+     *
+     * @return $this
+     */
+    public function removeOption(string $option = '')
+    {
+        if ('' === $option) {
+            $this->options = [];
+            $this->bind    = [];
+        } elseif (isset($this->options[$option])) {
+            unset($this->options[$option]);
+        }
 
         return $this;
     }
@@ -1359,10 +1396,6 @@ abstract class BaseQuery
             $this->parseUpdateData($this->options['data']);
         }
 
-        if (empty($this->options['where']) && $this->model) {
-            $this->where($this->model->getWhere());
-        }
-
         if (empty($this->options['where']) && empty($this->options['scope'])) {
             // 如果没有任何更新条件则不执行
             throw new Exception('miss update condition');
@@ -1396,15 +1429,11 @@ abstract class BaseQuery
             $this->parsePkWhere($data);
         }
 
-        if (empty($this->options['where'])) {
-            if ($this->model && $this->model instanceof Model) {
-                $this->where($this->model->getWhere());
-            } elseif (!empty($this->options['key'])) {
-                if (is_array($this->pk)) {
-                    $this->where($this->options['key']);
-                } else {
-                    $this->where($this->pk, '=', $this->options['key']);
-                }
+        if (empty($this->options['where']) && !empty($this->options['key'])) {
+            if (is_array($this->pk)) {
+                $this->where($this->options['key']);
+            } else {
+                $this->where($this->pk, '=', $this->options['key']);
             }
         }
 
@@ -1438,7 +1467,7 @@ abstract class BaseQuery
      * @throws ModelNotFoundException
      * @throws DataNotFoundException
      *
-     * @return Collection|array|static[]
+     * @return Collection<static>
      */
     public function select(array $data = []): Collection
     {
@@ -1469,13 +1498,13 @@ abstract class BaseQuery
      * 查找单条记录.
      *
      * @param mixed   $data 主键数据
-     * @param Closure $closure 闭包数据
+     * @param ?Closure $closure 闭包数据
      *
      * @throws Exception
      * @throws ModelNotFoundException
      * @throws DataNotFoundException
      *
-     * @return mixed
+     * @return mixed|static
      */
     public function find($data = null, ?Closure $closure = null)
     {
@@ -1538,7 +1567,7 @@ abstract class BaseQuery
         }
 
         if (!isset($options['strict'])) {
-            $options['strict'] = $this->connection->getConfig('fields_strict');
+            $options['strict'] = $this->getConfig('fields_strict');
         }
 
         foreach (['master', 'lock', 'fetch_sql', 'array', 'distinct', 'procedure', 'with_cache'] as $name) {
@@ -1647,16 +1676,6 @@ abstract class BaseQuery
             $this->where($key, '=', $data);
             $this->options['key'] = $data;
         }
-    }
-
-    /**
-     * 获取模型的更新条件.
-     *
-     * @param array $options 查询参数
-     */
-    protected function getModelUpdateCondition(array $options)
-    {
-        return $options['where']['AND'] ?? null;
     }
 
     /**

@@ -177,11 +177,11 @@ class Fetch
             return $this->insert($data);
         }
 
-        $data = array_merge($this->query->getOptions('data') ?: [], $data);
+        $data = array_merge($this->query->getOption('data', []), $data);
 
         $this->query->setOption('data', $data);
 
-        if ($this->query->getOptions('where')) {
+        if ($this->query->getOption('where')) {
             $isUpdate = true;
         } else {
             $isUpdate = $this->query->parseUpdateData($data);
@@ -248,13 +248,13 @@ class Fetch
     /**
      * 字段值增长
      *
-     * @param string    $field 字段名
-     * @param float     $step  步进值
+     * @param string    $field    字段名
+     * @param float|int $step     步进值
      * @param int       $lazyTime 延迟时间（秒）
      *
      * @return string
      */
-    public function setInc(string $field, float $step = 1, int $lazyTime = 0)
+    public function setInc(string $field, float|int $step = 1, int $lazyTime = 0)
     {
         return $this->inc($field, $step)->update();
     }
@@ -262,13 +262,13 @@ class Fetch
     /**
      * 字段值减少
      *
-     * @param string    $field 字段名
-     * @param float     $step  步进值
+     * @param string    $field    字段名
+     * @param float|int $step     步进值
      * @param int       $lazyTime 延迟时间（秒）
      *
      * @return string
      */
-    public function setDec(string $field, float $step = 1, int $lazyTime = 0)
+    public function setDec(string $field, float|int $step = 1, int $lazyTime = 0)
     {
         return $this->dec($field, $step)->update();
     }
@@ -306,7 +306,7 @@ class Fetch
                 }
             }
 
-            if (empty($this->query->getOptions('where'))) {
+            if (empty($this->query->getOption('where'))) {
                 // 如果没有任何更新条件则不执行
                 throw new Exception('miss update condition');
             }
