@@ -73,7 +73,6 @@ class Good extends Base
             "remark"                  => inputs("remark/s", ""),
             "sms_payer"               => inputs("sms_payer/d", 0),
             "card_order"              => inputs("card_order/d", 0),
-            "selectcard_fee"          => inputs("selectcard_fee", 0),
             // 叠加赠送
             "event_give"              => inputs("event_give/a", null),
             // 额外赠送
