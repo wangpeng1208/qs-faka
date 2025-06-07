@@ -15,17 +15,36 @@ if (!function_exists('inputs')) {
     {
         if (strpos($name, '/') !== false) {
             [$name, $type] = explode('/', $name);
+
             if ($type && in_array($type, ['d', 'a', 'f', 's'])) {
-                $default = match ($type) {
-                    'd' => intval($default),
-                    'a' => (array) $default,
-                    'f' => floatval($default),
-                    's' => strval($default),
-                    default => null
-                };
+                if ($type === 'd') {
+                    $default = intval($default);
+                } elseif ($type === 'a') {
+                    $default = (array) $default;
+                } elseif ($type === 'f') {
+                    $default = floatval($default);
+                } elseif ($type === 's') {
+                    $default = strval($default);
+                }
             }
         }
-        return request()->input($name, $default);
+
+        $value = request()->input($name, $default);
+        
+        // 处理返回值类型转换
+        if (isset($type) && in_array($type, ['d', 'a', 'f', 's'])) {
+            if ($type === 'd') {
+                $value = intval($value);
+            } elseif ($type === 'a') {
+                $value = (array) $value;
+            } elseif ($type === 'f') {
+                $value = floatval($value);
+            } elseif ($type === 's') {
+                $value = strval($value);
+            }
+        }
+        
+        return $value;
     }
 }
 
