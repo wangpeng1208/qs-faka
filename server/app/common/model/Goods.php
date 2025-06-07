@@ -114,7 +114,6 @@ class Goods extends BaseModel
 
 	public function getCardsStockCountAttr($value, $data)
 	{
-		// todo 可以考虑 总数量小于某个值的时候使用锁卡机制
 		return $this->cards('id')->where("status", 1)->count();
 	}
 
