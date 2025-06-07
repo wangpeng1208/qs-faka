@@ -44,7 +44,7 @@ class Workbench extends Base
     {
         $today     = $model::whereTime('create_at', 'today');
         $yesterday = $model::whereTime('create_at', 'yesterday');
-        $total     = $model::query();
+        $total     = new $model();
 
         if ($status !== null) {
             $today     = $today->where('status', $status);
