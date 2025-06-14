@@ -41,7 +41,7 @@ class Config extends Base
         $shop                       = $this->user->shop;
         $shop->shop_close           = inputs("shop_close/d", 0);
         $shop->show_contact         = inputs("show_contact/d", 0);
-        $shop->shop_contact         = inputs("shop_contact/s", "");
+        $shop->shop_contact         = inputs("shop_contact/a", []);
         $shop->shop_name            = inputs("shop_name/s", "");
         $shop->shop_notice          = inputs("shop_notice/s", "");
         $shop->shop_notice_show     = inputs("shop_notice_show/d", 0);
