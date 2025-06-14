@@ -19,7 +19,7 @@ class UserCollect extends BaseModel
             'type'      => [
                 'info' => 'json',
             ],
-            'jsonAssoc' => true,
+            'jsonAssoc' => false,
         ];
     }
     public function user()

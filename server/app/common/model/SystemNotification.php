@@ -21,7 +21,7 @@ class SystemNotification extends BaseModel
         'type'      => [
           'sms_config' => 'json',
         ],
-        'jsonAssoc' => true,
+        'jsonAssoc' => false,
       ];
     }
 }
