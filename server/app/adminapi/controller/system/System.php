@@ -12,7 +12,7 @@
 
 namespace app\adminapi\controller\system;
 
-use think\Facade\Db;
+use think\facade\Db;
 use app\adminapi\controller\Base;
 
 class System extends Base
