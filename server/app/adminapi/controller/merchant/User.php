@@ -12,7 +12,7 @@
 
 namespace app\adminapi\controller\merchant;
 
-use think\Facade\Db;
+use think\facade\Db;
 use app\adminapi\controller\Base;
 use app\service\message\EmailMessageService;
 use app\common\model\{User as UserModel, UserCollect as UserCollectModel, Channel as ChannelModel, UserLoginLog, UserRate as UserRateModel, UserRoleRelation, UserLoginErrorLog};
@@ -39,7 +39,7 @@ class User extends Base
         $res   = UserModel::withSearch($where[0], $where[1])->order("id desc")->paginate($this->limit)->each(function ($item) {
             $user_collect = UserCollectModel::where("user_id", $item->id)->find();
             if (!empty($user_collect)) {
-                $item->idcard_number = $user_collect?->info['idcard_number'] ?? '';
+                $item->idcard_number = $user_collect?->info?->idcard_number ?? '';
             }
             $item->shop_name       = $item->shop->shop_name ?? '';
             $item->complaint_count = $item->complaints()->count();
