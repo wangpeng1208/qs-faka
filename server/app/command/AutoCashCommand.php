@@ -56,7 +56,7 @@ class AutoCashCommand extends Command
 
             // 有收款信息的用户且余额大于最低提现金额且付款类型为自动提现的 未冻结 用户
             $users = UserModel::hasWhere('collect', function ($query) {
-                $query->whereIn('type', [1, 2, 3])->where('status', 1)->whereColumn('user_id', 'User.id');
+                $query->whereIn('type', [1, 2, 3])->where('status', 1)->whereExp('user_id', '=user.id');
             })->where('cash_type', 1)
                 ->where('is_freeze', 0)
                 ->where('money', '>=', $leastCashMoney)
