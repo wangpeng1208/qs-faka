@@ -16,8 +16,8 @@
       </t-input>
     </t-form-item>
     <!-- 订单号码 -->
-    <t-form-item label="订单号码" name="order_no">
-      <t-input v-model="params.order_no" clearable placeholder="请输入订单号码">
+    <t-form-item label="订单号码" name="trade_no">
+      <t-input v-model="params.trade_no" clearable placeholder="请输入订单号码">
         <template #suffix-icon>
           <search-icon />
         </template>
