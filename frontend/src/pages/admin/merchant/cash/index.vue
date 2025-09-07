@@ -68,16 +68,12 @@
       <t-table ref="tableRef" row-key="id" :data="lists" :columns="columns" :expand-on-row-click="false" :expanded-row-keys="expandedRowKeys" :expand-icon="false" :hover="lists.length > 0 ? true : false" :header-affixed-top="headerAffixedTop" :pagination="pagination" lazy-load max-height="100%" :selected-row-keys="selectedRowKeys" @page-change="onPageChange" @select-change="rehandleSelectChange">
         <template #expandedRow="{ row }"> {{ row.collect_info }} </template>
         <template #operate="{ row }">
-          <span v-if="row.status == 0 && row.daifu_status == 0">
+          <span v-if="row.status == 0 >
             <t-space size="small">
               <t-link v-perms="['adminapi/merchant/cash/pass']" theme="primary" @click="passRow(row.id)">手工打款</t-link>
               <t-link v-perms="['adminapi/merchant/cash/autoPass']" theme="primary" @click="hadleAutoRow('autopass', row.id)">代付打款</t-link>
               <t-link v-perms="['adminapi/merchant/cash/refuse']" theme="danger" @click="refuseRow(row.id)">驳回</t-link>
             </t-space>
-          </span>
-          <span v-if="row.status == 0 && row.daifu_status == 1">
-            已申请代付，请耐心等候，代付单号为
-            {{ row.orderid }}
           </span>
           <span v-if="row.status == 1" v-perms="['adminapi/merchant/cash/del']">
             <t-link theme="danger" @click="deleteRow(row.id)">删除</t-link>
