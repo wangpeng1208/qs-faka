@@ -26,7 +26,6 @@ class Order extends Base
      */
     public function list(OrderModel $model)
     {
-        $limit = inputs('limit/d', 20);
         $where = $this->request->params([
             ['date_type', ''],
             ['username', ''],
