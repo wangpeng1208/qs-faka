@@ -1,7 +1,5 @@
 <template>
   <t-card title="登陆日志" :bordered="false">
-    <t-alert>只保留显示最近30天的登录日志</t-alert>
-
     <t-base-table :data="list" :columns="COLUMNS" row-key="id" vertical-align="top" :hover="list.length > 0 ? true : false" :pagination="pagination" table-layout="auto" :header-affixed-top="headerAffixedTop" max-height="100%" :loading="dataLoading" @page-change="rehandlePageChange" />
   </t-card>
 </template>
