@@ -104,11 +104,11 @@ class Order extends BaseModel
 	public function searchDateTypeAttr($query, $value, $data)
 	{
 		match ($value) {
-			1 => $query->whereTime("create_at", "today"),
-			2 => $query->whereTime("create_at", "yesterday"),
-			3 => $query->whereTime("create_at", "week"),
-			4 => $query->whereTime("create_at", "month"),
-			5 => $query->whereTime("create_at", "year"),
+			"1" => $query->whereTime("create_at", "today"),
+			"2" => $query->whereTime("create_at", "yesterday"),
+			"3" => $query->whereTime("create_at", "week"),
+			"4" => $query->whereTime("create_at", "month"),
+			"5" => $query->whereTime("create_at", "year"),
 		};
 	}
 
