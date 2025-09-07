@@ -150,7 +150,7 @@ class User extends Base
         $user    = UserModel::findOrFail($user_id);
         $title   = inputs("title/s", "") ?: $this->error("请输入标题！");
         $content = inputs("content/s", "") ?: $this->error("请输入内容！");
-        $type    = inputs("type/d", 'site');
+        $type    = inputs("type/s", 'site');
         if ($type == 'site') {
             $title  = '【站内信】' . $title;
             $result = MessageService::send(0, $user_id, $title, $content);
@@ -161,12 +161,8 @@ class User extends Base
                 $this->error('该用户未绑定邮箱！');
             $result = EmailMessageService::send($user->email, $title, $content);
         }
+        return $result ? $this->success("发送成功！") : $this->error("发送失败，请重试！");
 
-        if ($result !== false) {
-            return $this->success("发送成功！");
-        } else {
-            return $this->error("发送失败，请重试！");
-        }
     }
 
     /**
@@ -384,8 +380,8 @@ class User extends Base
      */
     public function collectDetail()
     {
-        $user_id           = inputs('id/d', 0);
-        $data = UserCollectModel::where('user_id', $user_id)->find() ?? [];
+        $user_id         = inputs('id/d', 0);
+        $data            = UserCollectModel::where('user_id', $user_id)->find() ?? [];
         $data['user_id'] = $user_id;
         return $this->success('success', $data);
     }
