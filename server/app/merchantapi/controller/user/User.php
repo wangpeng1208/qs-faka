@@ -96,8 +96,7 @@ class User extends Base
      */
     public function loginLog()
     {
-        $time = strtotime("-30 day");
-        $res  = $this->user->loginLogs()->whereTime("create_at", ">=", $time)->order("id desc")->paginate($this->limit)->each(function ($item) {
+        $res  = $this->user->loginLogs()->order("id desc")->paginate($this->limit)->each(function ($item) {
             $item->username = $this->user->username;
         });
         $this->success('获取成功', [
