@@ -86,31 +86,39 @@ export const STATUSLIST = [
 
 export const TYPELIST = [
   {
+    label: '不会使用',
+    value: '不会使用',
+  },
+  {
     label: '无效卡密',
     value: '无效卡密',
   },
   {
-    label: '虚假商品',
-    value: '虚假商品',
+    label: '涉嫌色情',
+    value: '涉嫌色情',
   },
   {
-    label: '非法商品',
-    value: '非法商品',
+    label: '涉嫌赌博',
+    value: '涉嫌赌博',
   },
   {
-    label: '侵权商品',
-    value: '侵权商品',
+    label: '实名账号',
+    value: '实名账号',
   },
   {
-    label: '不能购买',
-    value: '不能购买',
+    label: '盗版侵权',
+    value: '盗版侵权',
   },
   {
-    label: '恐怖色情',
-    value: '恐怖色情',
+    label: '欺诈骗钱',
+    value: '欺诈骗钱',
   },
   {
-    label: '其他投诉',
-    value: '其他投诉',
+    label: '非法外挂',
+    value: '非法外挂',
+  },
+  {
+    label: '描述不符',
+    value: '描述不符',
   },
 ];
