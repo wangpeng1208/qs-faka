@@ -62,10 +62,11 @@ class OrderService
      */
     public function orderQuery()
     {
-        $querytype = inputs("queryType/d", "2");
         $trade_no  = inputs("orderid/s", "");
         $pwd       = inputs("pwd/s", "");
-        $orderList = $this->orderListsQuery($trade_no, $querytype);
+        $orderList = Order::where("contact", $trade_no)
+            ->whereOr('trade_no', $trade_no)
+            ->order("id desc")->paginate(30);
         if ($orderList->total() == 0) {
             throw new \exception("没有查询到订单信息");
         } else if ($orderList->total() == 1) {
@@ -101,6 +102,8 @@ class OrderService
                 'outCards'     => $outCards,
             ];
         } else {
+            // 前台未支持多个订单查询 可自己扩展后打开此项
+            throw new \exception("未支持联系方式查询");
             $pageType = 'list';
             $data     = [
                 'pageType' => $pageType,
@@ -110,33 +113,6 @@ class OrderService
         }
 
         return $data;
-    }
-
-    /**
-     * 订单列表查询
-     * @param $trade_no 订单号 | 联系方式
-     * @param $querytype 查询类型 2订单号查询 3联系方式查询
-     */
-    public function orderListsQuery($trade_no, $querytype)
-    {
-        switch ($querytype) {
-            case "2":
-                $orderList = Order::where(["trade_no" => $trade_no])->order("id desc")->paginate(30);
-                break;
-            case "3":
-                // 查询订单限制天数
-                $order_query_limitday = conf("order_query_limitday") ? conf("order_query_limitday") : 3;
-                $orderList = Order::where(["contact" => $trade_no])
-                    ->whereTime("create_at", ">", time() - 86400 * $order_query_limitday)
-                    ->order("id desc")->paginate(30);
-                break;
-            default:
-                throw new \Exception("查询类型错误");
-        }
-        if (empty($orderList)) {
-            throw new \Exception("没有查询到订单信息");
-        }
-        return $orderList;
     }
 
     /**
