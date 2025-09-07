@@ -84,7 +84,7 @@ class Link extends Base
         $this->success('获取成功', [
             'id'         => $id,
             'link'       => $res->links,
-            'status'     => $res->linkStatus ?? 1,
+            'status'     => $res->linkStatus,
             'short_link' => $res->shortLink,
         ]);
     }
