@@ -14,15 +14,15 @@ export function table(options: Options) {
   const dataLoading = ref(false);
   const lists = ref();
   const pagination = ref({
-    defaultPageSize: 20,
+    current: 1,
+    pageSize: 20,
     total: 0,
-    defaultCurrent: 1,
   });
   const fetchData = async () => {
     dataLoading.value = true;
     const value = {
-      page: pagination.value.defaultCurrent,
-      limit: pagination.value.defaultPageSize,
+      page: pagination.value.current,
+      limit: pagination.value.pageSize,
       ...params,
     };
     const { data } = await fetchFun(value);
@@ -39,12 +39,12 @@ export function table(options: Options) {
   }));
 
   const rehandlePageChange = (curr: any) => {
-    pagination.value.defaultCurrent = curr.current;
-    pagination.value.defaultPageSize = curr.pageSize;
+    pagination.value.current = curr.current;
+    pagination.value.pageSize = curr.pageSize;
     fetchData();
   };
   const searchData = async () => {
-    pagination.value.defaultCurrent = 1;
+    pagination.value.current = 1;
     await fetchData();
   };
   return {
