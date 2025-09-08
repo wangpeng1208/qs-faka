@@ -1,7 +1,6 @@
 <template>
   <div>
     <t-card title="商户信息" :bordered="false" class="basic-container" style="margin-top: 20px">
-      <t-alert style="margin-bottom: 20px" theme="warning" message="请完善商户资料，以便更好的为您服务。【用户名/手机号/邮箱可以用来登录】" />
       <t-form label-align="left" :label-width="150">
         <t-form-item label="用户头像">
           <wp-upload theme="image" :initial="userData" app="merchant" name="avatar" :data="{ type: 'image' }" @update="handleUpdateImage" />
@@ -13,7 +12,7 @@
         <t-form-item label="创建时间" tips="账号创建时间">
           {{ formatTime(userData.create_at) }}
         </t-form-item>
-        <t-form-item label="用户名称" tips="系统自动生成随机账号名">
+        <t-form-item label="账号名称" tips="账号名称，可用来登录后台">
           {{ userData.username ?? '未设置' }}
         </t-form-item>
         <t-form-item label="手机号码" tips="手机号码也是登录账号，不可更改，如需更改请联系管理员">

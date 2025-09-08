@@ -4,8 +4,8 @@
       <t-card :bordered="false" title="交易统计" :class="{ 'dashboard-overview-card': true, 'overview-panel': true }">
         <template #actions>
           <t-radio-group v-model="amountType" variant="default-filled" @change="renderStokeChart">
-            <t-radio-button value="week">最近7天</t-radio-button>
-            <t-radio-button value="month">月度统计</t-radio-button>
+            <t-radio-button value="week">最近一周</t-radio-button>
+            <t-radio-button value="month">最近一年</t-radio-button>
           </t-radio-group>
         </template>
         <v-charts class="chart" :option="orderOption()" autoresize />
@@ -123,7 +123,7 @@ const initData = async () => {
 .dashboard-overview-card.export-panel,
 .dashboard-overview-card.overview-panel {
   padding: 20px;
-  margin: 20px 0;
+  margin: 0 0 20px 0;
 }
 
 :deep(.t-card__body) {
