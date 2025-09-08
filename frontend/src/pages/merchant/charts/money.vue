@@ -44,7 +44,7 @@ export default {
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue';
 
-import { getChartsMoney } from '@/api/merchant/charts/charts';
+import { getChartsMoney, getChartsRankList } from '@/api/merchant/charts/charts';
 import { listSimple } from '@/api/merchant/goods/category';
 import { goodList } from '@/api/merchant/goods/good';
 import Result from '@/components/result/index.vue';
@@ -65,6 +65,12 @@ const charts = reactive({
   total_cost_price: 0,
   total_profit: 0,
 });
+
+const fetchChartsRankList = async () => {
+  const { data } = await getChartsRankList();
+  Object.assign(charts, data);
+};
+fetchChartsRankList();
 
 const categoryList = ref([]);
 const fetchGoodsCategory = async () => {
