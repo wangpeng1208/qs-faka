@@ -10,9 +10,9 @@
           <wp-upload theme="image" :initial="formData" name="shop_logo" app="merchant" :data="{ type: 'image' }" @update="handleUpdateImage" />
         </t-form-item>
         <t-form-item label="营业状态" name="shop_close" help="休息状态下无法下单">
-          <wp-check-tag
+          <t-radio-group
             v-model="formData.shop_close"
-            :items="[
+            :options="[
               { label: '营业', value: 0 },
               { label: '休息', value: 1 },
             ]"
@@ -24,9 +24,9 @@
         </t-form-item>
 
         <t-form-item label="公告开关" name="shop_notice_show" help="打开公告开关，店铺则显示公告">
-          <wp-check-tag
+          <t-radio-group
             v-model="formData.shop_notice_show"
-            :items="[
+            :options="[
               { label: '开启', value: 1 },
               { label: '关闭', value: 0 },
             ]"
@@ -37,13 +37,13 @@
         </t-form-item>
         <!-- 显示联系方式 -->
         <t-form-item label="联系方式" name="show_contact" help="开启后，店铺页面将显示联系方式">
-          <wp-check-tag
+          <t-radio-group
             v-model="formData.show_contact"
-            :items="[
+            :options="[
               { label: '开启', value: 1 },
               { label: '关闭', value: 0 },
             ]"
-            @actions="initCollapse"
+            @change="initCollapse"
           />
         </t-form-item>
 
@@ -66,10 +66,10 @@
         </t-collapse>
 
         <t-form-item label="库存展示" name="stock_display" :help="stockDisplayHelp">
-          <wp-check-tag v-model="formData.stock_display" :items="state.stockDisplay" @actions="initStockDisplayHelp" />
+          <t-radio-group v-model="formData.stock_display" :options="state.stockDisplay" @change="initStockDisplayHelp" />
         </t-form-item>
         <t-form-item label="费率承担方" name="rate_burden" help="系统收取的费率，系统默认为商户承担；一般都是商户承担">
-          <wp-check-tag v-model="formData.fee_payer" :items="state.fee_payer" />
+          <t-radio-group v-model="formData.fee_payer" :options="state.fee_payer" />
         </t-form-item>
         <t-form-item>
           <t-button theme="primary" class="form-submit-confirm" type="submit"> 提交 </t-button>
@@ -144,10 +144,9 @@ const initUserSetting = async () => {
       }
       initCollapse(formData.show_contact);
     });
-  } catch (e) {
-    console.log(e);
+  } finally {
+    loading.value = false;
   }
-  loading.value = false;
 };
 
 const form = ref(null);

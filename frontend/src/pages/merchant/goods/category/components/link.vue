@@ -1,55 +1,54 @@
 <template>
   <t-dialog v-model:visible="visible" :loading="loading" :destroy-on-close="true" :close-on-overlay-click="false" width="750" header="分类链接" :footer="false">
-    <template #body>
-      <div class="info-block">
-        <div class="info-item">
-          <t-space>
-            <h1>链接状态</h1>
-            <wp-check-tag v-model="linkData.status" :items="linkStatusTag" @actions="closeLink" />
-          </t-space>
-          <div class="help">选择暂停将仅当前分类链接不可用</div>
-        </div>
-        <div class="info-item">
-          <t-space>
-            <h1>绿标短链</h1>
-            <t-link theme="primary" :href="linkData.short_link" target="_blank">
-              {{ linkData.short_link }}
-            </t-link>
-            <t-tag class="hand-cursor" theme="primary" variant="light" size="small" @click="copyText(linkData.short_link)">
-              <template #icon> <file-copy-icon /> </template>复制
-            </t-tag>
-            <t-tag class="hand-cursor" theme="primary" size="small" @click="resetLink(0)">
-              <template #icon> <refresh-icon /> </template>重置短链
-            </t-tag>
-          </t-space>
-          <div class="help">绿标短链接打开就是分类长链接，强烈建议使用绿标短链接作为访问链接；如果在朋友圈等地方打广告请发【绿标短链】这个链接，这样可以让您的朋友直接进入您的店铺</div>
-        </div>
-        <div class="info-item">
-          <t-space>
-            <h1>分类链接</h1>
-            <t-link theme="primary" :href="linkData.link" target="_blank">
-              {{ linkData.link }}
-            </t-link>
-            <t-tag class="hand-cursor" theme="primary" variant="light" size="small" @click="copyText(linkData.link)">
-              <template #icon> <file-copy-icon /> </template>复制
-            </t-tag>
-            <t-tag class="hand-cursor" theme="primary" size="small" @click="resetLink(1)">
-              <template #icon> <refresh-icon /> </template>重置分接
-            </t-tag>
-          </t-space>
-          <div class="help">重置分类链接后，当前分类的原短链长连接都会失效；严禁使用此链接发广告</div>
-        </div>
-        <div class="info-item">
-          <t-space>
-            <h1>电脑端风格</h1>
-            <t-check-tag v-for="(item, index) in pcTemplate" :key="index" :checked="item.value == userPcTemplate" @change="changeTemplate('theme', item.value)">
-              {{ item.label }}
-            </t-check-tag>
-          </t-space>
-          <div class="help">当前分类链接PC页面风格</div>
-        </div>
+    <div class="info-block">
+      <div class="info-item">
+        <t-space>
+          <h1>链接状态</h1>
+          <t-radio-group
+            v-model="linkData.status"
+            :options="[
+              {
+                label: '开启',
+                value: 1,
+              },
+              {
+                label: '暂停',
+                value: 0,
+              },
+            ]"
+            @change="closeLink"
+          />
+        </t-space>
+        <div class="help">选择暂停将仅当前分类链接不可用</div>
       </div>
-    </template>
+      <div class="info-item">
+        <t-space>
+          <h1>绿标短链</h1>
+          <t-link theme="primary" :href="linkData.short_link" target="_blank">
+            {{ linkData.short_link }}
+          </t-link>
+          <t-tag class="hand-cursor" theme="primary" variant="light" size="small" @click="copyText(linkData.short_link)"> 复制 </t-tag>
+          <t-tag class="hand-cursor" theme="primary" size="small" @click="resetLink(0)"> 重置短链 </t-tag>
+        </t-space>
+        <div class="help">绿标短链接打开就是分类长链接，强烈建议使用绿标短链接作为访问链接；如果在朋友圈等地方打广告请发【绿标短链】这个链接，这样可以让您的朋友直接进入您的店铺</div>
+      </div>
+      <div class="info-item">
+        <t-space>
+          <h1>分类链接</h1>
+          <t-link theme="primary" :href="linkData.link" target="_blank">
+            {{ linkData.link }}
+          </t-link>
+          <t-tag class="hand-cursor" theme="primary" variant="light" size="small" @click="copyText(linkData.link)"> 复制 </t-tag>
+          <t-tag class="hand-cursor" theme="primary" size="small" @click="resetLink(1)"> 重置分接 </t-tag>
+        </t-space>
+        <div class="help">重置分类链接后，当前分类的原短链长连接都会失效；严禁使用此链接发广告</div>
+      </div>
+      <div class="info-item">
+        <h1>电脑端风格</h1>
+        <t-radio-group v-model="userPcTemplate" :options="pcTemplate" @change="changPceTemplate" />
+        <div class="help">当前分类链接PC页面风格</div>
+      </div>
+    </div>
   </t-dialog>
 </template>
 <script lang="ts">
@@ -58,7 +57,6 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { FileCopyIcon, RefreshIcon } from 'tdesign-icons-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { ref } from 'vue';
 
@@ -127,9 +125,9 @@ const getUserTemplate = async (id: any) => {
   userMobileTemplate.value = data.mobile_template;
 };
 // 更改模板
-const changeTemplate = async (field: string, value: string) => {
+const changPceTemplate = async (value: string) => {
   const data = await setTheme({
-    field,
+    field: 'pc_template',
     value,
     id: linkData.value.id,
     type: 'category',
@@ -140,18 +138,6 @@ const changeTemplate = async (field: string, value: string) => {
     MessagePlugin.error(data.msg);
   }
 };
-
-// 暂停销售 按钮选择
-const linkStatusTag = [
-  {
-    label: '开启',
-    value: 1,
-  },
-  {
-    label: '暂停',
-    value: 0,
-  },
-];
 
 defineExpose({
   getTemplate,

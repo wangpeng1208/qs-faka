@@ -1,14 +1,9 @@
 <template>
   <t-card title="店铺链接" class="basic-container" :bordered="false">
-    <!-- 昨夜冷风付我衣，我梦回故乡,不似他乡未知客，却是故园多故人 -->
     <t-loading attach=".basic-container" size="small" :loading="dataLoading"></t-loading>
     <t-form label-align="left" :label-width="160">
       <t-form-item label="链接状态" tips="店铺总链接状态，选择暂停将仅当前店铺“总链接”不可用">
-        <t-space>
-          <t-check-tag v-for="(item, key) in linkStatusTag" :key="key" :checked="item.value == user.link_status" @change="closeLink(item.value)">
-            {{ item.label }}
-          </t-check-tag>
-        </t-space>
+        <t-radio-group v-model="user.link_status" :options="linkStatusTag" @change="closeLink" />
       </t-form-item>
       <t-form-item label="绿标短链" tips="绿标短链接打开就是店铺长链接，强烈建议使用绿标短链接作为访问链接;如果在朋友圈等地方打广告请发【绿标短链】这个链接，这样可以让您的朋友直接进入您的店铺">
         <t-space>
@@ -37,9 +32,7 @@
       <t-form-item label="店铺主题" tips="店铺页面主题风格">
         <t-skeleton :loading="templateLoading" animation="flashed" :row-col="[{ type: 'rect', width: '600px', height: '30px' }]">
           <t-space>
-            <t-check-tag v-for="(item, key) in pcTemplate" :key="key" :checked="item.value == userPcTemplate" @change="changeTemplate('pc_template', item.value)">
-              {{ item.label }}
-            </t-check-tag>
+            <t-radio-group v-model:value="userPcTemplate" :options="pcTemplate" @change="changePcTemplate" />
           </t-space>
         </t-skeleton>
       </t-form-item>
@@ -88,7 +81,7 @@ const fetchData = async () => {
   user.link = data.link;
   user.src = data.link_src;
   user.user_status = data.user_status;
-  user.link_status = [data.link_status];
+  user.link_status = data.link_status;
   dataLoading.value = false;
 };
 fetchData();
@@ -125,11 +118,9 @@ const resetLink = async (status: number) => {
   });
 };
 const closeLink = async (status: number) => {
-  if (user.link_status === status) return;
   const data = await close({ status });
   if (data.code === 1) {
     MessagePlugin.success(data.msg);
-    fetchData();
   }
 };
 
@@ -156,8 +147,8 @@ const getUserTemplate = async () => {
 getUserTemplate();
 
 // 更改模板
-const changeTemplate = async (field: string, value: string) => {
-  const data = await setTemplate({ field, value });
+const changePcTemplate = async (value: string) => {
+  const data = await setTemplate({ field: 'pc_template', value });
   if (data.code === 1) {
     MessagePlugin.success(data.msg);
     getUserTemplate();
@@ -166,14 +157,3 @@ const changeTemplate = async (field: string, value: string) => {
   }
 };
 </script>
-
-<style lang="less" scoped>
-.qrimg {
-  width: 200px;
-  height: 200px;
-}
-
-.tag {
-  cursor: pointer;
-}
-</style>
