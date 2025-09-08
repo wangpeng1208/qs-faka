@@ -23,8 +23,7 @@ class Money extends Base
      */
     public function log()
     {
-        $time = strtotime("-30 day");
-        $res  = $this->user->userMoneyLog()->whereTime('create_at', '>=', $time)->order("id desc")->paginate($this->limit);
+        $res  = $this->user->userMoneyLog()->order("id desc")->paginate($this->limit);
         $this->success('获取成功', [
             'list'  => $res->items(),
             'total' => $res->total(),

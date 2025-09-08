@@ -81,7 +81,6 @@ class category extends Base
     public function edit()
     {
         $data = $this->post('edit');
-        print_r($data);
         $res  = $this->getCategory($data['id'])->save($data);
         return $res ? $this->success("保存成功！") : $this->error("保存失败！");
     }

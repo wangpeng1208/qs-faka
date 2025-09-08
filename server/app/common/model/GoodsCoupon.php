@@ -50,22 +50,4 @@ class GoodsCoupon extends BaseModel
     ];
     return $status[$data['status']];
   }
-
-  // 获取有效期
-  protected function getExpireDayAttr($value, $data)
-  {
-    if ($data['status'] == 1) {
-      if ($data['expire_at'] <= time()) {
-        return '已过期';
-      } else {
-        return date('Y-m-d H:i:s', $data['expire_at']);
-      }
-    }
-    if ($data['status'] == 2) {
-      return '已使用';
-    }
-    if ($data['status'] == 0) {
-      return '使用中';
-    }
-  }
 }

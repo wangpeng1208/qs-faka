@@ -80,7 +80,7 @@ class Workbench extends Base
      */
     public function channelCollectionOrderPriceSum()
     {
-        $channels = Channel::where(['status' => 1, 'is_custom' => 0, 'type' => 1])
+        $channels = Channel::where(['status' => 1, 'type' => 1])
             ->withSum('activeOrders', 'total_price')
             ->select();
 

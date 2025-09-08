@@ -13,7 +13,6 @@
 namespace app\service\analysis;
 
 use app\common\model\UserAnalysis as UserAnalysisModel;
-use app\common\model\ShopIplist as ShopIplistModel;
 
 class AnalysisService
 {
@@ -57,29 +56,6 @@ class AnalysisService
             $data[]               = ["month" => $month, "month_amount" => $month_amount, "month_order_count" => $month_order_count, "month_finally_amount" => $month_finally_amount];
         }
         return $data;
-    }
-
-    public function ipAnalysis($user_id)
-    {
-        $today_pv = ShopIplistModel::whereTime("create_at", 'today')->where("user_id", $user_id)->count();
-
-        $yesterday_pv = ShopIplistModel::whereTime("create_at", 'yesterday')->where("user_id", $user_id)->count();
-
-        $today_uv = ShopIplistModel::whereTime("create_at", 'today')->where("user_id", $user_id)->group("ip")->count();
-
-        $yesterday_uv = ShopIplistModel::whereTime("create_at", 'yesterday')->where("user_id", $user_id)->group("ip")->count();
-
-        if ($yesterday_pv == 0) {
-            $compare_pv = $today_pv > 0 ? 100 : 0;
-        } else {
-            $compare_pv = round(($today_pv - $yesterday_pv) / $yesterday_pv * 100);
-        }
-        if ($yesterday_uv == 0) {
-            $compare_uv = $today_uv > 0 ? 100 : 0;
-        } else {
-            $compare_uv = round(($today_uv - $yesterday_uv) / $yesterday_uv * 100);
-        }
-        return ["today_pv" => $today_pv, "today_uv" => $today_uv, "yesterday_pv" => $yesterday_pv, "yesterday_uv" => $yesterday_uv, "compare_pv" => $compare_pv, "compare_uv" => $compare_uv];
     }
 
     /**

@@ -28,7 +28,7 @@ class AutoDaifuCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $channels    = Channel::where('type', 2)->where('is_custom', 0)->where('status', 1)->select();
+        $channels    = Channel::where('type', 2)->where('status', 1)->select();
         $allAccounts = collect([]);
         foreach ($channels as $item) {
             $accounts = $item->accounts()->where('status', 1)->select();

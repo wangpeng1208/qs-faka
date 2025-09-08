@@ -153,9 +153,6 @@ class Complaint extends Base
                     DB::commit();
 
                     if (conf("complaint_refund") == 1) {
-                        if ($order->channel->is_custom == 1) {
-                            return J(200, "判决成功商家投诉保证金已扣除,商家自定义支付通道不支持退款，您需要人工联系买家进行退款！");
-                        }
                         $pay         = new PayService();
                         $pay_channel = $pay->invoke($order->channel->code);
                         if (method_exists($pay_channel, "refund")) {

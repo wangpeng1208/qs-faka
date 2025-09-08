@@ -127,7 +127,6 @@ class Base extends Api
         empty($this->shop->shop_status) && $this->error("店铺未审核!"); // 用户提交 后台审核
         $this->shop->shop_close && $this->error($this->shop->shop_close_notice); // 用户自己关闭
         $this->shop->shop_freeze && $this->error("店铺已冻结"); // 管理员冻结店铺
-        ShopIplist::visit($this->shop->id, $this->request->ip());
     }
 
     /**
@@ -138,7 +137,7 @@ class Base extends Api
      */
     protected function channel($user_id)
     {
-        $platform = Channel::where(["status" => 1, "is_custom" => 0, "type" => 1])->field(['id', 'title', 'is_available', 'paytype', 'is_custom', 'lowrate', 'show_name'])->order("sort desc")->select()->filter(
+        $platform = Channel::where(["status" => 1, "type" => 1])->field(['id', 'title', 'is_available', 'paytype', 'lowrate', 'show_name'])->order("sort desc")->select()->filter(
             function ($item) use ($user_id) {
                 $item->user_id      = $user_id;
                 $item->channel_id   = $item->id;

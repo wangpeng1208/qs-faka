@@ -24,7 +24,7 @@ class Payment extends Base
     public function list()
     {
         $user_id  = $this->user->id;
-        $res = Channel::where(["status" => 1, "is_custom" => 0, "type" => 1])->field(['id', 'title', 'is_available', 'paytype', 'is_custom', 'lowrate', 'show_name', 'status'])->order("sort desc")->select()->each(
+        $res = Channel::where(["status" => 1, "type" => 1])->field(['id', 'title', 'is_available', 'paytype', 'lowrate', 'show_name', 'status'])->order("sort desc")->select()->each(
             function ($item) use ($user_id) {
                 $item->user_id      = $user_id;
                 $item->channel_id   = $item->id;

@@ -28,7 +28,7 @@ class RebuildTableCommand extends Command
         $triggerTime = time();
         // 清空数据库表
 
-        $rebuild_table_name = ['pay_auto_unfreeze', 'user_cash', 'order_complaint', 'order_complaint_message', 'goods', 'goods_card', 'goods_category', 'goods_coupon', 'article_read', 'shop_link', 'user_log', 'user_message', '`order`', 'order_card', 'order_master', 'shop_list', 'user', 'user_analysis', 'user_collect', 'user_login_error_log', 'user_login_log', 'user_money_log', 'user_rate', 'shop_iplist', 'user_role_relation', 'admin_log', 'pay_channel_account',  'article'];
+        $rebuild_table_name = ['pay_auto_unfreeze', 'user_cash', 'order_complaint', 'order_complaint_message', 'goods', 'goods_card', 'goods_category', 'goods_coupon', 'article_read', 'shop_link', 'user_log', 'user_message', '`order`', 'order_card', 'order_master', 'shop_list', 'user', 'user_analysis', 'user_collect', 'user_login_error_log', 'user_login_log', 'user_money_log', 'user_rate', 'user_role_relation', 'admin_log', 'pay_channel_account',  'article'];
 
 
         foreach ($rebuild_table_name as $table_name) {
