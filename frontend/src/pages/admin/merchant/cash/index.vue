@@ -44,14 +44,8 @@
         </t-descriptions>
       </t-space>
     </div>
-    <t-divider />
-    <!-- <t-space align="center">
-      <t-button theme="primary" @click="fetchData">刷新</t-button>
-    </t-space> -->
-    <t-card title="提现记录" :bordered="false">
-      <div class="category-header c-flex">
-        <search-popup ref="editRef" @success="fetchData" />
-      </div>
+    <t-card title="" :bordered="false">
+      <search-popup @success="handelSearch" />
       <div class="category-header c-flex">
         <t-space align="baseline">
           <t-link hover="underline"> 打款站内信通知 已开启 </t-link>
@@ -65,17 +59,17 @@
           <p v-if="!!selectedRowKeys.length" class="selected-count">已选{{ selectedRowKeys.length }}项</p>
         </div>
       </div>
-      <t-table ref="tableRef" row-key="id" :data="lists" :columns="columns" :expand-on-row-click="false" :expanded-row-keys="expandedRowKeys" :expand-icon="false" :hover="lists.length > 0 ? true : false" :header-affixed-top="headerAffixedTop" :pagination="pagination" lazy-load max-height="100%" :selected-row-keys="selectedRowKeys" @page-change="onPageChange" @select-change="rehandleSelectChange">
+      <t-table row-key="id" :data="lists" :columns="columns" :expand-on-row-click="false" :expanded-row-keys="expandedRowKeys" :expand-icon="false" :hover="lists?.length > 0 ? true : false" :header-affixed-top="headerAffixedTop" :pagination="pagination" :loading="dataLoading" max-height="100%" :selected-row-keys="selectedRowKeys" @page-change="rehandlePageChange" @select-change="rehandleSelectChange">
         <template #expandedRow="{ row }"> {{ row.collect_info }} </template>
         <template #operate="{ row }">
-          <span v-if="row.status == 0 >
+          <span v-if="row.status === 0">
             <t-space size="small">
               <t-link v-perms="['adminapi/merchant/cash/pass']" theme="primary" @click="passRow(row.id)">手工打款</t-link>
               <t-link v-perms="['adminapi/merchant/cash/autoPass']" theme="primary" @click="hadleAutoRow('autopass', row.id)">代付打款</t-link>
               <t-link v-perms="['adminapi/merchant/cash/refuse']" theme="danger" @click="refuseRow(row.id)">驳回</t-link>
             </t-space>
           </span>
-          <span v-if="row.status == 1" v-perms="['adminapi/merchant/cash/del']">
+          <span v-if="row.status === 1" v-perms="['adminapi/merchant/cash/del']">
             <t-link theme="danger" @click="deleteRow(row.id)">删除</t-link>
           </span>
         </template>
@@ -85,16 +79,27 @@
 </template>
 <script setup lang="ts">
 import { DialogPlugin, Input, MessagePlugin } from 'tdesign-vue-next';
-import { computed, h, reactive, ref } from 'vue';
+import { h, reactive, ref } from 'vue';
 
 import { editConfig, getConfig } from '@/api/admin/config/config';
 import { autoPass, cashCount, del, delBatch, list, pass, refuse } from '@/api/admin/merchant/cash';
-import { prefix } from '@/config/global';
-import { useSettingStore } from '@/store';
+import { table } from '@/hooks/table';
 import { copyText } from '@/utils/common';
 
 import { columns } from './components/constant';
 import SearchPopup from './components/search.vue';
+
+const searchParams = reactive<any>({});
+const { pagination, fetchData, dataLoading, headerAffixedTop, rehandlePageChange, lists } = table({
+  fetchFun: list,
+  params: searchParams,
+});
+fetchData();
+
+const handelSearch = (params: any) => {
+  Object.assign(searchParams, params);
+  fetchData();
+};
 
 const selectedRowKeys = ref<number[]>([]);
 const rehandleSelectChange = (val: number[]) => {
@@ -138,41 +143,8 @@ const initCashCount = async () => {
 };
 initCashCount();
 
-const pagination = ref({
-  defaultPageSize: 20,
-  total: 0,
-  defaultCurrent: 1,
-});
-const lists = ref([]);
-// 避免丢失searchData·重要
-const searchData = ref();
-const fetchData = async (params = {}) => {
-  searchData.value = params;
-  const { data } = await list({
-    page: pagination.value.defaultCurrent,
-    limit: pagination.value.defaultPageSize,
-    ...params,
-  });
-  lists.value = data.list;
-  pagination.value.total = data.total;
-};
 fetchData();
 
-const onPageChange = (curr: any) => {
-  pagination.value.defaultCurrent = curr.current;
-  pagination.value.defaultPageSize = curr.pageSize;
-  // 翻页参数应传入搜索数据
-  fetchData(searchData);
-};
-
-const store = useSettingStore();
-const headerAffixedTop = computed(
-  () =>
-    ({
-      offsetTop: store.isUseTabsRouter ? 48 : 0,
-      container: `.${prefix}-layout`,
-    }) as any,
-);
 const expandedRowKeys = ref(['']);
 
 const passRow = async (id: any) => {
@@ -196,7 +168,7 @@ const passRow = async (id: any) => {
       confirmDialog.update({ confirmBtn: { content: '提交中', loading: true } });
       pass({ id }).then((res) => {
         if (res.code === 1) {
-          MessagePlugin.success('操作成功');
+          MessagePlugin.success(res.msg);
           confirmDialog.hide();
           fetchData();
         } else {
@@ -230,7 +202,7 @@ const refuseRow = async (id: number) => {
         reason: reason.value,
       }).then((res) => {
         if (res.code === 1) {
-          MessagePlugin.success('操作成功');
+          MessagePlugin.success(res.msg);
           reason.value = '';
           confirmDialog.hide();
           fetchData();
@@ -256,7 +228,7 @@ const hadleAutoRow = async (type: string, id: number) => {
       confirmDialog.update({ confirmBtn: { content: '提交中', loading: true } });
       autoPass({ id, type }).then((res) => {
         if (res.code === 1) {
-          MessagePlugin.success('操作成功');
+          MessagePlugin.success(res.msg);
           confirmDialog.hide();
           fetchData();
         } else {
@@ -266,11 +238,11 @@ const hadleAutoRow = async (type: string, id: number) => {
     },
   });
 };
-// deleteRow
+
 const deleteRow = async (id: number) => {
   const res = await del({ id });
   if (res.code === 1) {
-    MessagePlugin.success('删除成功');
+    MessagePlugin.success(res.msg);
     fetchData();
   } else {
     MessagePlugin.error(res.msg);
@@ -304,7 +276,7 @@ const setConfig = async (name: any) => {
     },
   });
   if (res.code === 1) {
-    MessagePlugin.success('操作成功');
+    MessagePlugin.success(res.msg);
     fetchConfig();
   } else {
     MessagePlugin.error(res.msg);

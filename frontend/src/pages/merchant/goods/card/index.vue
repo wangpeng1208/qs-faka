@@ -30,12 +30,10 @@
         <t-button theme="primary" @click="searchData">查询</t-button>
       </t-space>
     </div>
-    <!-- {{ pagination }} -->
     <t-table :data="lists" :columns="listsColumns" row-key="id" :pagination="pagination" :selected-row-keys="selectedRowKeys" :loading="dataLoading" :header-affixed-top="headerAffixedTop" max-height="auto" table-layout="auto" @page-change="rehandlePageChange" @select-change="rehandleSelectChange">
       <template #status="{ row }">
         <t-tag v-if="row.status === 2" variant="light" theme="success">已售</t-tag>
         <t-tag v-else variant="light" theme="danger">未售</t-tag>
-        <t-tag v-if="row.is_cross === 1" variant="light" theme="success">跨站</t-tag>
       </template>
       <template #operation="{ row }">
         <t-space>
@@ -134,7 +132,7 @@ const delRow = async (row: any) => {
             MessagePlugin.error(`${res.msg}`);
           }
         })
-        .catch((error) => {
+        .catch(() => {
           MessagePlugin.error('删除失败');
         });
     },

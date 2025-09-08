@@ -10,10 +10,10 @@
       <div class="r c-flex"></div>
     </div>
 
-    <t-table :data="list" :columns="listsColumns" row-key="id" vertical-align="top" :hover="list.length ? true : false" :pagination="pagination" :selected-row-keys="selectedRowKeys" :loading="dataLoading" :header-affixed-top="headerAffixedTop" max-height="auto" table-layout="auto" @page-change="rehandlePageChange" @select-change="rehandleSelectChange">
+    <t-table :data="lists" :columns="listsColumns" row-key="id" vertical-align="top" :hover="lists?.length ? true : false" :pagination="pagination" :selected-row-keys="selectedRowKeys" :loading="dataLoading" :header-affixed-top="headerAffixedTop" max-height="auto" table-layout="auto" @page-change="rehandlePageChange" @select-change="rehandleSelectChange">
       <template #code="{ row }">
         <span title="点击复制" @click="copyText(row.code)">
-          {{ row.code }}
+          <t-tag :theme="row.status === 1 ? 'success' : 'danger'" variant="outline"> {{ row.code }} </t-tag>
         </span>
       </template>
       <template #amount="{ row }">
@@ -23,9 +23,6 @@
       <template #min_banlance="{ row }">
         <span v-if="row.min_banlance">{{ row.min_banlance }}</span>
         <span v-else>-</span>
-      </template>
-      <template #expire_day="{ row }">
-        {{ row.expire_day }}
       </template>
       <template #empty>
         <result title="" tip="优惠券为空" type="list"> </result>
@@ -43,47 +40,21 @@ export default {
 
 <script setup lang="ts">
 import { DialogPlugin, MessagePlugin } from 'tdesign-vue-next';
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { batchDelGoodsCoupon, getGoodsCouponList } from '@/api/merchant/goods/coupon';
 import Result from '@/components/result/index.vue';
-import { prefix } from '@/config/global';
-import { useSettingStore } from '@/store';
+import { table } from '@/hooks/table';
 import { copyText } from '@/utils/common';
 
 import { listsColumns } from './components/constant';
 import ExportCoupon from './components/ExportCoupon.vue';
 
 const router = useRouter();
-const store = useSettingStore();
-const list = ref([]);
-const pagination = ref({
-  defaultPageSize: 20,
-  total: 0,
-  defaultCurrent: 1,
+const { pagination, fetchData, dataLoading, headerAffixedTop, rehandlePageChange, lists } = table({
+  fetchFun: getGoodsCouponList,
 });
-
-const dataLoading = ref(false);
-const fetchData = async () => {
-  const value = {
-    page: pagination.value.defaultCurrent,
-    limit: pagination.value.defaultPageSize,
-  };
-  dataLoading.value = true;
-  try {
-    const { data } = await getGoodsCouponList(value);
-    list.value = data.list;
-    pagination.value = {
-      ...pagination.value,
-      total: data.total,
-    };
-  } catch (e) {
-    console.log(e);
-  } finally {
-    dataLoading.value = false;
-  }
-};
 
 onMounted(() => {
   fetchData();
@@ -94,16 +65,6 @@ const selectedRowKeys = ref([]);
 const rehandleSelectChange = (val: number[]) => {
   selectedRowKeys.value = val;
 };
-const rehandlePageChange = (curr: any, pageInfo: any) => {
-  pagination.value.defaultCurrent = curr.current;
-  pagination.value.defaultPageSize = curr.pageSize;
-  fetchData();
-};
-
-const headerAffixedTop = computed(() => ({
-  offsetTop: store.isUseTabsRouter ? 48 : 0,
-  container: `.${prefix}-layout`,
-}));
 
 // 批量删除
 const batchDel = async () => {
@@ -111,42 +72,29 @@ const batchDel = async () => {
     header: '是否确认删除？',
     body: `未使用的优惠券会被删除至回收站，已使用或者已过期的优惠券会被直接删除！`,
     confirmBtn: '确认',
-    onConfirm: ({ e }) => {
+    onConfirm: () => {
       confirmDia.hide();
       const data = {
         ids: selectedRowKeys.value,
       };
       batchDelGoodsCoupon(data)
-        .then((res) => {
+        .then((res: any) => {
           if (res.code === 1) {
             MessagePlugin.success(res.msg);
             fetchData();
             // 重置选中
             selectedRowKeys.value = [];
           } else {
-            MessagePlugin.error(`删除失败：${res.msg}`);
+            MessagePlugin.error(res.msg);
           }
         })
-        .catch((error) => {
+        .catch(() => {
           MessagePlugin.error('删除失败');
         });
     },
-    onClose: ({ e, trigger }) => {
+    onClose: () => {
       confirmDia.hide();
     },
   });
 };
 </script>
-<style lang="less" scoped>
-.selected-count {
-  display: inline-block;
-  margin-left: 8px;
-  color: var(--td-text-color-secondary);
-}
-
-:deep(.t-table th),
-:deep(.t-table td) {
-  position: relative;
-  padding: var(--td-comp-paddingTB-m) 0;
-}
-</style>

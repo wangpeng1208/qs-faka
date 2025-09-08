@@ -10,13 +10,13 @@
       </div>
       <div class="r c-flex">
         <t-space>
-          <t-select v-model="searchValue.goods_id" placeholder="全部商品" type="search" clearable :options="goodsListOptions" :keys="{ value: 'id', label: 'name' }" />
-          <t-button theme="default" variant="outline" @click="fetchData">查询</t-button>
+          <t-select v-model="params.goods_id" placeholder="全部商品" type="search" clearable :options="goodsListOptions" :keys="{ value: 'id', label: 'name' }" />
+          <t-button theme="primary" @click="searchData">查询</t-button>
         </t-space>
       </div>
     </div>
 
-    <t-base-table :data="list" :columns="COLUMNS" :row-key="rowKey" vertical-align="top" :hover="list.length > 0 ? true : false" :pagination="pagination" :selected-row-keys="selectedRowKeys" :loading="dataLoading" table-layout="auto" max-height="auto" :header-affixed-top="headerAffixedTop" @page-change="rehandlePageChange" @change="rehandleChange" @select-change="rehandleSelectChange">
+    <t-base-table :data="lists" :columns="COLUMNS" row-key="id" vertical-align="top" :hover="lists?.length > 0 ? true : false" :pagination="pagination" :loading="dataLoading" table-layout="auto" max-height="auto" :header-affixed-top="headerAffixedTop" @page-change="rehandlePageChange">
       <template #status="{ row }">
         <t-tag v-if="row.status === 0" variant="light" theme="danger">未付款</t-tag>
         <t-tag v-else-if="row.status === 1" variant="light" theme="success">已付款</t-tag>
@@ -42,62 +42,29 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 
 import { getChartsMoney } from '@/api/merchant/charts/charts';
 import { listSimple } from '@/api/merchant/goods/category';
 import { goodList } from '@/api/merchant/goods/good';
 import Result from '@/components/result/index.vue';
-import { prefix } from '@/config/global';
 import { COLUMNS } from '@/constant/charts/money/constant';
-import { useSettingStore } from '@/store';
+import { table } from '@/hooks/table';
 import { formatMoney } from '@/utils/common';
 import { formatTime } from '@/utils/date';
 
-const store = useSettingStore();
-
-const searchValue = reactive({
-  cate_id: '',
-  goods_id: '',
+const params = reactive<any>({});
+const { pagination, fetchData, dataLoading, headerAffixedTop, rehandlePageChange, lists, searchData } = table({
+  fetchFun: getChartsMoney,
+  params,
 });
 
-const rowKey = 'id';
-const pagination = ref({
-  defaultPageSize: 10,
-  total: 0,
-  defaultCurrent: 1,
-});
 // 列表数据
-const list = ref([]);
 const charts = reactive({
   total_price: 0,
   total_cost_price: 0,
   total_profit: 0,
 });
-const dataLoading = ref(false);
-const fetchData = async () => {
-  dataLoading.value = true;
-  const value = {
-    page: pagination.value.defaultCurrent,
-    limit: pagination.value.defaultPageSize,
-    ...searchValue,
-  };
-  try {
-    const { data } = await getChartsMoney(value);
-    list.value = data.list;
-    charts.total_cost_price = data.charts.total_cost_price;
-    charts.total_price = data.charts.total_price;
-    charts.total_profit = data.charts.total_profit;
-    pagination.value = {
-      ...pagination.value,
-      total: data.total,
-    };
-  } catch (e) {
-    console.log(e);
-  } finally {
-    dataLoading.value = false;
-  }
-};
 
 const categoryList = ref([]);
 const fetchGoodsCategory = async () => {
@@ -115,24 +82,6 @@ onMounted(() => {
   fetchGoodsCategory();
   fetchGoodsList();
 });
-
-const selectedRowKeys = ref([]);
-// 勾选selectedRowKeys变化
-const rehandleSelectChange = (val: number[]) => {
-  selectedRowKeys.value = val;
-};
-
-const rehandlePageChange = (curr: any, pageInfo: any) => {
-  pagination.value.defaultCurrent = curr.current;
-  pagination.value.defaultPageSize = curr.pageSize;
-  fetchData();
-};
-const rehandleChange = (changeParams: any, triggerAndData: any) => {};
-
-const headerAffixedTop = computed(() => ({
-  offsetTop: store.isUseTabsRouter ? 48 : 0,
-  container: `.${prefix}-layout`,
-}));
 </script>
 
 <style lang="less" scoped>

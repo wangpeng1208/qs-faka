@@ -1,14 +1,14 @@
 <template>
-  <t-card title="提现记录" class="basic-container" :bordered="false">
-    <t-base-table :data="list" :columns="columns" :row-key="rowKey" vertical-align="middle" :hover="list.length > 0 ? true : false" :pagination="pagination" :loading="dataLoading" max-height="auto" @page-change="rehandlePageChange" @select-change="rehandleSelectChange">
+  <t-card title="提现记录" :bordered="false">
+    <t-base-table :data="lists" :columns="columns" row-key="id" vertical-align="middle" :hover="lists?.length > 0 ? true : false" :pagination="pagination" :loading="dataLoading" :header-affixed-top="headerAffixedTop" max-height="auto" @page-change="rehandlePageChange">
       <template #status="{ row }">
-        <t-tag v-if="row.status == 0" theme="default" variant="light"> 结算中 </t-tag>
-        <t-tag v-if="row.status == 1" theme="default" variant="light"> 提现成功 </t-tag>
-        <t-tag v-else-if="row.status == 2" theme="danger" variant="light"> 提现失败 </t-tag>
+        <t-tag v-if="row.status === 0" theme="primary" variant="outline"> 结算中 </t-tag>
+        <t-tag v-if="row.status === 1" theme="success" variant="outline"> 提现成功 </t-tag>
+        <t-tag v-else-if="row.status === 2" theme="danger" variant="outline"> 提现失败 </t-tag>
       </template>
       <template #auto_cash="{ row }">
-        <span v-if="row.auto_cash == 1">自动结算</span>
-        <span v-else>手动结算</span>
+        <span v-if="row.auto_cash === 1">自动提现</span>
+        <span v-else>手动提现</span>
       </template>
       <template #create_at="{ row }">
         <span>{{ formatTime(row.create_at) }}</span>
@@ -32,18 +32,14 @@ export default {
 
 <script setup lang="ts">
 import { PrimaryTableCol, TableRowData } from 'tdesign-vue-next';
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted } from 'vue';
 
 import { index } from '@/api/merchant/finance/cash';
 import Result from '@/components/result/index.vue';
+import { table } from '@/hooks/table';
 import { formatTime } from '@/utils/date';
 
 const columns: PrimaryTableCol<TableRowData>[] = [
-  // {
-  //   colKey: 'id',
-  //   title: 'ID',
-  //   width: '50px',
-  // },
   {
     colKey: 'auto_cash',
     title: '提现方式',
@@ -51,7 +47,7 @@ const columns: PrimaryTableCol<TableRowData>[] = [
   },
   {
     colKey: 'create_at',
-    title: '发起提现时间',
+    title: '提现时间',
     width: '140px',
   },
   {
@@ -78,68 +74,11 @@ const columns: PrimaryTableCol<TableRowData>[] = [
   },
 ];
 
-const list = ref([]);
-const pagination = ref({
-  defaultPageSize: 20,
-  total: 1,
-  defaultCurrent: 1,
-});
-
-const dataLoading = ref(false);
-const fetchData = async () => {
-  dataLoading.value = true;
-
-  const value = {
-    ...searchValue,
-    page: pagination.value.defaultCurrent,
-    limit: pagination.value.defaultPageSize,
-  };
-  try {
-    const { data } = await index(value);
-    list.value = data.list;
-    pagination.value = {
-      ...pagination.value,
-      total: data.total,
-    };
-  } catch (e) {
-    console.log(e);
-  } finally {
-    dataLoading.value = false;
-  }
-};
-const searchValue = reactive({
-  time: [],
+const { pagination, fetchData, dataLoading, headerAffixedTop, rehandlePageChange, lists } = table({
+  fetchFun: index,
 });
 
 onMounted(() => {
   fetchData();
 });
-
-const selectedRowKeys = ref([]);
-
-const rowKey = 'id';
-
-const rehandleSelectChange = (val: number[]) => {
-  selectedRowKeys.value = val;
-};
-const rehandlePageChange = (curr: any, pageInfo: any) => {
-  pagination.value.defaultCurrent = curr.current;
-  pagination.value.defaultPageSize = curr.pageSize;
-  fetchData();
-};
 </script>
-
-<style lang="less" scoped>
-:deep(.t-table th) {
-  padding: var(--td-comp-paddingTB-m) 0;
-  &:first-child {
-    padding-left: var(--td-comp-paddingTB-m);
-  }
-}
-:deep(.t-table td) {
-  padding: var(--td-comp-paddingTB-m) 0;
-  &:first-child {
-    padding-left: var(--td-comp-paddingTB-m);
-  }
-}
-</style>

@@ -1,10 +1,6 @@
 <template>
-  <t-card title="流水记录" class="basic-container" :bordered="false">
-    <t-alert>
-      <!-- <template #icon> <flag-icon /> </template> -->
-      只保留显示最近30天的流水日志
-    </t-alert>
-    <t-base-table :data="list" :columns="COLUMNS" row-key="id" vertical-align="middle" :hover="list.length > 0 ? true : false" table-layout="auto" max-height="auto" :pagination="pagination" :header-affixed-top="headerAffixedTop" :loading="dataLoading" @page-change="rehandlePageChange">
+  <t-card title="资金明细" :bordered="false">
+    <t-base-table :data="lists" :columns="COLUMNS" row-key="id" vertical-align="middle" :hover="lists?.length > 0 ? true : false" table-layout="auto" max-height="auto" :pagination="pagination" :header-affixed-top="headerAffixedTop" :loading="dataLoading" @page-change="rehandlePageChange">
       <template #create_at="{ row }">
         <span>{{ formatTime(row.create_at) }}</span>
       </template>
@@ -25,53 +21,19 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 
 import { log } from '@/api/merchant/finance/money';
 import Result from '@/components/result/index.vue';
-import { prefix } from '@/config/global';
 import { COLUMNS } from '@/constant/user/money_log/constant';
-import { useSettingStore } from '@/store';
+import { table } from '@/hooks/table';
 import { formatTime } from '@/utils/date';
 
-const store = useSettingStore();
-
-const list = ref([]);
-const pagination = ref({
-  defaultPageSize: 20,
-  total: 0,
-  defaultCurrent: 1,
+const { pagination, fetchData, dataLoading, headerAffixedTop, rehandlePageChange, lists } = table({
+  fetchFun: log,
 });
-const dataLoading = ref(false);
-const fetchData = async () => {
-  dataLoading.value = true;
-  const params = {
-    page: pagination.value.defaultCurrent,
-    limit: pagination.value.defaultPageSize,
-  };
-
-  const { data } = await log(params);
-  list.value = data.list;
-  pagination.value = {
-    ...pagination.value,
-    total: data.total,
-  };
-
-  dataLoading.value = false;
-};
 
 onMounted(() => {
   fetchData();
 });
-
-const rehandlePageChange = (curr: any, pageInfo: any) => {
-  pagination.value.defaultCurrent = curr.current;
-  pagination.value.defaultPageSize = curr.pageSize;
-  fetchData();
-};
-
-const headerAffixedTop = computed(() => ({
-  offsetTop: store.isUseTabsRouter ? 48 : 0,
-  container: `.${prefix}-layout`,
-}));
 </script>

@@ -1,19 +1,16 @@
 <template>
   <t-card title="用户管理" class="basic-container" :bordered="false">
-    <template #actions>
-      <t-link hover="color" theme="primary" @click="showSearchFrom = !showSearchFrom">{{ searchText }}</t-link>
-    </template>
     <div class="category-header c-flex">
-      <row-search v-show="showSearchFrom" ref="searchFormRef" @success="fetchSearchData" />
+      <row-search ref="searchFormRef" @success="fetchSearchData" />
     </div>
     <div class="category-header c-flex">
       <div class="l">
         <t-button v-perms="['adminapi/merchant/user/add']" theme="primary" @click="editRow(0)">添加</t-button>
       </div>
     </div>
-    <t-table :data="lists" :columns="columns" row-key="id" :expand-on-row-click="false" :expanded-row-keys="expandedRowKeys" :expand-icon="false" :hover="lists.length > 0 ? true : false" :pagination="pagination" :header-affixed-top="headerAffixedTop" max-height="100%" @page-change="onPageChange">
+    <t-table :data="lists" :columns="columns" row-key="id" :expand-on-row-click="false" :expanded-row-keys="expandedRowKeys" :expand-icon="false" :hover="lists?.length > 0 ? true : false" :pagination="pagination" :header-affixed-top="headerAffixedTop" max-height="100%" :loading="dataLoading" @page-change="rehandlePageChange">
       <template #expandedRow="{ row }">
-        <div calss="edit" style="float: right; height: 30px">
+        <div calss="edit" style="float: left; height: 30px">
           <t-space>
             <t-link v-perms="['adminapi/merchant/user/eidt']" theme="primary" hover="color" @click="editRow(row.id)">
               <t-icon name="edit" />
@@ -83,11 +80,10 @@
 </template>
 <script setup lang="ts">
 import { MessagePlugin } from 'tdesign-vue-next';
-import { computed, reactive, ref } from 'vue';
+import { reactive, ref } from 'vue';
 
 import { del, list, unlock } from '@/api/admin/merchant/user';
-import { prefix } from '@/config/global';
-import { useSettingStore } from '@/store';
+import { table } from '@/hooks/table';
 
 import CollectPopup from './components/collect.vue';
 import { columns } from './components/constant';
@@ -99,9 +95,14 @@ import RatePopup from './components/rate.vue';
 import RolePopup from './components/role.vue';
 import RowSearch from './components/row-search.vue';
 
-const detailRef = ref();
+const { pagination, fetchData, dataLoading, headerAffixedTop, rehandlePageChange, lists, searchData } = table({
+  fetchFun: list,
+});
+fetchData();
+
+const detailRef = ref<InstanceType<typeof DetailPopup>>();
 const detailRow = (id: number) => {
-  detailRef.value.init(id);
+  detailRef.value?.init(id);
 };
 const unlockRow = async (id: number) => {
   const res = await unlock({
@@ -114,23 +115,23 @@ const unlockRow = async (id: number) => {
     MessagePlugin.error(res.msg);
   }
 };
-const collectRef = ref();
+const collectRef = ref<InstanceType<typeof CollectPopup>>();
 const collectRow = (id: number) => {
-  collectRef.value.init(id);
+  collectRef.value?.init(id);
 };
-const rateRef = ref();
+const rateRef = ref<InstanceType<typeof RatePopup>>();
 const rateRow = (row: any) => {
-  rateRef.value.init(row);
+  rateRef.value?.init(row);
 };
 
-const roleRef = ref();
+const roleRef = ref<InstanceType<typeof RolePopup>>();
 const roleRow = (id: number) => {
-  roleRef.value.init(id);
+  roleRef.value?.init(id);
 };
 
-const moneyRef = ref();
+const moneyRef = ref<InstanceType<typeof MoneyPopup>>();
 const moneyRow = (id: number) => {
-  moneyRef.value.init(id);
+  moneyRef.value?.init(id);
 };
 const expandedRowKeys = ref(['']);
 const operateRow = (id: any) => {
@@ -141,67 +142,30 @@ const operateRow = (id: any) => {
     expandedRowKeys.value = [id];
   }
 };
-const messageRef = ref();
+const messageRef = ref<InstanceType<typeof MessagePopup>>();
 const messageRow = (id: number) => {
-  messageRef.value.init(id);
+  messageRef.value?.init(id);
 };
 // 搜索
 const params = reactive<any>({});
 const fetchSearchData = (newParams: any) => {
   Object.assign(params, newParams);
-  fetchData();
+  searchData();
 };
-const showSearchFrom = ref(false);
-const searchText = computed(() => (showSearchFrom.value ? '收起搜索' : '展开搜索'));
-const pagination = ref({
-  defaultPageSize: 20,
-  total: 0,
-  defaultCurrent: 1,
-});
 
-const lists = ref([]);
-const fetchData = async () => {
-  const { data } = await list({
-    page: pagination.value.defaultCurrent,
-    limit: pagination.value.defaultPageSize,
-    ...params,
-  });
-  lists.value = data.list;
-  pagination.value = {
-    ...pagination.value,
-    total: data.total,
-  };
-};
-fetchData();
-const onPageChange = (curr: any) => {
-  pagination.value.defaultCurrent = curr.current;
-  pagination.value.defaultPageSize = curr.pageSize;
-  fetchData();
-};
-const store = useSettingStore();
-const headerAffixedTop = computed(
-  () =>
-    ({
-      offsetTop: store.isUseTabsRouter ? 48 : 0,
-      container: `.${prefix}-layout`,
-    }) as any,
-);
-const editRef = ref();
+const editRef = ref<InstanceType<typeof EditPopup>>();
 const editRow = (id: number) => {
-  editRef.value.init(id);
+  editRef.value?.init(id);
 };
 const deleteRow = async (id: number) => {
   const res = await del({
     id,
   });
   if (res.code === 1) {
-    MessagePlugin.success('删除成功');
+    MessagePlugin.success(res.msg);
     fetchData();
+  } else {
+    MessagePlugin.error(res.msg);
   }
 };
 </script>
-<style lang="less" scoped>
-:deep(.t-table .t-icon) {
-  margin-right: 10px;
-}
-</style>

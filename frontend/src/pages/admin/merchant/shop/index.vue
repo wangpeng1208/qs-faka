@@ -1,10 +1,8 @@
 <template>
   <t-card title="商铺管理" class="basic-container" :bordered="false">
-    <t-base-table ref="tableRef" row-key="id" :data="lists" :columns="columns" :hover="lists.length > 0 ? true : false" :header-affixed-top="headerAffixedTop" max-height="auto" table-layout="auto" :pagination="pagination" lazy-load @page-change="onPageChange">
+    <t-base-table ref="tableRef" row-key="id" :data="lists" :columns="columns" :hover="lists?.length > 0 ? true : false" :header-affixed-top="headerAffixedTop" max-height="auto" table-layout="auto" :pagination="pagination" :loading="dataLoading" @page-change="rehandlePageChange">
       <template #operate="{ row }">
-        <t-space>
-          <t-link theme="primary" size="small" @click="deatilRow(row)">详情</t-link>
-        </t-space>
+        <t-link theme="primary" size="small" @click="deatilRow(row)">详情</t-link>
       </template>
     </t-base-table>
     <row-detail ref="detailRef" @success="fetchData" />
@@ -12,14 +10,18 @@
 </template>
 <script setup lang="ts">
 import { PrimaryTableCol, TableRowData, Tag } from 'tdesign-vue-next';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 
 import { list } from '@/api/admin/merchant/shop';
-import { prefix } from '@/config/global';
-import { useSettingStore } from '@/store';
+import { table } from '@/hooks/table';
 import { formatTime } from '@/utils/date';
 
 import RowDetail from './detail.vue';
+
+const { pagination, fetchData, dataLoading, headerAffixedTop, rehandlePageChange, lists } = table({
+  fetchFun: list,
+});
+fetchData();
 
 const columns: PrimaryTableCol<TableRowData>[] = [
   {
@@ -96,38 +98,8 @@ const columns: PrimaryTableCol<TableRowData>[] = [
   },
 ];
 
-const pagination = ref({
-  defaultPageSize: 20,
-  total: 0,
-  defaultCurrent: 1,
-});
-const lists = ref([]);
-const fetchData = async () => {
-  const { data } = await list({
-    page: pagination.value.defaultCurrent,
-    limit: pagination.value.defaultPageSize,
-  });
-  lists.value = data.list;
-  pagination.value = {
-    defaultPageSize: data.limit,
-    total: data.total,
-    defaultCurrent: data.page,
-  };
-};
-fetchData();
-const onPageChange = (curr: any) => {
-  pagination.value.defaultCurrent = curr.current;
-  pagination.value.defaultPageSize = curr.pageSize;
-  fetchData();
-};
-const store = useSettingStore();
-const headerAffixedTop = computed(() => ({
-  offsetTop: store.isUseTabsRouter ? 48 : 0,
-  container: `.${prefix}-layout`,
-}));
-
-const detailRef = ref();
+const detailRef = ref<InstanceType<typeof RowDetail>>();
 const deatilRow = (row: { [key: string]: any } | null = null) => {
-  detailRef.value.init(row);
+  detailRef.value?.init(row);
 };
 </script>

@@ -16,15 +16,14 @@
         <t-space>
           <t-select v-model="params.cate_id" placeholder="全部分类" type="search" clearable :options="categoryList"></t-select>
           <t-select v-model="params.status" placeholder="全部状态" type="search" clearable :options="statusList"></t-select>
-          <t-button theme="default" variant="outline" @click="fetchData">查询</t-button>
+          <t-button theme="primary" @click="searchData">查询</t-button>
         </t-space>
       </div>
     </div>
 
-    <t-table :data="list" :columns="trashListsColumns" :row-key="rowKey" vertical-align="top" :hover="list.length > 0 ? true : false" :pagination="pagination" :loading="dataLoading" :header-affixed-top="headerAffixedTop" table-layout="auto" max-height="100%" @page-change="rehandlePageChange" @select-change="rehandleSelectChange">
+    <t-table :data="lists" :columns="trashListsColumns" row-key="id" vertical-align="top" :hover="lists?.length > 0 ? true : false" :pagination="pagination" :loading="dataLoading" :header-affixed-top="headerAffixedTop" table-layout="auto" max-height="100%" @page-change="rehandlePageChange" @select-change="rehandleSelectChange">
       <template #operation="{ row }">
         <t-button size="small" variant="outline" shape="round" theme="success" @click="handleSetupTrash([row.id])">恢复</t-button>
-        <!-- <t-button size="small" variant="outline" shape="round" theme="danger" @click="handleDelTrash(row.id)">删除</t-button> -->
       </template>
       <template #empty>
         <result title="" tip="优惠券回收站为空" type="list"> </result>
@@ -41,52 +40,25 @@ export default {
 
 <script setup lang="ts">
 import { DialogPlugin, MessagePlugin } from 'tdesign-vue-next';
-import { computed, onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { listSimple } from '@/api/merchant/goods/category';
 import { batchRecoverGoodsCoupon, emptyGoodsCouponTrash, getGoodsCouponTrashList } from '@/api/merchant/goods/coupon';
 import Result from '@/components/result/index.vue';
-import { prefix } from '@/config/global';
-import { useSettingStore } from '@/store';
+import { table } from '@/hooks/table';
 
 import { statusList, trashListsColumns } from './components/constant';
 
-const router = useRouter();
-const store = useSettingStore();
-
-const rowKey = 'id';
-const list = ref([]);
-const pagination = ref({
-  defaultPageSize: 15,
-  total: 0,
-  defaultCurrent: 1,
+const { pagination, fetchData, dataLoading, headerAffixedTop, rehandlePageChange, lists, searchData } = table({
+  fetchFun: getGoodsCouponTrashList,
 });
+const router = useRouter();
+
 const params = reactive({
   cate_id: '',
   status: '',
 });
-const dataLoading = ref(false);
-const fetchData = async () => {
-  dataLoading.value = true;
-  const value = {
-    ...params,
-    page: pagination.value.defaultCurrent,
-    limit: pagination.value.defaultPageSize,
-  };
-  try {
-    const { data } = await getGoodsCouponTrashList(value);
-    list.value = data.list;
-    pagination.value = {
-      ...pagination.value,
-      total: data.total,
-    };
-  } catch (e) {
-    console.log(e);
-  } finally {
-    dataLoading.value = false;
-  }
-};
 
 const categoryList = ref([]);
 const fetchGoodsCategory = async () => {
@@ -99,12 +71,6 @@ onMounted(() => {
   fetchGoodsCategory();
 });
 
-const rehandlePageChange = (curr: any, pageInfo: any) => {
-  pagination.value.defaultCurrent = curr.current;
-  pagination.value.defaultPageSize = curr.pageSize;
-  fetchData();
-};
-
 const selectedRowKeys = ref([]);
 const rehandleSelectChange = (val: number[]) => {
   selectedRowKeys.value = val;
@@ -115,13 +81,13 @@ const handleSetupTrash = (id: any) => {
   if (id > 0) {
     rehandleSelectChange(id);
   }
-  
+
   // 确定要批量恢复吗？
   const confirmDia = DialogPlugin({
     header: '提醒',
     body: `确定要恢复吗？`,
     confirmBtn: '确认',
-    onConfirm: ({ e }) => {
+    onConfirm: () => {
       confirmDia.hide();
       const data = {
         ids: selectedRowKeys.value,
@@ -129,18 +95,18 @@ const handleSetupTrash = (id: any) => {
       batchRecoverGoodsCoupon(data)
         .then((res) => {
           if (res.code === 1) {
-            MessagePlugin.success('恢复成功');
+            MessagePlugin.success(res.msg);
             selectedRowKeys.value = [];
             fetchData();
           } else {
-            MessagePlugin.error(`恢复失败：${res.msg}`);
+            MessagePlugin.error(res.msg);
           }
         })
-        .catch((error) => {
+        .catch(() => {
           MessagePlugin.error('恢复失败');
         });
     },
-    onClose: ({ e, trigger }) => {
+    onClose: () => {
       confirmDia.hide();
     },
   });
@@ -161,27 +127,22 @@ const handleDelTrash = (id: any) => {
       emptyGoodsCouponTrash(data)
         .then((res) => {
           if (res.code === 1) {
-            MessagePlugin.success('操作成功');
+            MessagePlugin.success(res.msg);
             selectedRowKeys.value = [];
             fetchData();
           } else {
-            MessagePlugin.error(`操作失败：${res.msg}`);
+            MessagePlugin.error(res.msg);
           }
         })
-        .catch((error) => {
+        .catch(() => {
           MessagePlugin.error('操作失败');
         });
     },
-    onClose: ({ e, trigger }) => {
+    onClose: () => {
       confirmDia.hide();
     },
   });
 };
-
-const headerAffixedTop = computed(() => ({
-  offsetTop: store.isUseTabsRouter ? 48 : 0,
-  container: `.${prefix}-layout`,
-}));
 </script>
 
 <style lang="less" scoped>

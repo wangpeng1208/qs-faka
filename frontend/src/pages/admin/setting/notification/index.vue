@@ -2,7 +2,7 @@
   <t-card title="通知场景" class="basic-container" :bordered="false">
     <t-table size="small" :data="lists" :columns="columns" row-key="id" vertical-align="middle" :loading="dataLoading" :pagination="pagination" :header-affixed-top="headerAffixedTop" table-layout="fixed" max-height="100%" @page-change="rehandlePageChange">
       <template #topContent>
-        <t-space style="margin: 15px 0">
+        <t-space style="margin: 0 0 15px 0">
           <t-button theme="primary" @click="rowAdd()">新增</t-button>
         </t-space>
       </template>
@@ -172,7 +172,7 @@ const smsOnSubmit = async () => {
     data: smsData,
   });
   if (res.code === 1) {
-    MessagePlugin.success('操作成功');
+    MessagePlugin.success(res.msg);
     smsDialogVisible.value = false;
     fetchData();
   } else {
@@ -203,10 +203,10 @@ const rowDel = async (row: any) => {
     id: row.id,
   });
   if (res.code === 1) {
-    MessagePlugin.success('操作成功');
+    MessagePlugin.success(res.msg);
     fetchData();
   } else {
-    MessagePlugin.error(`${res.msg}`);
+    MessagePlugin.error(res.msg);
   }
 };
 const rowSubmit = async () => {
@@ -219,11 +219,11 @@ const rowSubmit = async () => {
           data: rowData,
         });
   if (res.code === 1) {
-    MessagePlugin.success('操作成功');
+    MessagePlugin.success(res.msg);
     dialogVisible.value = false;
     fetchData();
   } else {
-    MessagePlugin.error(`${res.msg}`);
+    MessagePlugin.error(res.msg);
   }
 };
 </script>
