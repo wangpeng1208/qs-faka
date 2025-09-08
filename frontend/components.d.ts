@@ -11,7 +11,6 @@ declare module 'vue' {
     Color: typeof import('./src/components/color/index.vue')['default']
     Editor: typeof import('./src/components/editor/index.vue')['default']
     Image: typeof import('./src/components/image/index.vue')['default']
-    ProductCard: typeof import('./src/components/product-card/index.vue')['default']
     Result: typeof import('./src/components/result/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

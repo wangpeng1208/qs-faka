@@ -1,0 +1,1 @@
+import{r as e}from"./index-6b6fbd51.js";function s(r){return e.post({url:"/merchantapi/user/news/list",params:r})}function n(r){return e.post({url:"/merchantapi/user/news/read",params:r})}function a(r){return e.post({url:"/merchantapi/user/news/detail",params:r})}export{a as d,s as g,n as r};

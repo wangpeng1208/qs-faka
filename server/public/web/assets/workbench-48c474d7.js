@@ -1,1 +1,0 @@
-import{r}from"./index-45c41893.js";function t(){return r.post({url:"/merchantapi/workbench/dashboard"})}function a(){return r.post({url:"/merchantapi/workbench/analysis"})}function e(){return r.post({url:"/merchantapi/workbench/notice"})}export{t as a,a as g,e as n};

@@ -1,0 +1,13 @@
+import{h as x,g as m,H as C,V as p,A as w,n as S,w as k}from"./index-6b6fbd51.js";import{d as N,r as T,w as A,M as h,j as I}from"./vue-d500b9b9.js";/**
+ * tdesign v1.16.1
+ * (c) 2025 tdesign
+ * @license MIT
+ */var M={animation:{type:String,default:"none",validator:function(t){return t?["gradient","flashed","none"].includes(t):!0}},content:{type:[String,Function]},default:{type:[String,Function]},delay:{type:Number,default:0},loading:{type:Boolean,default:!0},rowCol:{type:Array},theme:{type:String,default:"text",validator:function(t){return t?["text","avatar","paragraph","avatar-text","tab","article"].includes(t):!0}}};/**
+ * tdesign v1.16.1
+ * (c) 2025 tdesign
+ * @license MIT
+ */var z={text:[1],avatar:[{type:"circle",size:"56px"}],paragraph:[1,1,{width:"70%"}],"avatar-text":[[{type:"circle"},{type:"text",height:"32px"}]],tab:[{height:"30px"},{height:"200px"}],article:[{type:"rect",height:"30px",width:"100%"},{type:"rect",height:"200px",width:"100%"},[{type:"text",height:"30px"},{type:"text",height:"30px"},{type:"text",height:"30px"}],[{type:"text",height:"30px"},{type:"text",height:"30px"}],[{type:"text",height:"30px"},{type:"text",height:"30px"}],[{type:"text",height:"30px"},{type:"text",height:"30px"}]]},B=function(t){var f=["width","height","marginRight","marginLeft","margin","size","background","backgroundColor"],i=Object.create(null);return f.forEach(function(a){if(a in t){var n=t[a],u=p(n)?"".concat(n,"px"):n;if(a==="size"){var c=[u,u];i.width=c[0],i.height=c[1]}else i[a]=u}}),i},E=N({name:"TSkeleton",props:M,setup:function(t,f){var i=f.slots,a=T(!1),n=x("skeleton"),u=m(),c=function(e){return["".concat(n.value,"__col"),"".concat(n.value,"--type-").concat(e.type||"text"),S({},"".concat(n.value,"--animation-").concat(t.animation),t.animation)]},y=function(e){var o=[];return C(e)?o=e:p(e)?o=new Array(e).fill({type:"text"}):o=[e],o.map(function(r){return h("div",{class:c(r),style:B(r)},[w(r.content)?r.content(I):r.content])})},d=function(e){var o=e||t.rowCol,r=function(){return["".concat(n.value,"__row")]};return o.map(function(g){return h("div",{class:r()},[y(g)])})},v=null;return A(function(){return t.loading},function(l){if(!l){clearTimeout(v),a.value=!1;return}t.delay>0?v=setTimeout(function(){clearTimeout(v),a.value=!0},t.delay):a.value=!0},{immediate:!0}),function(){var l=u("default","content");if(i.default&&!a.value)return h("div",null,[l]);if(a.value){var e=[];return t.theme&&e.push(d(z[t.theme])),t.rowCol&&e.push(d(t.rowCol)),!t.theme&&!t.rowCol&&e.push(d([1,1,1,{width:"70%"}])),h("div",{class:n.value},[e])}}}});/**
+ * tdesign v1.16.1
+ * (c) 2025 tdesign
+ * @license MIT
+ */var P=k(E);export{P as S};

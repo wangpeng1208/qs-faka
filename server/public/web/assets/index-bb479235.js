@@ -1,1 +1,0 @@
-import{_ as o}from"./index-45c41893.js";import{P as r,Q as t}from"./vue-bf422dc1.js";import"./ui-ba7aaa7e.js";import"./icons-a8498fb6.js";import"./libs-51817cd7.js";import"./plugins-ca970193.js";import"./others-9f318174.js";import"./echarts-bf9d612c.js";const e={name:"AwardIndex"};function p(n,i,m,a,c,s){return r(),t("div")}const B=o(e,[["render",p]]);export{B as default};
