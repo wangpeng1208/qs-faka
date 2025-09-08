@@ -1,7 +1,7 @@
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import { defineStore } from 'pinia';
 
-import { checkScanStatus, login } from '@/api/merchant/user/account';
+import { login } from '@/api/merchant/user/account';
 import { userDetail } from '@/api/merchant/user/user';
 import { usePermissionStore } from '@/store';
 
@@ -15,7 +15,6 @@ export const useUserStore = defineStore('user', {
       mobile: '',
       status: 0,
       email: '',
-      openid: '',
       create_at: '',
     },
     shop: {
@@ -52,19 +51,6 @@ export const useUserStore = defineStore('user', {
         this.shop.shop_verify = res.data.shop_verify;
       }
       return res;
-    },
-    async wxQrcodeLoginStatus(userId: number, token: string) {
-      const res = await checkScanStatus({
-        user_id: userId,
-        token,
-      });
-      if (res.code === 1) {
-        this.accessToken = res.data.access_token;
-        this.new = res.data.refresh_token;
-        this.refreshToken = res.data.refresh_token;
-        return { status: 1 };
-      }
-      return { status: 0, msg: res.msg };
     },
     async getUniqueCode() {
       const fpPromise = FingerprintJS.load();

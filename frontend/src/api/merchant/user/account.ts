@@ -12,19 +12,6 @@ export function login(data: any) {
     data,
   });
 }
-// 获取微信扫码登录二维码地址
-export function getWechatQrUri() {
-  return request.post({
-    url: '/merchantapi/user/account/wechatQrCodeUri',
-  });
-}
-
-export function checkScanStatus(data: any) {
-  return request.post({
-    url: '/merchantapi/user/account/checkScanStatus',
-    data,
-  });
-}
 
 export function register(data: any) {
   return request.post({
@@ -52,13 +39,6 @@ export function sendSms(data: any) {
 export function sendEmail(data: any) {
   return request.post({
     url: '/merchantapi/user/account/sendEmailCode',
-    data,
-  });
-}
-// refreshToken换取token
-export function refreshToken(data: any) {
-  return request.post({
-    url: '/merchantapi/user/account/refresh_token',
     data,
   });
 }
