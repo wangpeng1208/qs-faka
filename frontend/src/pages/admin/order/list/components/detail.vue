@@ -1,5 +1,5 @@
 <template>
-  <t-drawer v-model:visible="visible" :close-on-overlay-click="false" size="100%" :destroy-on-close="true" :header="title" :on-confirm="onSubmit">
+  <t-drawer v-model:visible="visible" :close-on-overlay-click="false" size="50%" :destroy-on-close="true" :header="title" :on-confirm="onSubmit">
     <t-descriptions :title="`${fetchData.trade_no}的订单详情`">
       <t-descriptions-item label="商户账号">{{ fetchData?.user?.username }}</t-descriptions-item>
       <t-descriptions-item label="流水号">{{ fetchData?.transaction_id }}</t-descriptions-item>

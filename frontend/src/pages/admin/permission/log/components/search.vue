@@ -27,7 +27,7 @@
     </t-form-item>
     <t-form-item>
       <t-space>
-        <t-button theme="default" variant="outline" @click="fetchData">查询</t-button>
+        <t-button theme="primary" @click="fetchData">查询</t-button>
       </t-space>
     </t-form-item>
   </t-form>

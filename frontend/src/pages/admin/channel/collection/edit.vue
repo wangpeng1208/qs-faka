@@ -77,7 +77,6 @@ const DATA = {
   lowrate: 0,
   type: 1,
   paytype: '',
-  is_custom: 0,
 };
 const formData = reactive({ ...DATA });
 

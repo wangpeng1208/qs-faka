@@ -1,31 +1,32 @@
 <template>
   <t-space align="center">
-    <t-form-item label="搜索字段" name="field">
+    <t-form-item label="" name="field">
       <t-select v-model="params.field" :clear="fetchData" placeholder="请选择搜索字段" type="search" clearable :options="fieldOptions">
         <template #suffix-icon>
           <search-icon />
         </template>
       </t-select>
     </t-form-item>
-    <t-form-item label="商户ID" name="keyword">
+    <t-form-item label="" name="keyword">
       <t-input v-model="params.keyword" clearable placeholder="请输入关键词">
         <template #suffix-icon>
           <search-icon />
         </template>
       </t-input>
     </t-form-item>
-    <t-form-item label="IP" name="ip">
+    <t-form-item label="" name="ip">
       <t-input v-model="params.ip" clearable placeholder="请输入IP">
         <template #suffix-icon>
           <search-icon />
         </template>
       </t-input>
     </t-form-item>
-    <t-form-item label="登录时间" name="date_range">
+    <t-form-item label="" name="date_range">
       <t-date-range-picker v-model="params.date_range" allow-input clearable cancel-range-select-limit />
     </t-form-item>
-
-    <t-button theme="default" variant="outline" @click="fetchData">查询</t-button>
+    <t-form-item label="">
+      <t-button theme="primary" @click="fetchData">查询</t-button>
+    </t-form-item>
   </t-space>
 </template>
 

@@ -70,7 +70,6 @@ defineExpose({
   init,
 });
 
-
 const FORM_RULES: Record<string, FormRule[]> = {
   name: [{ required: true, message: '名称必填', type: 'error' }],
   ico: [{ required: true, message: '图标必须上传', type: 'error' }],

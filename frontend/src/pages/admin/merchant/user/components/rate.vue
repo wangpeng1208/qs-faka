@@ -49,11 +49,6 @@ const columns: PrimaryTableCol<TableRowData>[] = [
     title: '显示名称',
   },
   {
-    colKey: 'is_custom',
-    title: '通道类型',
-    cell: (h, { row }) => (row.is_custom ? '用户通道' : '官方通道'),
-  },
-  {
     colKey: 'rate',
     title: '费率',
     edit: {
