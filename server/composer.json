@@ -20,7 +20,7 @@
     "wiki": "https://gitee.com/wp1208/faka-qs/wikis"
   },
   "require": {
-    "php": ">=8.1",
+    "php": ">=8.2",
     "workerman/webman-framework": "~2.1",
     "monolog/monolog": "^2.9.2",
     "webman/think-orm": "~2.1",

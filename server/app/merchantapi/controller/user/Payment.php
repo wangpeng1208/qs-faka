@@ -29,8 +29,8 @@ class Payment extends Base
                 $item->user_id      = $user_id;
                 $item->channel_id   = $item->id;
                 $item->rate         = get_user_rate($user_id, $item->id);
-                $item->product_name = get_paytype($item->paytype)->name; // 支付类型名
-                $item->type_text = $item->type_text;
+                $item->product_name = get_paytype($item->paytype)->name;
+                $item->setAttr('type_text', $item->type_text);
                 $item->ico = get_paytype($item->paytype)->ico;
                 unset ($item->id);
             }

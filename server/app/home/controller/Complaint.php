@@ -110,10 +110,6 @@ class Complaint extends Base
             $post['messages']  = $complaint->messages;
             $post['order']     = $complaint->orders;
             $post['complaint'] = $complaint;
-            // 记录缓存
-            $ip = $this->request->ip();
-            // 记录ip缓存 用于验证发送聊天权限和push消息通道权限
-            Cache::set('complaint_query_' . $complaint->id, $ip, 86400);
             $this->success('密码正确！', $post);
         } else {
             $this->error('密码不正确，如有问题请联系客服处理！');
