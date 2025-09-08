@@ -48,7 +48,7 @@ const columns: PrimaryTableCol<TableRowData>[] = [
   {
     colKey: 'create_at',
     title: '提现时间',
-    width: '140px',
+    width: '180px',
   },
   {
     colKey: 'money',
@@ -71,6 +71,7 @@ const columns: PrimaryTableCol<TableRowData>[] = [
     colKey: 'complete_at',
     title: '结算时间',
     fixed: 'right',
+    width: '180px',
   },
 ];
 

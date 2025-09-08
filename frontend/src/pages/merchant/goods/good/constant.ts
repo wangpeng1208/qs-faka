@@ -24,13 +24,13 @@ export const COLUMNS: PrimaryTableCol<TableRowData>[] = [
   {
     colKey: 'create_at',
     title: '创建时间',
-    width: 150,
+    width: 180,
   },
   {
     colKey: 'operation',
     title: '操作',
     fixed: 'right',
-    width: 180,
+    width: 200,
   },
 ];
 
