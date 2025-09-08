@@ -1,1 +1,0 @@
-import{r}from"./index-6b6fbd51.js";function s(t){return r.post({url:"/merchantapi/charts/charts/money",params:t})}function n(t){return r.post({url:"/merchantapi/charts/charts/ranklist",params:t})}function e(){return r.post({url:"/merchantapi/charts/charts/charts"})}export{s as a,n as b,e as g};

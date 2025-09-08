@@ -1,0 +1,1 @@
+import{r}from"./index-5ae314bf.js";function o(){return r.post({url:"/adminapi/workbench/basic"})}function a(n){return r.post({url:"/adminapi/workbench/orderStatisData",data:n})}function s(){return r.post({url:"/adminapi/workbench/userCollectionRank"})}function e(){return r.post({url:"/adminapi/workbench/systemVersion"})}export{o as b,a as o,e as s,s as u};

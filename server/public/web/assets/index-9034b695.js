@@ -1,0 +1,5 @@
+import{h as e}from"./index-5ae314bf.js";import{b as a}from"./vue-d500b9b9.js";/**
+ * tdesign v1.16.1
+ * (c) 2025 tdesign
+ * @license MIT
+ */var l=function(){var t=e();return a(function(){var o="".concat(t.value,"-form"),n="".concat(t.value,"-input"),r="".concat(t.value,"-is");return{form:o,label:"".concat(o,"__label"),labelTop:"".concat(o,"__label--top"),inline:"".concat(o,"-inline"),formItem:"".concat(o,"__item"),formItemWithHelp:"".concat(o,"__item-with-help"),formItemWithExtra:"".concat(o,"__item-with-extra"),controls:"".concat(o,"__controls"),controlsContent:"".concat(o,"__controls-content"),status:"".concat(o,"__status"),extra:"".concat(n,"__extra"),help:"".concat(n,"__help"),success:"".concat(r,"-success"),successBorder:"".concat(o,"--success-border"),error:"".concat(r,"-error"),warning:"".concat(r,"-warning")}})},s=function(c){return c.TO_BE_VALIDATED="not",c.SUCCESS="success",c.FAIL="fail",c}(s||{}),_=Symbol("FormProvide"),u=Symbol("FormItemProvide");export{_ as F,s as V,u as a,l as u};
