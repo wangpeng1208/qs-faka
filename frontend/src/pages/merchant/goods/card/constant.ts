@@ -67,10 +67,6 @@ export const listsColumns: PrimaryTableCol<TableRowData>[] = [
 ];
 export const statusList = [
   {
-    label: '锁定中',
-    value: 3,
-  },
-  {
     label: '已售出',
     value: 2,
   },

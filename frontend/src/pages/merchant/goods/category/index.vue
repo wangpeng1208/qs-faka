@@ -41,13 +41,14 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { DialogPlugin, NotifyPlugin } from 'tdesign-vue-next';
+import { NotifyPlugin } from 'tdesign-vue-next';
 import { nextTick, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { del, list, status } from '@/api/merchant/goods/category';
+import { list, status } from '@/api/merchant/goods/category';
 import Result from '@/components/result/index.vue';
 import { table } from '@/hooks/table';
+import { useBatchAction } from '@/hooks/useBatchAction';
 
 import { COLUMNS } from './components/constant';
 import EditPopup from './components/edit.vue';
@@ -91,31 +92,14 @@ const addRow = async () => {
 };
 
 const delRow = async (row: any) => {
-  const confirmDia = DialogPlugin({
-    header: '提醒？',
-    body: `是否确认删除(${row.name})？`,
-    confirmBtn: '确认',
-    onConfirm: () => {
-      confirmDia.hide();
-      const { id } = row;
-      const data = {
-        ids: [id],
-      };
-      del(data)
-        .then((res) => {
-          if (res.code === 1) {
-            fetchData();
-            NotifyPlugin.success({ title: '提醒', content: res.msg });
-          } else {
-            NotifyPlugin.success({ title: '提醒', content: res.msg });
-          }
-        })
-        .catch(() => {
-          NotifyPlugin.success({ title: '提醒', content: '删除失败' });
-        });
-    },
-    onClose: () => {
-      confirmDia.hide();
+  useBatchAction({
+    title: '提醒',
+    body: `是否确认删除？`,
+    ids: row.id,
+    url: '/merchantapi/goods/category/del',
+    fetchList: () => {
+      fetchData();
+      selectedRowKeys.value = [];
     },
   });
 };

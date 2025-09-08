@@ -176,7 +176,7 @@ const smsOnSubmit = async () => {
     smsDialogVisible.value = false;
     fetchData();
   } else {
-    MessagePlugin.error(`${res.msg}`);
+    MessagePlugin.error(res.msg);
   }
 };
 

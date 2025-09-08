@@ -116,15 +116,12 @@ const onSubmit = async () => {
   if (typeof result !== 'object' && result) {
     const res = await add(formData.value);
     if (res.code === 1) {
-      MessagePlugin.success('新增成功');
+      MessagePlugin.success('新增成功。可手动返回原页面');
       if (formData.value.import_coupon) {
         downloadFile(res.data.url);
       }
-      setTimeout(() => {
-        router.push('/merchant/goods/coupon');
-      }, 3000);
     } else {
-      MessagePlugin.error(`新增失败：${res.msg}`);
+      MessagePlugin.error(res.msg);
     }
   }
 };

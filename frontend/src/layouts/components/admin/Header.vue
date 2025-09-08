@@ -2,9 +2,9 @@
   <div :class="layoutCls">
     <t-head-menu :class="menuCls" :theme="menuTheme" expand-type="popup" :value="active">
       <template #logo>
-        <span v-if="showLogo" class="header-logo-container" @click="handleNav('/admin/base')">
+        <a v-if="showLogo" class="header-logo-container" href="/" target="_blank">
           <img :src="siteLogo" alt="" style="width: 184px; height: 26px" />
-        </span>
+        </a>
       </template>
       <template v-if="layout !== 'side'" #default>
         <menu-content class="header-menu" :nav-data="menu" />
@@ -54,12 +54,12 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { DialogPlugin, MessagePlugin } from 'tdesign-vue-next';
 import type { PropType } from 'vue';
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { prefix } from '@/config/global';
+import { useBatchAction } from '@/hooks/useBatchAction';
 import { getActive } from '@/router';
 import { useAdminUserStore, useSettingStore, useSiteStore } from '@/store';
 import type { MenuRoute } from '@/types/interface';
@@ -140,21 +140,13 @@ const handleNav = (url: string) => {
   router.push(url);
 };
 const handleLogout = () => {
-  // 弹出提示框
-  // adminStore.logout();
-  const confirmDialog = DialogPlugin.confirm({
-    header: '提醒',
+  useBatchAction({
+    title: '提醒',
     body: '是否确认退出登录？',
-    confirmBtn: {
-      content: '提交',
-      theme: 'primary',
-      loading: false,
-    },
-    closeOnOverlayClick: false,
-    onConfirm: async () => {
+    ids: [],
+    url: '',
+    fetchList: () => {
       adminStore.logout();
-      confirmDialog.hide();
-      MessagePlugin.success('退出成功');
       handleNav('/admin/login');
     },
   });

@@ -82,8 +82,9 @@ import { DialogPlugin, Input, MessagePlugin } from 'tdesign-vue-next';
 import { h, reactive, ref } from 'vue';
 
 import { editConfig, getConfig } from '@/api/admin/config/config';
-import { autoPass, cashCount, del, delBatch, list, pass, refuse } from '@/api/admin/merchant/cash';
+import { autoPass, cashCount, del, list, pass, refuse } from '@/api/admin/merchant/cash';
 import { table } from '@/hooks/table';
+import { useBatchAction } from '@/hooks/useBatchAction';
 import { copyText } from '@/utils/common';
 
 import { columns } from './components/constant';
@@ -106,31 +107,17 @@ const rehandleSelectChange = (val: number[]) => {
   selectedRowKeys.value = val;
 };
 // 批量删除
-const batchDel = async () => {
-  const confirmDia = DialogPlugin({
-    header: '提醒',
+const batchDel = () =>
+  useBatchAction({
+    title: '提醒',
     body: `是否确认删除？`,
-    confirmBtn: '确认',
-    onConfirm: () => {
-      confirmDia.hide();
-      const data = {
-        ids: selectedRowKeys.value,
-      };
-      delBatch(data).then((res) => {
-        if (res.code === 1) {
-          fetchData();
-          MessagePlugin.success(res.msg);
-          selectedRowKeys.value = [];
-        } else {
-          MessagePlugin.error(res.msg);
-        }
-      });
-    },
-    onClose: () => {
-      confirmDia.hide();
+    ids: selectedRowKeys.value,
+    url: '/adminapi/merchant/cash/delBatch',
+    fetchList: () => {
+      fetchData();
+      selectedRowKeys.value = [];
     },
   });
-};
 const column = ref(5);
 interface cashCountDataInter {
   name: string;
@@ -155,26 +142,14 @@ const passRow = async (id: any) => {
     expandedRowKeys.value = [id];
   }
   // 提示是否确认打款
-  const confirmDialog = DialogPlugin.confirm({
-    header: '是否确认打款',
-    body: '是否确认提交？',
-    confirmBtn: {
-      content: '提交',
-      theme: 'primary',
-      loading: false,
-    },
-    theme: 'warning',
-    onConfirm: () => {
-      confirmDialog.update({ confirmBtn: { content: '提交中', loading: true } });
-      pass({ id }).then((res) => {
-        if (res.code === 1) {
-          MessagePlugin.success(res.msg);
-          confirmDialog.hide();
-          fetchData();
-        } else {
-          MessagePlugin.error(res.msg);
-        }
-      });
+  useBatchAction({
+    title: '提醒',
+    body: '是否确认打款',
+    ids: id,
+    url: '/adminapi/merchant/cash/pass',
+    fetchList: () => {
+      fetchData();
+      expandedRowKeys.value = [];
     },
   });
 };

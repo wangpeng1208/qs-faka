@@ -42,15 +42,15 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { DialogPlugin, MessagePlugin } from 'tdesign-vue-next';
 import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { getGoodsCardTrashList, restore, trashBatchDel, trashBatchDelAll } from '@/api/merchant/goods/card';
+import { getGoodsCardTrashList } from '@/api/merchant/goods/card';
 import { listSimple as getGoodsCategory } from '@/api/merchant/goods/category';
 import { goodList as getGoodsListIdName } from '@/api/merchant/goods/good';
 import Result from '@/components/result/index.vue';
 import { table } from '@/hooks/table';
+import { useBatchAction } from '@/hooks/useBatchAction';
 
 import { trashListColumns } from './constant';
 import CardDetail from './detail.vue';
@@ -81,30 +81,20 @@ const selectedRowKeys = ref([]);
 const rehandleSelectChange = (val: number[]) => {
   selectedRowKeys.value = val;
 };
-// 批量删除
+// 批量删除|单个删除
 const handleDelTrash = async (res: any) => {
   // 如果id存在，就存到selectedRowKeys
   if (res) {
     rehandleSelectChange(res.id);
   }
-  const confirmDia = DialogPlugin({
-    header: '确认删除当前所选内容？',
+  useBatchAction({
+    title: '确认删除当前所选内容？',
     body: `删除后，所选信息将被清空，且无法恢复`,
-    confirmBtn: '确认',
-    onConfirm: async () => {
-      confirmDia.hide();
-      const data = {
-        ids: selectedRowKeys.value,
-      };
-      try {
-        await trashBatchDel(data);
-        MessagePlugin.success('删除成功');
-        // 清空 selectedRowKeys
-        selectedRowKeys.value = [];
-        fetchData();
-      } catch (e) {
-        console.log(e);
-      }
+    ids: selectedRowKeys.value,
+    url: '/merchantapi/goods/card/trashBatchDel',
+    fetchList: () => {
+      fetchData();
+      selectedRowKeys.value = [];
     },
   });
 };
@@ -114,48 +104,27 @@ const handleSetupTrash = (id: any) => {
   if (id > 0) {
     rehandleSelectChange(id);
   }
-
-  // 确定要批量恢复吗？
-  const confirmDia = DialogPlugin({
-    header: '提醒',
-    body: `确定要恢复吗？`,
-    confirmBtn: '确认',
-    onConfirm: () => {
-      confirmDia.hide();
-      const data = {
-        ids: selectedRowKeys.value,
-      };
-      restore(data)
-        .then((res: any) => {
-          if (res.code === 1) {
-            MessagePlugin.success('恢复成功');
-            fetchData();
-
-            selectedRowKeys.value = [];
-          } else {
-            MessagePlugin.error(res.msg);
-          }
-        })
-        .catch(() => {
-          MessagePlugin.error('恢复失败');
-        });
-    },
-    onClose: () => {
-      confirmDia.hide();
+  useBatchAction({
+    title: '确认恢复当前所选内容？',
+    body: `恢复后，所选信息将被恢复，且无法恢复`,
+    ids: selectedRowKeys.value,
+    url: '/merchantapi/goods/card/trashBatchRestore',
+    fetchList: () => {
+      fetchData();
+      selectedRowKeys.value = [];
     },
   });
 };
 // 清空删除
 const deleteAll = () => {
-  const confirmDia = DialogPlugin({
-    header: '确认清空回收站？',
+  useBatchAction({
+    title: '确认清空回收站？',
     body: `清空后，回收站将被清空，且无法恢复`,
-    confirmBtn: '确认',
-    onConfirm: async () => {
-      await trashBatchDelAll();
-      MessagePlugin.success('清空成功');
-      confirmDia.hide();
+    ids: selectedRowKeys.value,
+    url: '/merchantapi/goods/card/clear',
+    fetchList: () => {
       fetchData();
+      selectedRowKeys.value = [];
     },
   });
 };

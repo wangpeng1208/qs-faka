@@ -1,6 +1,6 @@
 <template>
   <t-card title="付款方式" :bordered="false" class="basic-container">
-    <t-base-table :columns="columns" row-key="id" :data="lists" class="basic-table">
+    <t-base-table :columns="columns" row-key="id" :data="lists" class="basic-table" max-height="100%">
       <template #title="{ row }">
         <t-space size="small">
           <t-image :src="baseUrl + row.ico" fit="cover" :style="{ width: '21px', height: '21px' }" />

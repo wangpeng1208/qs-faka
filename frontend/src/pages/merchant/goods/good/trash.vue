@@ -2,6 +2,13 @@
   <t-card title="商品回收站" class="basic-container" :bordered="false">
     <div class="category-header c-flex">
       <div class="l">
+        <t-button variant="base" :disabled="!selectedRowKeys.length" @click="handleSetupTrash()">
+          <template #icon><rollback-icon /></template>
+          批量恢复
+        </t-button>
+        <p v-if="!!selectedRowKeys.length" class="selected-count">已选{{ selectedRowKeys.length }}项</p>
+      </div>
+      <div class="r c-flex">
         <t-space>
           <t-select v-model="params.cate_id" placeholder="全部分类" type="search" clearable :options="categoryList"></t-select>
 
@@ -13,15 +20,8 @@
           <t-button theme="primary" @click="searchData">查询</t-button>
         </t-space>
       </div>
-      <div class="r c-flex">
-        <t-button variant="base" :disabled="!selectedRowKeys.length" @click="handleSetupTrash()">
-          <template #icon><rollback-icon /></template>
-          批量恢复
-        </t-button>
-        <p v-if="!!selectedRowKeys.length" class="selected-count">已选{{ selectedRowKeys.length }}项</p>
-      </div>
     </div>
-    <t-table :data="lists" :columns="columns" row-key="id" vertical-align="top" :hover="lists?.length > 0 ? true : false" table-layout="auto" :pagination="pagination" :loading="dataLoading" :header-affixed-top="headerAffixedTop" max-height="100%" @page-change="rehandlePageChange" @change="rehandleChange" @select-change="rehandleSelectChange">
+    <t-table :data="lists" :columns="columns" row-key="id" vertical-align="top" :hover="lists?.length > 0 ? true : false" table-layout="auto" :pagination="pagination" :loading="dataLoading" :header-affixed-top="headerAffixedTop" max-height="100%" @page-change="rehandlePageChange" @select-change="rehandleSelectChange">
       <template #name="{ row }">
         {{ row.name }}
         <t-space size="small" align="center" class="tag-demo light">
@@ -57,13 +57,14 @@ export default {
 
 <script setup lang="ts">
 import { RollbackIcon, SearchIcon } from 'tdesign-icons-vue-next';
-import { DialogPlugin, MessagePlugin, PrimaryTableCol, TableRowData } from 'tdesign-vue-next';
+import { PrimaryTableCol, TableRowData } from 'tdesign-vue-next';
 import { reactive, ref } from 'vue';
 
 import { listSimple } from '@/api/merchant/goods/category';
-import { recover, trash } from '@/api/merchant/goods/good';
+import { trash } from '@/api/merchant/goods/good';
 import Result from '@/components/result/index.vue';
 import { table } from '@/hooks/table';
+import { useBatchAction } from '@/hooks/useBatchAction';
 import { formatTime } from '@/utils/date';
 
 const categoryList = ref([]);
@@ -125,31 +126,26 @@ const rehandleSelectChange = (val: number[]) => {
   selectedRowKeys.value = val;
 };
 
-const rehandleChange = (changeParams: any, triggerAndData: any) => {};
-
 const handleSetupTrash = (id = 0) => {
   if (id) {
     selectedRowKeys.value = [id];
   }
-  const confirmDia = DialogPlugin({
-    header: '提醒',
+  useBatchAction({
+    title: '提醒',
     body: `确定要恢复所选数据吗？`,
-    confirmBtn: '确认',
-    onConfirm: async () => {
-      confirmDia.hide();
-      const res = await recover({
-        ids: selectedRowKeys.value,
-      });
-      if (res.code === 1) {
-        fetchData();
-        MessagePlugin.success('恢复成功');
-      } else {
-        MessagePlugin.error(`恢复失败：${res.msg}`);
-      }
-    },
-    onClose: () => {
-      confirmDia.hide();
+    ids: selectedRowKeys.value,
+    url: '/merchantapi/goods/good/recover',
+    fetchList: () => {
+      fetchData();
+      selectedRowKeys.value = [];
     },
   });
 };
 </script>
+<style lang="less" scoped>
+.selected-count {
+  display: inline-block;
+  margin-left: 8px;
+  color: var(--td-text-color-secondary);
+}
+</style>

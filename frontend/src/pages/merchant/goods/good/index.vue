@@ -1,12 +1,14 @@
 <template>
   <t-card title="商品列表" class="basic-container" :bordered="false">
+    <template #actions>
+      <t-button variant="text" theme="default" @click="router.push('/merchant/goods/trash')">
+        <template #icon><t-icon name="delete" /></template>
+        回收站
+      </t-button>
+    </template>
     <div class="category-header c-flex">
       <div class="l">
         <t-button theme="primary" @click="router.push('/merchant/goods/add')"> 添加 </t-button>
-        <t-button theme="danger" @click="router.push('/merchant/goods/trash')">
-          <!-- <template #icon><delete-icon /></template> -->
-          回收站
-        </t-button>
       </div>
       <div class="r c-flex">
         <t-space>
@@ -63,14 +65,15 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { DialogPlugin, MessagePlugin } from 'tdesign-vue-next';
+import { MessagePlugin } from 'tdesign-vue-next';
 import { nextTick, onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { listSimple } from '@/api/merchant/goods/category';
-import { del, list, status } from '@/api/merchant/goods/good';
+import { list, status } from '@/api/merchant/goods/good';
 import Result from '@/components/result/index.vue';
 import { table } from '@/hooks/table';
+import { useBatchAction } from '@/hooks/useBatchAction';
 import { formatTime } from '@/utils/date';
 
 import GoodLink from './components/GoodsLink.vue';
@@ -111,31 +114,13 @@ const showGoodLink = async (row: any) => {
 };
 
 const delRow = async (row: any) => {
-  const confirmDia = DialogPlugin({
-    header: '提醒',
+  useBatchAction({
+    title: '提醒',
     body: `是否确认删除(${row.name})？`,
-    confirmBtn: '确认',
-    onConfirm: ({ e }) => {
-      confirmDia.hide();
-      const { id } = row;
-      const data = {
-        id,
-      };
-      del(data)
-        .then((res) => {
-          if (res.code === 1) {
-            fetchData();
-            MessagePlugin.success('删除成功');
-          } else {
-            MessagePlugin.error(`删除失败：${res.msg}`);
-          }
-        })
-        .catch((error) => {
-          MessagePlugin.error('删除失败');
-        });
-    },
-    onClose: () => {
-      confirmDia.hide();
+    ids: row.id,
+    url: '/merchantapi/goods/good/del',
+    fetchList: () => {
+      fetchData();
     },
   });
 };

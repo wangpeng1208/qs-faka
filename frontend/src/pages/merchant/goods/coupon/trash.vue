@@ -39,14 +39,14 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { DialogPlugin, MessagePlugin } from 'tdesign-vue-next';
 import { onMounted, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { listSimple } from '@/api/merchant/goods/category';
-import { batchRecoverGoodsCoupon, emptyGoodsCouponTrash, getGoodsCouponTrashList } from '@/api/merchant/goods/coupon';
+import { getGoodsCouponTrashList } from '@/api/merchant/goods/coupon';
 import Result from '@/components/result/index.vue';
 import { table } from '@/hooks/table';
+import { useBatchAction } from '@/hooks/useBatchAction';
 
 import { statusList, trashListsColumns } from './components/constant';
 
@@ -81,33 +81,14 @@ const handleSetupTrash = (id: any) => {
   if (id > 0) {
     rehandleSelectChange(id);
   }
-
-  // 确定要批量恢复吗？
-  const confirmDia = DialogPlugin({
-    header: '提醒',
+  useBatchAction({
+    title: '提醒',
     body: `确定要恢复吗？`,
-    confirmBtn: '确认',
-    onConfirm: () => {
-      confirmDia.hide();
-      const data = {
-        ids: selectedRowKeys.value,
-      };
-      batchRecoverGoodsCoupon(data)
-        .then((res) => {
-          if (res.code === 1) {
-            MessagePlugin.success(res.msg);
-            selectedRowKeys.value = [];
-            fetchData();
-          } else {
-            MessagePlugin.error(res.msg);
-          }
-        })
-        .catch(() => {
-          MessagePlugin.error('恢复失败');
-        });
-    },
-    onClose: () => {
-      confirmDia.hide();
+    ids: selectedRowKeys.value,
+    url: '/merchantapi/goods/coupon/restore',
+    fetchList: () => {
+      fetchData();
+      selectedRowKeys.value = [];
     },
   });
 };
@@ -115,31 +96,14 @@ const handleDelTrash = (id: any) => {
   if (id > 0) {
     rehandleSelectChange(id);
   }
-  const confirmDia = DialogPlugin({
-    header: '提醒',
+  useBatchAction({
+    title: '提醒',
     body: `确定要清空吗？清空后将无法恢复`,
-    confirmBtn: '确认',
-    onConfirm: ({ e }) => {
-      confirmDia.hide();
-      const data = {
-        id: selectedRowKeys.value,
-      };
-      emptyGoodsCouponTrash(data)
-        .then((res) => {
-          if (res.code === 1) {
-            MessagePlugin.success(res.msg);
-            selectedRowKeys.value = [];
-            fetchData();
-          } else {
-            MessagePlugin.error(res.msg);
-          }
-        })
-        .catch(() => {
-          MessagePlugin.error('操作失败');
-        });
-    },
-    onClose: () => {
-      confirmDia.hide();
+    ids: selectedRowKeys.value,
+    url: '/merchantapi/goods/coupon/clear',
+    fetchList: () => {
+      fetchData();
+      selectedRowKeys.value = [];
     },
   });
 };

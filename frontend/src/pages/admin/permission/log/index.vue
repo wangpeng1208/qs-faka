@@ -11,11 +11,11 @@
   </t-card>
 </template>
 <script setup lang="ts">
-import { DialogPlugin, MessagePlugin } from 'tdesign-vue-next';
 import { reactive, ref } from 'vue';
 
-import { delBatch, list } from '@/api/admin/permission/log';
+import { list } from '@/api/admin/permission/log';
 import { table } from '@/hooks/table';
+import { useBatchAction } from '@/hooks/useBatchAction';
 
 import { columns } from './components/constant';
 import RowSearch from './components/search.vue';
@@ -28,27 +28,14 @@ const rehandleSelectChange = (val: number[]) => {
 
 // 批量删除
 const batchDel = async () => {
-  const confirmDia = DialogPlugin({
-    header: '提醒',
+  useBatchAction({
+    title: '提醒',
     body: `是否确认删除？`,
-    confirmBtn: '确认',
-    onConfirm: () => {
-      confirmDia.hide();
-      const data = {
-        ids: selectedRowKeys.value,
-      };
-      delBatch(data).then((res) => {
-        if (res.code === 1) {
-          fetchData();
-          MessagePlugin.success(res.msg);
-          selectedRowKeys.value = [];
-        } else {
-          MessagePlugin.error(res.msg);
-        }
-      });
-    },
-    onClose: () => {
-      confirmDia.hide();
+    ids: selectedRowKeys.value,
+    url: '/adminapi/permission/log/delBatch',
+    fetchList: () => {
+      fetchData();
+      selectedRowKeys.value = [];
     },
   });
 };

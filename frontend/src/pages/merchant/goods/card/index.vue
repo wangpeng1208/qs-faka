@@ -1,5 +1,5 @@
 <template>
-  <t-card title="库存列表" class="basic-container" :bordered="false">
+  <t-card class="basic-container" :bordered="false">
     <template #title>
       <span style="padding-right: 20px">库存列表</span>
       <t-button theme="primary" @click="router.push('/merchant/goods/card/add')">
@@ -59,15 +59,15 @@ export default {
 
 <script setup lang="ts">
 import { SearchIcon } from 'tdesign-icons-vue-next';
-import { DialogPlugin, MessagePlugin } from 'tdesign-vue-next';
 import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { clearGoodsCards, del, first, list } from '@/api/merchant/goods/card';
+import { first, list } from '@/api/merchant/goods/card';
 import { listSimple } from '@/api/merchant/goods/category';
 import { goodList } from '@/api/merchant/goods/good';
 import Result from '@/components/result/index.vue';
 import { table } from '@/hooks/table';
+import { useBatchAction } from '@/hooks/useBatchAction';
 
 import { listsColumns, statusList } from './constant';
 import CardDetail from './detail.vue';
@@ -112,32 +112,15 @@ const cardDetailRef = ref(null);
 const initDetail = async (row: any) => {
   cardDetailRef.value.init(row);
 };
-const delRow = async (row: any) => {
-  const confirmDia = DialogPlugin({
-    header: '提醒',
+const delRow = (row: any) => {
+  useBatchAction({
+    title: '提醒',
     body: `是否确认删除？`,
-    confirmBtn: '确认',
-    onConfirm: ({ e }) => {
-      confirmDia.hide();
-      const { id } = row;
-      const data = {
-        ids: [id],
-      };
-      del(data)
-        .then((res) => {
-          if (res.code === 1) {
-            MessagePlugin.success('删除成功');
-            fetchData();
-          } else {
-            MessagePlugin.error(`${res.msg}`);
-          }
-        })
-        .catch(() => {
-          MessagePlugin.error('删除失败');
-        });
-    },
-    onClose: ({ e, trigger }) => {
-      confirmDia.hide();
+    ids: row.id,
+    url: '/merchantapi/goods/card/del',
+    fetchList: () => {
+      fetchData();
+      selectedRowKeys.value = [];
     },
   });
 };
@@ -157,57 +140,27 @@ const setRowFrist = (row: any) => {
 };
 
 // 批量删除
-const batchDel = async () => {
-  const confirmDia = DialogPlugin({
-    header: '提醒',
+const batchDel = () => {
+  useBatchAction({
+    title: '提醒',
     body: `是否确认删除？点击确认后删除的卡密将被放置回收站`,
-    confirmBtn: '确认',
-    onConfirm: ({ e }) => {
-      confirmDia.hide();
-      const data = {
-        ids: selectedRowKeys.value,
-      };
-      del(data)
-        .then((res) => {
-          if (res.code === 1) {
-            fetchData();
-            MessagePlugin.success('删除成功');
-            selectedRowKeys.value = [];
-          } else {
-            MessagePlugin.error(`删除失败：${res.msg}`);
-          }
-        })
-        .catch((error) => {
-          MessagePlugin.error('删除失败');
-        });
-    },
-    onClose: ({ e, trigger }) => {
-      confirmDia.hide();
+    ids: selectedRowKeys.value,
+    url: '/merchantapi/goods/card/del',
+    fetchList: () => {
+      fetchData();
+      selectedRowKeys.value = [];
     },
   });
 };
-const batchclearGoodsCards = async () => {
-  const confirmDia = DialogPlugin({
-    header: '提醒',
+const batchclearGoodsCards = () => {
+  useBatchAction({
+    title: '提醒',
     body: `确定要清空卡密库存吗？点击确认后，卡密库存将被移至回收站！`,
-    confirmBtn: '确认',
-    onConfirm: ({ e }) => {
-      confirmDia.hide();
-      clearGoodsCards()
-        .then((res) => {
-          if (res.code === 1) {
-            fetchData();
-            MessagePlugin.success('清空成功');
-          } else {
-            MessagePlugin.error(`清空失败：${res.msg}`);
-          }
-        })
-        .catch((error) => {
-          MessagePlugin.error('清空失败');
-        });
-    },
-    onClose: ({ e, trigger }) => {
-      confirmDia.hide();
+    ids: selectedRowKeys.value,
+    url: '/merchantapi/goods/card/clearGoodsCards',
+    fetchList: () => {
+      fetchData();
+      selectedRowKeys.value = [];
     },
   });
 };
@@ -218,59 +171,5 @@ const batchclearGoodsCards = async () => {
   display: inline-block;
   margin-left: 8px;
   color: var(--td-text-color-secondary);
-}
-
-:deep(.t-table th),
-:deep(.t-table td) {
-  position: relative;
-  padding: var(--td-comp-paddingTB-m) 0;
-}
-
-.info-block {
-  column-count: 1;
-
-  .info-item {
-    padding: 12px 0;
-    display: flex;
-    color: var(--td-text-color-primary);
-
-    h1 {
-      width: 100px;
-      font-weight: normal;
-      font: var(--td-font-body-medium);
-      color: var(--td-text-color-secondary);
-      text-align: left;
-      line-height: 22px;
-
-      @media (max-width: @screen-sm-max) {
-        width: 100px;
-      }
-
-      @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
-        width: 120px;
-      }
-    }
-
-    span {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      margin-left: 24px;
-    }
-
-    img {
-      width: 200px;
-      height: 200px;
-      margin-left: 24px;
-    }
-
-    i {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: var(--td-radius-circle);
-      background: var(--td-success-color-5);
-    }
-  }
 }
 </style>

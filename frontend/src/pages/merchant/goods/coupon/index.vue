@@ -1,9 +1,15 @@
 <template>
   <t-card title="优惠券列表" class="basic-container" :bordered="false">
+    <template #actions>
+      <t-button variant="text" theme="default" @click="router.push({ name: 'merchantGoodsCouponTrash' })">
+        <template #icon><t-icon name="delete" /></template>
+        回收站
+      </t-button>
+    </template>
     <div class="category-header c-flex">
       <div class="l">
         <t-button @click="router.push({ name: 'merchantGoodsCouponAdd' })"> 添加 </t-button>
-        <t-button theme="danger" @click="router.push({ name: 'merchantGoodsCouponTrash' })"> 回收站 </t-button>
+
         <t-button variant="base" theme="default" :disabled="!selectedRowKeys.length" @click="batchDel"> 批量删除 </t-button>
         <p v-if="!!selectedRowKeys.length" class="selected-count">已选{{ selectedRowKeys.length }}项</p>
       </div>
@@ -39,13 +45,13 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { DialogPlugin, MessagePlugin } from 'tdesign-vue-next';
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { batchDelGoodsCoupon, getGoodsCouponList } from '@/api/merchant/goods/coupon';
+import { getGoodsCouponList } from '@/api/merchant/goods/coupon';
 import Result from '@/components/result/index.vue';
 import { table } from '@/hooks/table';
+import { useBatchAction } from '@/hooks/useBatchAction';
 import { copyText } from '@/utils/common';
 
 import { listsColumns } from './components/constant';
@@ -67,34 +73,23 @@ const rehandleSelectChange = (val: number[]) => {
 };
 
 // 批量删除
-const batchDel = async () => {
-  const confirmDia = DialogPlugin({
-    header: '是否确认删除？',
+const batchDel = () => {
+  useBatchAction({
+    title: '是否确认删除？',
     body: `未使用的优惠券会被删除至回收站，已使用或者已过期的优惠券会被直接删除！`,
-    confirmBtn: '确认',
-    onConfirm: () => {
-      confirmDia.hide();
-      const data = {
-        ids: selectedRowKeys.value,
-      };
-      batchDelGoodsCoupon(data)
-        .then((res: any) => {
-          if (res.code === 1) {
-            MessagePlugin.success(res.msg);
-            fetchData();
-            // 重置选中
-            selectedRowKeys.value = [];
-          } else {
-            MessagePlugin.error(res.msg);
-          }
-        })
-        .catch(() => {
-          MessagePlugin.error('删除失败');
-        });
-    },
-    onClose: () => {
-      confirmDia.hide();
+    ids: selectedRowKeys.value,
+    url: '/merchantapi/goods/coupon/batchDel',
+    fetchList: () => {
+      fetchData();
+      selectedRowKeys.value = [];
     },
   });
 };
 </script>
+<style lang="less" scoped>
+.selected-count {
+  display: inline-block;
+  margin-left: 8px;
+  color: var(--td-text-color-secondary);
+}
+</style>

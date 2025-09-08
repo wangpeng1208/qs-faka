@@ -301,7 +301,6 @@ const onSubmit = async () => {
   const result = await form.value.validate();
   if (typeof result !== 'object' && result) {
     const submitForm = formData.value;
-    // if (opt.value === 'add') {
     try {
       let res;
       if (opt.value === 'add') {
@@ -311,9 +310,8 @@ const onSubmit = async () => {
       }
       if (res.code === 1) {
         MessagePlugin.success(res.msg);
-        // router.push('/goods/index');
       } else {
-        MessagePlugin.error(`提交失败：${res.msg}`);
+        MessagePlugin.error(res.msg);
       }
     } catch (error) {
       console.error(error);
