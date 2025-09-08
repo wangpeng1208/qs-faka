@@ -12,12 +12,6 @@ export function listSimple() {
     url: '/adminapi/permission/role/listSimple',
   });
 }
-// listSimpleTree
-export function listSimpleTree() {
-  return request.post({
-    url: '/adminapi/permission/role/listSimpleTree',
-  });
-}
 // delete
 export function del(params: any) {
   return request.post({
