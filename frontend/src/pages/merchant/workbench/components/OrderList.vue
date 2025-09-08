@@ -13,7 +13,7 @@
             {{ formatTime(row.create_at) }}
           </template>
           <template #bottomContent>
-            <t-pagination v-if="pagination.total > pagination.defaultPageSize" v-model="pagination.defaultCurrent" v-model:page-size="pagination.defaultPageSize" :total="pagination.total" :show-page-size="false" :total-content="false" style="margin-top: 10px" @current-change="fetchData" />
+            <t-pagination v-model="pagination.current" v-model:page-size="pagination.pageSize" :total="pagination.total" :show-page-size="false" :total-content="false" style="margin-top: 10px" @current-change="fetchData" />
           </template>
         </t-base-table>
       </t-card>
