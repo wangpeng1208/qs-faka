@@ -19,17 +19,6 @@ export const COLUMNS: PrimaryTableCol<TableRowData>[] = [
     title: '分类名称',
     align: 'left',
     colKey: 'name',
-    filter: {
-      type: 'input',
-      resetValue: '',
-      // 按下 Enter 键时也触发确认搜索
-      confirmEvents: ['onEnter'],
-      props: {
-        placeholder: '输入关键词过滤',
-      },
-      showConfirmAndReset: true,
-    },
-
     ellipsis: true,
   },
   {

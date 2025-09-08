@@ -93,7 +93,7 @@ const getFieldOptions = async (type: String) => {
     const optionsValue = await getSmsConfig({ type });
     Object.assign(postData, { ...optionsValue.data });
   } else {
-    MessagePlugin.error(`${res.msg}`);
+    MessagePlugin.error(res.msg);
   }
 };
 const smsType = ref();
@@ -114,10 +114,10 @@ const onSubmit = async () => {
     },
   });
   if (res.code === 1) {
-    MessagePlugin.success(`${res.msg}`);
+    MessagePlugin.success(res.msg);
     visible.value = false;
   } else {
-    MessagePlugin.error(`${res.msg}`);
+    MessagePlugin.error(res.msg);
   }
 };
 </script>

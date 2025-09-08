@@ -17,7 +17,7 @@
       <t-date-range-picker v-model="params.date_range" allow-input clearable cancel-range-select-limit />
     </t-form-item>
 
-    <t-button theme="default" variant="outline" @click="fetchData">查询</t-button>
+    <t-button theme="primary" @click="fetchData">查询</t-button>
   </t-space>
 </template>
 

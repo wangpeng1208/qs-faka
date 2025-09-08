@@ -135,7 +135,7 @@ const submit = async () => {
       data: formData,
     });
     if (res.code === 1) {
-      MessagePlugin.success('操作成功');
+      MessagePlugin.success(res.msg);
     } else {
       MessagePlugin.error(res.msg);
     }

@@ -91,12 +91,12 @@ const onSubmit = async () => {
     try {
       const res = mode.value === 'add' ? await add(categoryForm) : await edit(categoryForm);
       if (res.code === 1) {
-        MessagePlugin.success('操作成功');
+        MessagePlugin.success(res.msg);
         visible.value = false;
         emit('success');
         //   fetchData();
       } else {
-        MessagePlugin.error(`操作失败：${res.msg}`);
+        MessagePlugin.error(res.msg);
       }
     } catch (error) {
       MessagePlugin.error('操作失败');

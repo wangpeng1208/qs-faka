@@ -1,5 +1,5 @@
 <template>
-  <t-form layout="inline" label-width="100px">
+  <t-form layout="inline" label-width="60px" style="margin-bottom: 15px">
     <t-form-item label="商户账号" name="username">
       <t-input v-model="params.username" clearable placeholder="请输入商户账号">
         <template #suffix-icon>
@@ -55,17 +55,11 @@
     <t-form-item label="冻结状态" name="is_freeze">
       <t-select v-model="params.is_freeze" :clear="fetchData" placeholder="全部分类" type="search" clearable :options="freezeStatusOptions" />
     </t-form-item>
-    <!-- 订单类型 -->
-    <t-form-item label="订单类型" name="order_type">
-      <t-select v-model="params.order_type" :clear="fetchData" placeholder="全部分类" type="search" clearable :options="orderTypeOptions" />
-    </t-form-item>
     <t-form-item label="下单时间" name="date_range">
       <t-date-range-picker v-model="params.date_range" allow-input clearable cancel-range-select-limit />
     </t-form-item>
     <t-form-item>
-      <t-space>
-        <t-button theme="default" variant="outline" @click="fetchData">查询</t-button>
-      </t-space>
+      <t-button theme="primary" @click="fetchData">查询</t-button>
     </t-form-item>
   </t-form>
 </template>
@@ -108,12 +102,6 @@ const freezeStatusOptions = ref([
   { label: '未冻结', value: 1 },
   { label: '已冻结', value: 0 },
 ]);
-const orderTypeOptions = ref([
-  { label: '全部订单', value: '' },
-  { label: '普通订单', value: 1 },
-  { label: '代理订单', value: 2 },
-]);
-
 const payChannelOptions = ref();
 // 加载支付通道
 const initPayChannelOptions = async () => {

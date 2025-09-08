@@ -1,15 +1,11 @@
 <template>
-  <t-card title="收款通道账号管理" class="basic-container" :bordered="false">
+  <t-card title="账号管理" class="basic-container" :bordered="false">
     <div class="category-header c-flex">
-      <div class="l">
-        <t-button v-perms="['adminapi/channel/collectionAccount/add']" theme="primary" @click="editRow(id)">添加</t-button>
-      </div>
+      <t-button v-perms="['adminapi/channel/collectionAccount/add']" theme="primary" @click="editRow(id)">添加</t-button>
     </div>
-    <t-base-table ref="tableRef" row-key="id" :data="lists" :columns="columns" :hover="lists.length > 0 ? true : false" :header-affixed-top="headerAffixedTop" max-height="auto" table-layout="auto" :pagination="pagination" lazy-load @page-change="onPageChange">
-      <!-- status -->
+    <t-base-table row-key="id" :data="lists" :columns="columns" :hover="lists?.length > 0 ? true : false" :header-affixed-top="headerAffixedTop" max-height="auto" table-layout="auto" :pagination="pagination" :loading="dataLoading" @page-change="rehandlePageChange">
       <template #status="{ row }">
-        <t-tag v-if="row.status === 1" theme="success">启用</t-tag>
-        <t-tag v-else theme="danger">禁用</t-tag>
+        <t-tag variant="light" :theme="row.status === 1 ? 'success' : 'danger'">{{ row.status === 1 ? '启用' : '禁用' }}</t-tag>
       </template>
       <template #operate="{ row }">
         <t-space>
@@ -23,12 +19,11 @@
 </template>
 <script setup lang="ts">
 import { MessagePlugin } from 'tdesign-vue-next';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { del, list } from '@/api/admin/channel/collectionAccount';
-import { prefix } from '@/config/global';
-import { useSettingStore } from '@/store';
+import { table } from '@/hooks/table';
 
 import { columns } from './constant';
 import EditPopup from './edit.vue';
@@ -36,38 +31,16 @@ import EditPopup from './edit.vue';
 const router = useRouter();
 
 const id = +router.currentRoute.value.query.id;
-const pagination = ref({
-  defaultPageSize: 20,
-  total: 0,
-  defaultCurrent: 1,
-});
-const lists = ref([]);
-const fetchData = async () => {
-  const { data } = await list({
-    page: pagination.value.defaultCurrent,
-    limit: pagination.value.defaultPageSize,
-    type: 2,
+const { pagination, fetchData, dataLoading, headerAffixedTop, rehandlePageChange, lists } = table({
+  fetchFun: list,
+  params: {
     id,
-  });
-  lists.value = data.list;
-  pagination.value = {
-    defaultPageSize: data.limit,
-    total: data.total,
-    defaultCurrent: data.page,
-  };
-};
+  },
+});
+
 fetchData();
-const onPageChange = (curr: any) => {
-  pagination.value.defaultCurrent = curr.current;
-  pagination.value.defaultPageSize = curr.pageSize;
-  fetchData();
-};
-const store = useSettingStore();
-const headerAffixedTop = computed(() => ({
-  offsetTop: store.isUseTabsRouter ? 48 : 0,
-  container: `.${prefix}-layout`,
-}));
-const editRef = ref();
+
+const editRef = ref<InstanceType<typeof EditPopup>>();
 const editRow = (channelId = 0, id = 0) => {
   editRef.value.init(channelId, id);
 };
@@ -76,8 +49,10 @@ const deleteRow = async (id: number) => {
     id,
   });
   if (res.code === 1) {
-    MessagePlugin.success('删除成功');
+    MessagePlugin.success(res.msg);
     fetchData();
+  } else {
+    MessagePlugin.error(res.msg);
   }
 };
 </script>

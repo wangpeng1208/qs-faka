@@ -3,13 +3,7 @@ import { PrimaryTableCol, TableRowData } from 'tdesign-vue-next';
 export const COLUMNS: PrimaryTableCol<TableRowData>[] = [
   {
     colKey: 'id',
-    title: '登录编号',
-  },
-  {
-    colKey: 'user_id',
-    title: '用户ID',
-    ellipsis: true,
-    cell: 'user_id',
+    title: 'ID',
   },
   {
     colKey: 'username',
@@ -22,6 +16,5 @@ export const COLUMNS: PrimaryTableCol<TableRowData>[] = [
   {
     colKey: 'create_at',
     title: '	登录时间',
-    fixed: 'right',
   },
 ];

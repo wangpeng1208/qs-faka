@@ -18,7 +18,7 @@
         </t-input-adornment>
       </t-form-item>
 
-      <t-form-item label="限购设置" name="event_give">
+      <t-form-item label="限购设置" name="event_give" tips="0表示不限制购买数量">
         <t-space>
           <t-input-number v-model="formData.limit_quantity" theme="normal" align="center" label="最少购买" suffix="件" placeholder="请输入最少购买数量" :style="{ width: '292px' }" size="medium"></t-input-number>
           <t-input-number v-model="formData.limit_quantity_max" theme="normal" align="center" label="最多购买" suffix="件" placeholder="请输入最多购买数量" :style="{ width: '292px' }" size="medium"></t-input-number>
@@ -77,29 +77,6 @@
         </t-space>
       </t-form-item>
 
-      <t-form-item label="短信费用" name="sms_payer" tips="选择由买家或者商家承担平台服务费。默认买家承担">
-        <wp-check-tag v-model="formData.sms_payer" :items="SMSPAYER" />
-      </t-form-item>
-      <t-form-item label="售卡顺序" name="card_order">
-        <wp-check-tag v-model="formData.card_order" :items="CARDORDER" />
-      </t-form-item>
-      <!-- <t-form-item label="自助选号费" name="selectcard_fee">
-        <t-input-number v-model="formData.selectcard_fee" theme="normal" placeholder="输入自助选号费用" :style="{ width: '600px' }"></t-input-number>
-      </t-form-item> -->
-
-      <t-form-item label="售出通知" name="sold_notify" tips="">
-        <wp-check-tag v-model="formData.sold_notify" :items="TRUEFALSESWITCH" />
-      </t-form-item>
-
-      <t-form-item v-if="formData.sold_notify" :span="8" label="通知方式" name="inventory_notify_type" tips="默认站内信通知，邮件和微信通知需要绑定对应关系" class="notify_type">
-        <wp-check-tag v-model="formData.inventory_notify_type" :items="INVENTORYNOTIFYTYPE" />
-      </t-form-item>
-      <t-form-item label="提货密码" name="take_card_type" tips="开启后，购买页面会提示买家填写取卡密码">
-        <wp-check-tag v-model="formData.take_card_type" :items="TAKECARDTYPE" />
-      </t-form-item>
-      <t-form-item label="联系方式" name="contact_limit" tips="">
-        <wp-check-tag v-model="formData.contact_limit" :items="CONTACTLIMIT" />
-      </t-form-item>
       <t-form-item label="商品描述" name="content" tips="必填，商品描述会在买家选择商品时展示，建议写上您商品的简介，官网以及常见的问题" :style="{ width: '760px' }">
         <t-textarea v-model="formData.content" placeholder="商品描述会在买家选择商品时展示，建议写上您商品的简介，官网以及常见的问题，请保持在10-500字之间" size="medium" />
       </t-form-item>
@@ -108,11 +85,34 @@
       </t-form-item>
       <div class="more-setting">
         <t-switch v-model="moreSetting" />
-        <span class="more-sett-text">显示更多高级设置</span>
+        <span class="more-sett-text">显示更多设置</span>
       </div>
       <div v-if="moreSetting" class="more-content">
+        <t-form-item label="短信费用" name="sms_payer" tips="选择由买家或者商家承担平台服务费。默认买家承担">
+          <t-radio-group v-model="formData.sms_payer" :options="SMSPAYER" />
+        </t-form-item>
+        <t-form-item label="售卡顺序" name="card_order">
+          <t-radio-group v-model="formData.card_order" :options="CARDORDER" />
+        </t-form-item>
+        <!-- <t-form-item label="自助选号费" name="selectcard_fee">
+        <t-input-number v-model="formData.selectcard_fee" theme="normal" placeholder="输入自助选号费用" :style="{ width: '600px' }"></t-input-number>
+      </t-form-item> -->
+
+        <t-form-item label="售出通知" name="sold_notify" tips="">
+          <t-radio-group v-model="formData.sold_notify" :options="TRUEFALSESWITCH" />
+        </t-form-item>
+
+        <t-form-item v-if="formData.sold_notify" :span="8" label="通知方式" name="inventory_notify_type" tips="默认站内信通知，邮件和微信通知需要绑定对应关系" class="notify_type">
+          <t-radio-group v-model="formData.inventory_notify_type" :options="INVENTORYNOTIFYTYPE" />
+        </t-form-item>
+        <t-form-item label="提货密码" name="take_card_type" tips="开启后，购买页面会提示买家填写取卡密码">
+          <t-radio-group v-model="formData.take_card_type" :options="TAKECARDTYPE" />
+        </t-form-item>
+        <t-form-item label="联系方式" name="contact_limit" tips="">
+          <t-radio-group v-model="formData.contact_limit" :options="CONTACTLIMIT" />
+        </t-form-item>
         <t-form-item label="库存预警" name="inventory_notify" tips="设置后请确保邮箱正确，否则无法接收邮件">
-          <wp-check-tag v-model="formData.inventory_notify" :items="TRUEFALSESWITCH" />
+          <t-radio-group v-model="formData.inventory_notify" :options="TRUEFALSESWITCH" />
         </t-form-item>
 
         <t-form-item label="商品排序" name="sort" tips=""> <t-input-number v-model="formData.sort" :min="0" theme="normal" placeholder="" :style="{ width: '600px' }" size="medium" /> </t-form-item>
@@ -120,7 +120,6 @@
       <t-form-item>
         <t-button theme="primary" class="form-submit-confirm" type="submit"> 提交 </t-button>
         <t-button theme="default" class="form-submit-confirm" @click="onSubmit2"> 提交并返回至商品列表 </t-button>
-        <!-- <t-button type="reset" class="form-submit-cancel" theme="default" variant="base"> 重置 </t-button> -->
       </t-form-item>
     </t-form>
   </t-card>
@@ -302,7 +301,6 @@ const onSubmit = async () => {
   const result = await form.value.validate();
   if (typeof result !== 'object' && result) {
     const submitForm = formData.value;
-    // if (opt.value === 'add') {
     try {
       let res;
       if (opt.value === 'add') {
@@ -312,9 +310,8 @@ const onSubmit = async () => {
       }
       if (res.code === 1) {
         MessagePlugin.success(res.msg);
-        // router.push('/goods/index');
       } else {
-        MessagePlugin.error(`提交失败：${res.msg}`);
+        MessagePlugin.error(res.msg);
       }
     } catch (error) {
       console.error(error);

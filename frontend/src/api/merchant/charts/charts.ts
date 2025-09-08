@@ -23,3 +23,10 @@ export function getChartsChannel(params: any) {
     params,
   });
 }
+
+// charts
+export function getChartsRankList() {
+  return request.post({
+    url: '/merchantapi/charts/charts/charts',
+  });
+}

@@ -183,10 +183,6 @@ export const columns: PrimaryTableCol<TableRowData>[] = [
     },
   },
   {
-    colKey: 'create_ip',
-    title: 'Ip',
-  },
-  {
     width: '200px',
     colKey: 'create_at',
     title: '下单时间',

@@ -54,8 +54,11 @@ export const listsColumns: PrimaryTableCol<TableRowData>[] = [
     },
   },
   {
-    colKey: 'status',
+    colKey: 'expire_at',
     title: '有效期',
+    cell(h, props) {
+      return h('span', formatTime(props.row.expire_at));
+    },
   },
   {
     colKey: 'min_banlance',
@@ -81,43 +84,41 @@ export const trashListsColumns: PrimaryTableCol<TableRowData>[] = [
   {
     colKey: 'id',
     type: 'multiple',
-    width: '5%',
   },
   {
     colKey: 'cate_name',
-    title: '商品分类',
+    title: '分类',
     fixed: 'left',
-    width: '10%',
   },
   {
     colKey: 'code',
     title: '优惠券',
-    width: '15%',
   },
   {
     colKey: 'amount',
     title: '面额',
-    width: '8%',
   },
   {
     colKey: 'create_at',
     title: '生成时间',
-    width: '15%',
+    cell(h, props) {
+      return h('span', formatTime(props.row.create_at));
+    },
   },
   {
-    colKey: 'status',
+    colKey: 'expire_at',
     title: '有效期',
-    width: '10%',
+    cell(h, props) {
+      return h('span', formatTime(props.row.expire_at));
+    },
   },
   {
     colKey: 'remark',
     title: '备注',
-    width: '10%',
   },
   {
     colKey: 'operation',
     title: '操作',
-    width: '10%',
     cell: 'operation',
     fixed: 'right',
   },

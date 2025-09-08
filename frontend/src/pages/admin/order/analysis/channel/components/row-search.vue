@@ -1,12 +1,5 @@
 <template>
   <t-form layout="inline" label-width="auto">
-    <t-form-item label="商户账号" name="username">
-      <t-input v-model="params.username" clearable placeholder="请输入商户账号">
-        <template #suffix-icon>
-          <search-icon />
-        </template>
-      </t-input>
-    </t-form-item>
     <!-- 支付通道 -->
     <t-form-item label="收款通道" name="channel_id">
       <t-select v-model="params.channel_id" :clear="fetchData" placeholder="请选择收款通道" type="search" clearable :options="payChannelOptions" />
@@ -30,7 +23,7 @@
     </t-form-item>
     <t-form-item>
       <t-space>
-        <t-button theme="default" variant="outline" @click="fetchData">查询</t-button>
+        <t-button theme="primary" @click="fetchData">查询</t-button>
       </t-space>
     </t-form-item>
   </t-form>
@@ -42,7 +35,6 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { SearchIcon } from 'tdesign-icons-vue-next';
 import { reactive, ref } from 'vue';
 
 import { listSimple } from '@/api/admin/channel/collection';

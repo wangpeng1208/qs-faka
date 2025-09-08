@@ -14,25 +14,23 @@ export const COLUMNS: PrimaryTableCol<TableRowData>[] = [
   {
     colKey: 'price',
     title: '价格(￥)',
-    ellipsis: true,
+    width: 100,
   },
   {
     colKey: 'status',
     title: '上下架',
-    ellipsis: true,
+    width: 80,
   },
   {
     colKey: 'create_at',
     title: '创建时间',
-    ellipsis: true,
+    width: 150,
   },
   {
     colKey: 'operation',
     title: '操作',
     fixed: 'right',
-    ellipsis: true,
-
-    minWidth: 200,
+    width: 180,
   },
 ];
 

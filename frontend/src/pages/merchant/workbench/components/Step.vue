@@ -1,5 +1,5 @@
 <template>
-  <t-card :bordered="false" title="操作步骤" :class="{ 'dashboard-overview-card': true, 'overview-panel': true }" style="margin: 20px 0">
+  <t-card :bordered="false" title="快捷菜单" :class="{ 'dashboard-overview-card': true, 'overview-panel': true }" style="margin: 20px 0">
     <t-row :gutter="[0, { xs: 8, sm: 16, md: 16, lg: 16, xl: 16, xxl: 40 }]">
       <t-col v-for="(item, index) in options" :key="index" :span="2">
         <t-button :icon="item.dot" theme="primary" variant="outline" @click="goPage(item.path)"> {{ item.label }} </t-button>

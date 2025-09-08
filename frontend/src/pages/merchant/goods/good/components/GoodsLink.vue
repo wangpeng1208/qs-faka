@@ -5,7 +5,7 @@
         <div class="info-item">
           <t-space>
             <h1>链接状态</h1>
-            <wp-check-tag v-model="linkData.status" :items="linkStatusTag" @actions="setLinkStutus" />
+            <t-radio-group v-model="linkData.status" :options="linkStatusTag" @change="setLinkStutus" />
           </t-space>
           <div class="help">选择暂停将仅当前商品链接不可用</div>
         </div>
@@ -15,12 +15,8 @@
             <t-link theme="primary" :href="linkData.short_link" target="_blank">
               {{ linkData.short_link }}
             </t-link>
-            <t-tag class="hand-cursor" theme="primary" variant="light" size="small" @click="copyText(linkData.short_link)">
-              <template #icon> <file-copy-icon /> </template>复制
-            </t-tag>
-            <t-tag class="hand-cursor" theme="primary" size="small" @click="resetLink(0)">
-              <template #icon> <refresh-icon /> </template>重置短链
-            </t-tag>
+            <t-tag class="hand-cursor" theme="primary" variant="light" size="small" @click="copyText(linkData.short_link)"> 复制 </t-tag>
+            <t-tag class="hand-cursor" theme="primary" size="small" @click="resetLink(0)"> 重置短链 </t-tag>
           </t-space>
           <div class="help">绿标短链接打开就是商品长链接，强烈建议使用绿标短链接作为访问链接；如果在朋友圈等地方打广告请发【绿标短链】这个链接，这样可以让您的朋友直接进入您的店铺</div>
         </div>
@@ -30,21 +26,15 @@
             <t-link theme="primary" :href="linkData.link" target="_blank">
               {{ linkData.link }}
             </t-link>
-            <t-tag class="hand-cursor" theme="primary" variant="light" size="small" @click="copyText(linkData.link)">
-              <template #icon> <file-copy-icon /> </template>复制
-            </t-tag>
-            <t-tag class="hand-cursor" theme="primary" size="small" @click="resetLink(1)">
-              <template #icon> <refresh-icon /> </template>重置分接
-            </t-tag>
+            <t-tag class="hand-cursor" theme="primary" variant="light" size="small" @click="copyText(linkData.link)"> 复制 </t-tag>
+            <t-tag class="hand-cursor" theme="primary" size="small" @click="resetLink(1)"> 重置分接 </t-tag>
           </t-space>
           <div class="help">重置商品链接后，当前商品的原短链长连接都会失效；严禁使用此链接发广告</div>
         </div>
         <div class="info-item">
           <t-space>
             <h1>电脑端风格</h1>
-            <t-check-tag v-for="(item, index) in pcTemplate" :key="index" :checked="item.value == userPcTemplate" @change="changeTemplate('theme', item.value)">
-              {{ item.label }}
-            </t-check-tag>
+            <t-radio-group v-model="userPcTemplate" :options="pcTemplate" @change="changeTemplate" />
           </t-space>
           <div class="help">当前商品链接PC页面风格</div>
         </div>
@@ -58,7 +48,6 @@ export default {
 };
 </script>
 <script setup lang="ts">
-import { FileCopyIcon, RefreshIcon } from 'tdesign-icons-vue-next';
 import { MessagePlugin } from 'tdesign-vue-next';
 import { ref } from 'vue';
 
@@ -122,7 +111,8 @@ const getUserTemplate = async () => {
   userMobileTemplate.value = data.mobile_template;
 };
 // 更改模板
-const changeTemplate = async (field: string, value: string) => {
+const changeTemplate = async (value: string) => {
+  const field = 'pc_template';
   const data = await setTheme({ field, value, id: linkData.value.id, type: 'good' });
   if (data.code === 1) {
     MessagePlugin.success(data.msg);

@@ -1,11 +1,9 @@
 <template>
   <t-card title="文章分类管理" class="basic-container" :bordered="false">
     <div class="category-header c-flex">
-      <div class="l">
-        <t-button v-perms="['adminapi/article/articleCategory/add']" theme="primary" @click="editRow()">添加</t-button>
-      </div>
+      <t-button v-perms="['adminapi/article/articleCategory/add']" theme="primary" @click="editRow()">添加</t-button>
     </div>
-    <t-base-table ref="tableRef" row-key="id" :data="lists" :columns="columns" :hover="lists.length > 0 ? true : false" :header-affixed-top="headerAffixedTop" max-height="auto" table-layout="auto" :pagination="pagination" lazy-load :loading="dataLoading" @page-change="rehandlePageChange">
+    <t-base-table row-key="id" :data="lists" :columns="columns" :hover="lists?.length > 0 ? true : false" :header-affixed-top="headerAffixedTop" max-height="auto" table-layout="auto" :pagination="pagination" :loading="dataLoading" @page-change="rehandlePageChange">
       <template #status="{ row }">
         <t-tag v-if="row.status === 1" variant="light" theme="success">启用</t-tag>
         <t-tag v-else variant="light" theme="danger">禁用</t-tag>
@@ -46,8 +44,10 @@ const deleteRow = async (id: number) => {
     id,
   });
   if (res.code === 1) {
-    MessagePlugin.success('删除成功');
+    MessagePlugin.success(res.msg);
     fetchData();
+  } else {
+    MessagePlugin.error(res.msg);
   }
 };
 </script>

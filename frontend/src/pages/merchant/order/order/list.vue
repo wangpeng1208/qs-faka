@@ -3,19 +3,19 @@
     <div class="category-header c-flex">
       <div class="l">
         <t-space>
-          <t-select v-model="params.type" :clear="fetchData" placeholder="全部分类" clearable :options="TYPE"></t-select>
           <t-select v-model="params.status" :clear="fetchData" placeholder="全部状态" clearable :options="STATUS"></t-select>
+          <t-select v-model="params.type" :clear="fetchData" placeholder="搜索类型" clearable :options="TYPE"></t-select>
           <t-input v-model="params.keywords" placeholder="请输入关键词" clearable>
             <template #suffix-icon>
-              <search-icon />
+              <t-icon name="search" />
             </template>
           </t-input>
 
-          <t-button theme="default" variant="outline" @click="fetchData">查询</t-button>
+          <t-button theme="primary" @click="fetchData">查询</t-button>
         </t-space>
       </div>
     </div>
-    <t-base-table size="small" :data="lists" :columns="COLUMNS" :row-key="rowKey" vertical-align="middle" :hover="list.length > 0 ? true : false" :pagination="pagination" :selected-row-keys="selectedRowKeys" :loading="dataLoading" :header-affixed-top="headerAffixedTop" max-height="100%" @page-change="rehandlePageChange" @change="rehandleChange" @select-change="rehandleSelectChange">
+    <t-base-table size="small" :data="lists" :columns="COLUMNS" row-key="id" vertical-align="middle" :hover="lists?.length > 0 ? true : false" :pagination="pagination" :loading="dataLoading" :header-affixed-top="headerAffixedTop" max-height="100%" @page-change="rehandlePageChange">
       <template #trade_no="{ row }">
         <t-space size="small" direction="vertical">
           <t-tooltip placement="top" content="点击复制">
@@ -30,24 +30,21 @@
       </template>
       <template #status="{ row }">
         <span>
-          <t-tag v-if="row.status === 0" variant="light-outline" theme="danger"><close-circle-filled-icon />未付款</t-tag>
-          <t-tag v-else-if="row.status === 1" variant="light-outline" theme="success"> <check-circle-filled-icon />已付款</t-tag>
-          <t-tag v-else-if="row.status === 2" variant="light-outline" theme="danger"><info-circle-icon />已关闭</t-tag>
-          <t-tag v-else-if="row.status === 3" variant="light-outline" theme="danger"> <error-circle-filled-icon />已退款</t-tag>
+          <t-tag v-if="row.status === 0" variant="light-outline" theme="danger">未付款</t-tag>
+          <t-tag v-else-if="row.status === 1" variant="light-outline" theme="success"> 已付款</t-tag>
+          <t-tag v-else-if="row.status === 2" variant="light-outline" theme="danger">已关闭</t-tag>
+          <t-tag v-else-if="row.status === 3" variant="light-outline" theme="danger"> 已退款</t-tag>
         </span>
       </template>
       <template #take_status_text="{ row }">
-        <t-tag v-if="row.take_status_text == '未取'" variant="outline" theme="danger"> <check-circle-filled-icon />{{ row.take_status_text }}</t-tag>
-        <t-tag v-else-if="row.take_status_text == '已取'" variant="outline" theme="success"> <check-circle-filled-icon />{{ row.take_status_text }}</t-tag>
+        <t-tag v-if="row.take_status_text == '未取'" variant="outline" theme="danger"> {{ row.take_status_text }}</t-tag>
+        <t-tag v-else-if="row.take_status_text == '已取'" variant="outline" theme="success"> {{ row.take_status_text }}</t-tag>
       </template>
       <template #total_product_price="{ row }">
         <t-space size="small" direction="vertical">
           <span> 总价：{{ row.total_product_price }} </span>
           <span> 实付：{{ row.total_price }} </span>
         </t-space>
-      </template>
-      <template #paytype="{ row }">
-        <t-tag variant="light-outline" theme="primary" size="small">{{ row.paytype }}</t-tag>
       </template>
       <template #create_at="{ row }">
         {{ formatTime(row.create_at) }}
@@ -74,14 +71,12 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { CheckCircleFilledIcon, CloseCircleFilledIcon, ErrorCircleFilledIcon, InfoCircleIcon, SearchIcon } from 'tdesign-icons-vue-next';
-import { computed, reactive, ref } from 'vue';
+import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { list } from '@/api/merchant/order/order';
 import Result from '@/components/result/index.vue';
-import { prefix } from '@/config/global';
-import { useSettingStore } from '@/store';
+import { table } from '@/hooks/table';
 import { copyText } from '@/utils/common';
 import { formatTime } from '@/utils/date';
 
@@ -93,44 +88,11 @@ const params = reactive({
   keywords: '',
   type: '',
 });
-const { query } = router.currentRoute.value as any;
-if (query.status) {
-  params.status = query.status;
-}
-const store = useSettingStore();
-const lists = ref([]);
-const pagination = ref({
-  defaultPageSize: 15,
-  total: 0,
-  defaultCurrent: 1,
+const { pagination, fetchData, dataLoading, headerAffixedTop, rehandlePageChange, lists, searchData } = table({
+  fetchFun: list,
+  params,
 });
 
-const searchValue = ref('');
-const dataLoading = ref(false);
-const fetchData = async (val = {}) => {
-  const value = {
-    page: pagination.value.defaultCurrent,
-    limit: pagination.value.defaultPageSize,
-    name: searchValue.value,
-    ...params,
-    ...val,
-  };
-  dataLoading.value = true;
-  try {
-    const { data } = await list(value);
-    lists.value = data.list;
-    pagination.value = {
-      ...pagination.value,
-      total: data.total,
-    };
-  } catch (e) {
-    console.log(e);
-  } finally {
-    dataLoading.value = false;
-  }
-};
-
-fetchData();
 const goPage = (id: number) => {
   router.push({
     name: 'merchantOrderOrderCard',
@@ -140,22 +102,5 @@ const goPage = (id: number) => {
   });
 };
 
-const selectedRowKeys = ref([]);
-
-const rowKey = 'index';
-
-const rehandleSelectChange = (val: number[]) => {
-  selectedRowKeys.value = val;
-};
-const rehandlePageChange = (curr: any, pageInfo: any) => {
-  pagination.value.defaultCurrent = curr.current;
-  pagination.value.defaultPageSize = curr.pageSize;
-  fetchData();
-};
-const rehandleChange = (changeParams: any, triggerAndData: any) => {};
-
-const headerAffixedTop = computed(() => ({
-  offsetTop: store.isUseTabsRouter ? 48 : 0,
-  container: `.${prefix}-layout`,
-}));
+searchData();
 </script>

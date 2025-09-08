@@ -103,7 +103,7 @@ const onSubmit = async () => {
     try {
       const res = await edit(formData);
       if (res.code === 1) {
-        MessagePlugin.success('操作成功');
+        MessagePlugin.success(res.msg);
         visible.value = false;
         emit('success');
       } else {

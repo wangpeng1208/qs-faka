@@ -1,9 +1,6 @@
 <template>
   <t-dialog v-model:visible="visible" :close-on-overlay-click="false" :destroy-on-close="true" :header="title" :on-confirm="onSubmit">
     <t-form ref="formRef" label-align="left" :data="formData" :rules="FORM_RULES" :label-width="80">
-      <!-- <t-form-item label="角色" name="role">
-        <t-tree-select v-model="formData.role" placeholder="请选择上级管理员" :data="roleOptions" multiple clearable filterable check-strictly :min-collapsed-num="2" />
-      </t-form-item> -->
       <t-form-item label="用户名" name="username">
         <t-input v-model="formData.username" clearable placeholder="请输入管理员用户名" />
       </t-form-item>
@@ -37,7 +34,6 @@ import { FormRule, MessagePlugin } from 'tdesign-vue-next';
 import { reactive, ref } from 'vue';
 
 import { detail, edit } from '@/api/admin/permission/admin';
-import { listSimpleTree } from '@/api/admin/permission/role';
 import WpUpload from '@/components/upload/index.vue';
 
 const DATA = {
@@ -58,12 +54,6 @@ const handleUpdateImage = ({ name, url }: any) => {
   formData[name] = url;
 };
 
-const roleOptions = ref([]);
-
-const initRoleOptions = async () => {
-  const { data } = await listSimpleTree();
-  roleOptions.value = data.list;
-};
 const visible = ref(false);
 const title = ref('添加管理员');
 const init = (id: number) => {
@@ -78,7 +68,6 @@ const init = (id: number) => {
     }
   }
 
-  initRoleOptions();
   visible.value = true;
 };
 
@@ -104,9 +93,7 @@ defineExpose({
 
 const formRef = ref(null);
 
-
 const FORM_RULES: Record<string, FormRule[]> = {
-  role: [{ required: true, message: '必填', type: 'error' }],
   username: [{ required: true, message: '必填', type: 'error' }],
 };
 const emit = defineEmits(['success']);

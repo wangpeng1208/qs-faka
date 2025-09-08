@@ -1,9 +1,9 @@
 <template>
-  <t-card title="收款通道管理" class="basic-container" :bordered="false">
+  <t-card title="收款通道" class="basic-container" :bordered="false">
     <template #actions>
       <t-button v-perms="['adminapi/channel/collection/add']" theme="primary" @click="editRow()">添加通道</t-button>
     </template>
-    <t-base-table ref="tableRef" row-key="id" :data="lists" :columns="columns" :hover="lists.length > 0 ? true : false" :header-affixed-top="headerAffixedTop" max-height="auto" table-layout="auto" :pagination="pagination" lazy-load @page-change="onPageChange">
+    <t-base-table row-key="id" :data="lists" :columns="columns" :hover="lists?.length > 0 ? true : false" :header-affixed-top="headerAffixedTop" max-height="auto" table-layout="auto" :pagination="pagination" :loading="dataLoading" @page-change="rehandlePageChange">
       <template #paytype="{ row }">
         {{ findPayType(row.paytype) }}
       </template>
@@ -20,8 +20,8 @@
       <template #operate="{ row }">
         <t-space>
           <t-link v-perms="['adminapi/channel/collection/edit']" theme="primary" size="small" @click="editRow(row.id)">编辑</t-link>
-          <t-link v-perms="['adminapi/channel/collectionAccount/list']" theme="primary" size="small" @click="accountRow(row.id)">账号管理</t-link>
-          <t-link v-if="row.id != 1" v-perms="['adminapi/channel/collection/del']" theme="danger" size="small" @click="deleteRow(row.id)">删除</t-link>
+          <t-link v-perms="['adminapi/channel/collectionAccount/list']" theme="primary" size="small" @click="accountRow(row.id)">账号</t-link>
+          <t-link v-perms="['adminapi/channel/collection/del']" theme="danger" size="small" @click="deleteRow(row.id)">删除</t-link>
         </t-space>
       </template>
     </t-base-table>
@@ -30,57 +30,28 @@
 </template>
 <script setup lang="ts">
 import { MessagePlugin } from 'tdesign-vue-next';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { del, list } from '@/api/admin/channel/collection';
 import { baseUrl, payTypeSimple } from '@/api/admin/channel/pay_type';
-import { prefix } from '@/config/global';
-import { useSettingStore } from '@/store';
+import { table } from '@/hooks/table';
 
 import { columns } from './constant';
 import EditPopup from './edit.vue';
 
-const isCustom = ref(0);
-
 const router = useRouter();
 
-const accountRow = (id = 0) => {
-  router.push(`/admin/channel/collection/account?id=${id}`);
-};
-
-const pagination = ref({
-  defaultPageSize: 20,
-  total: 0,
-  defaultCurrent: 1,
+const { pagination, fetchData, dataLoading, headerAffixedTop, rehandlePageChange, lists } = table({
+  fetchFun: list,
+  params: {
+    type: 1,
+  },
 });
-const lists = ref([]);
-const fetchData = async () => {
-  const { data } = await list({
-    page: pagination.value.defaultCurrent,
-    limit: pagination.value.defaultPageSize,
-    is_custom: isCustom.value,
-  });
-  lists.value = data.list;
-  pagination.value = {
-    defaultPageSize: data.limit,
-    total: data.total,
-    defaultCurrent: data.page,
-  };
-  initPayTypeOptions();
-};
+
 fetchData();
-const onPageChange = (curr: any) => {
-  pagination.value.defaultCurrent = curr.current;
-  pagination.value.defaultPageSize = curr.pageSize;
-  fetchData();
-};
-const store = useSettingStore();
-const headerAffixedTop = computed(() => ({
-  offsetTop: store.isUseTabsRouter ? 48 : 0,
-  container: `.${prefix}-layout`,
-}));
-const editRef = ref();
+
+const editRef = ref<InstanceType<typeof EditPopup>>();
 const editRow = (id = 0) => {
   editRef.value.init(id);
 };
@@ -89,9 +60,13 @@ const deleteRow = async (id: number) => {
     id,
   });
   if (res.code === 1) {
-    MessagePlugin.success('删除成功');
+    MessagePlugin.success(res.msg);
     fetchData();
   }
+};
+
+const accountRow = (id = 0) => {
+  router.push(`/admin/channel/collection/account?id=${id}`);
 };
 
 const payTypeOptions = ref();
@@ -101,9 +76,9 @@ const initPayTypeOptions = async () => {
   data.forEach((item: any, key: any) => {
     data[key].ico = baseUrl + item.ico;
   });
-  // console.table(data);
   payTypeOptions.value = data;
 };
+initPayTypeOptions();
 // 按id查找支付分类名
 const findPayType = (id: number) => {
   if (!payTypeOptions.value) return '';
