@@ -86,7 +86,11 @@ export async function transformObjectToRoute<T = RouteItem>(routeList: RouteItem
         if (component.toUpperCase() === 'LAYOUT') {
           route.component = LayoutMap.get(component.toUpperCase());
         } else {
-          route.children = [cloneDeep(route)];
+          const childRoute = cloneDeep(route);
+          if (childRoute.name) {
+            childRoute.name = `${childRoute.name}Content`; // 为子路由添加Content后缀
+          }
+          route.children = [childRoute];
           route.component = LAYOUT;
           route.meta.single = true;
           route.meta = (route.meta || {}) as RouteMeta;
