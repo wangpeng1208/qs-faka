@@ -59,8 +59,11 @@ class Order extends Base
      */
     public function clear()
     {
-        $res = OrderModel::where(["status" => 2])->delete();
-        return $res ? $this->success("清空成功！") : $this->error("清空失败！");
+        OrderModel::where(
+            "status",
+            2
+        )->delete();
+        $this->success("清空成功！");
     }
 
     /**
@@ -135,7 +138,7 @@ class Order extends Base
                     $user->save();
                     record_user_money_log("freeze", $user->id, -1 * $order->total_price, $user->money, "后台冻结订单：" . $order->trade_no . "，冻结金额：" . $order->total_price . "元");
                 } else {
-                    Db::table("auto_unfreeze")->where(["trade_no" => $order->trade_no])->update(["status" => -1]);
+                    Db::table("pay_auto_unfreeze")->where(["trade_no" => $order->trade_no])->update(["status" => -1]);
                     record_user_money_log("freeze", $user->id, 0, $user->money, "后台冻结订单：" . $order->trade_no . "，冻结金额：0元（订单收入尚未解冻）。");
                 }
             } else {
@@ -148,7 +151,7 @@ class Order extends Base
                         $user->save();
                         record_user_money_log("unfreeze", $user->id, $order->total_price, $user->money, "后台解冻订单：" . $order->trade_no . "，解冻金额：" . $order->total_price . "元");
                     } else {
-                        Db::table("auto_unfreeze")->where(["trade_no" => $order->trade_no])->update(["status" => 1]);
+                        Db::table("pay_auto_unfreeze")->where(["trade_no" => $order->trade_no])->update(["status" => 1]);
                         record_user_money_log("unfreeze", $user->id, 0, $user->money, "后台解冻订单：" . $order->trade_no . "，解冻金额：0元 (订单收入尚未解冻)。");
                     }
                 } else {

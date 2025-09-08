@@ -29,7 +29,7 @@ class Message extends Base
         });
         $this->success("获取成功", [
             "list"  => $list->items(),
-            "count" => $list->total()
+            "total" => $list->total()
         ]);
     }
     // 未读消息数量

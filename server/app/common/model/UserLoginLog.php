@@ -33,7 +33,7 @@ class UserLoginLog extends Model
         }
 
         if ($value == 'id') {
-            $query->where('id', $data['keyword']);
+            $query->where('user_id', $data['keyword']);
         }
         if ($value == 'mobile') {
             // 查user模型里的mobile字段

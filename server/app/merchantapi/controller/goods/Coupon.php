@@ -42,7 +42,6 @@ class Coupon extends Base
             ->paginate($this->limit)
             ->each(function ($item) {
                 $item->cate_name = $item['cate_id'] == 0 ? '全部' : $item->category->name;
-                $item->status = $item->expire_day;
             });
         return $this->success('获取成功', [
             'list'  => $list->items(),
@@ -108,7 +107,7 @@ class Coupon extends Base
         $ids = inputs("ids/a", []);
         count($ids) == 0 && $this->error("没有选中项！");
 
-        $result = $this->user->goodsCoupon()->where(["id", "in", $ids])->update(["delete_at" => time()]);
+        $result = $this->user->goodsCoupon()->whereIn("id", $ids)->update(["delete_at" => time()]);
         return $result ? $this->success("批量删除优惠券成功") : $this->error("删除失败！");
     }
 
@@ -120,7 +119,7 @@ class Coupon extends Base
     {
         $ids = inputs("ids/a", []);
         empty($ids) && $this->error('没有选中项！');
-        $result = $this->user->goodsCoupon()->onlyTrashed()->where(["id", "in", $ids])->update(["delete_at" => null]);
+        $result = $this->user->goodsCoupon()->onlyTrashed()->whereIn("id", $ids)->update(["delete_at" => null]);
         return $result ? $this->success("恢复成功！") : $this->error("恢复失败！");
     }
 

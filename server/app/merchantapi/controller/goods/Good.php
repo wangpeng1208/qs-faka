@@ -185,7 +185,8 @@ class Good extends Base
      */
     public function del()
     {
-        $id   = inputs("id/d", 0);
+        $ids  = inputs("ids/a", []);
+        $id   = $ids[0];
         $data = $this->getGoods($id);
         $res  = $data->delete();
         return $res ? $this->success("删除商品成功！") : $this->error("删除失败！");

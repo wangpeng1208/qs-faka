@@ -171,7 +171,16 @@ class Card extends Base
     {
         $ids = inputs("ids/a");
         empty($ids) && $this->error("没有选中项！");
-        $res = $this->user->cards()->where(["id", "in", $ids])->update(["delete_at" => time()]);
+        $res = $this->user->cards()->whereIn("id", $ids)->update(["delete_at" => time()]);
+        return $res ? $this->success("删除成功！") : $this->error("删除失败！");
+    }
+
+    /**
+     * 全部清空
+     */
+    public function clearGoodsCards()
+    {
+        $res = $this->user->cards()->whereNull('delete_at')->update(["delete_at" => time()]);
         return $res ? $this->success("删除成功！") : $this->error("删除失败！");
     }
 
@@ -250,7 +259,7 @@ class Card extends Base
         }
         $where[] = ["id", "in", $ids];
         $result  = $this->user->cards()->onlyTrashed()->where($where)->update(["delete_at" => null]);
-        return $result ? $this->success("恢复虚拟卡成功，ID:" . json_encode($ids)) : $this->error("恢复失败！");
+        return $result ? $this->success("恢复虚拟卡成功") : $this->error("恢复失败！");
     }
 
     public function first()
