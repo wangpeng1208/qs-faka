@@ -145,8 +145,8 @@ class Workbench extends Base
             ],
             'version'   => config('site.version'),
             'framework' => [
-                'backend'  => 'webman, think-orm',
-                'frontend' => 'TDdesign, '
+                'backend'  => 'webman',
+                'frontend' => 'Vue3, '
             ],
             'author'    => [
                 'name'  => '邮箱',

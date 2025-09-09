@@ -110,7 +110,7 @@ class System extends Base
 
         $env = [
             ['option' => 'PHP版本',
-                'require' => '>=8.1',
+                'require' => '>=8.2',
                 'status'  => version_compare(PHP_VERSION, '8.0.0') >= 0 ? true : false,
                 'remark'  => ''
             ],

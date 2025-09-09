@@ -131,7 +131,6 @@ class Order extends Base
             $order->is_freeze = $is_freeze;
             $order->save();
             if ($is_freeze == 1) {
-                $msg = "冻结";
                 if (empty($auto_unfreeze)) {
                     $user->money -= $order->total_price;
                     $user->freeze_money += $order->total_price;
@@ -142,7 +141,6 @@ class Order extends Base
                     record_user_money_log("freeze", $user->id, 0, $user->money, "后台冻结订单：" . $order->trade_no . "，冻结金额：0元（订单收入尚未解冻）。");
                 }
             } else {
-                $msg       = "解冻";
                 $complaint = Db::name("order_complaint")->where(["trade_no" => $order->trade_no])->find();
                 if (empty($complaint) || $complaint["status"] == 1 && $complaint["result"] == 1) {
                     if (empty($auto_unfreeze)) {
