@@ -1,5 +1,5 @@
 <template>
-  <t-card title="商户支付分析" class="basic-container" :bordered="false">
+  <t-card title="商户支付分析" :bordered="false">
     <row-search @success="fetchSearchData" />
     <t-base-table :data="lists" :columns="columns" row-key="id" vertical-align="middle" :hover="lists?.length > 0 ? true : false" :pagination="pagination" :header-affixed-top="headerAffixedTop" table-layout="auto" max-height="100%" :loading="dataLoading" @page-change="rehandlePageChange" />
 
