@@ -1,22 +1,21 @@
 <template>
-  <div style="width: 100%; background: url(http://www.kuaifaka.com/static/img/back.f6b9993.png); background-size: 100%; min-height: 100vh; position: relative; padding-bottom: 10px">
-    <div class="container">
+  <div class="page-container">
+    <div class="shop-container">
       <common-header :shop-info="shopInfo" />
-      <t-card class="section details pb20" :bordered="false">
-        <div class="row category">
-          <div class="title">
-            <img :src="CategoryImg" style="display: inline-block; vertical-align: bottom" />
-            <span style="margin-bottom: 2px; font-size: 16px; font-weight: 700; margin-left: 5px; display: inline-block; vertical-align: bottom">商品分类</span>
+      <t-card class="shop-main-content">
+        <div class="category-section">
+          <div class="section-title">
+            <img :src="CategoryImg" class="section-icon" />
+            <span class="section-title-text">商品分类</span>
           </div>
 
-          <div v-for="(item, key) in cateInfo.categorys" :key="key" flex="auto" class="category_box" :class="cateInfo.id == item.id ? 'active' : ''" @click="clickCategory(item.id)">
-            <div class="card">
-              <div>
+          <div v-for="(item, key) in cateInfo.categorys" :key="key" class="category-item" :class="{ 'category-item--active': cateInfo.id == item.id }" @click="clickCategory(item.id)">
+            <div class="category-card">
+              <div class="category-name">
                 {{ item.name }}
               </div>
-              <span class="card__s_cateremark">共{{ item.goodsCount }}种商品</span>
-
-              <img class="lite_img" src="./static/lite_img.png" />
+              <span class="category-count">共{{ item.goodsCount }}种商品</span>
+              <img class="selection-indicator" src="./static/lite_img.png" />
             </div>
           </div>
         </div>
@@ -24,32 +23,30 @@
         <div v-if="cateInfo.goods.length > 0">
           <t-divider />
 
-          <div class="row goods">
-            <div class="title">
-              <goodsico style="display: inline-block; vertical-align: bottom" />
-              <span style="margin-bottom: 2px; font-size: 16px; font-weight: 700; margin-left: 5px; display: inline-block; vertical-align: bottom">选择商品</span>
+          <div class="goods-section">
+            <div class="section-title">
+              <goodsico class="section-icon" />
+              <span class="section-title-text">选择商品</span>
             </div>
 
             <t-row>
-              <t-col v-for="(item, key) in cateInfo.goods" :key="key" class="goods_box" :class="goodsInfo.id == item.id ? 'active' : ''" @click="clickGoods(item.id)">
-                <div class="card">
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div class="card__wrap">
-                        <div class="card__detail">
-                          <h4>{{ item.name }}</h4>
+              <t-col v-for="(item, key) in cateInfo.goods" :key="key" class="goods-item" :class="{ 'goods-item--active': goodsInfo.id == item.id }" @click="clickGoods(item.id)">
+                <div class="goods-card">
+                  <div class="goods-content">
+                    <div class="goods-info">
+                      <div class="goods-wrapper">
+                        <div class="goods-detail">
+                          <h4 class="goods-name">{{ item.name }}</h4>
                         </div>
-                        <div class="card__detail">
-                          <span class="card__detail_price">￥{{ item.price }}</span>
+                        <div class="goods-detail">
+                          <span class="goods-price">￥{{ item.price }}</span>
                         </div>
-                        <div class="card__detail">
-                          <span class="card__detail_stock">
-                            <span> {{ item.stockStr }}</span>
-                          </span>
+                        <div class="goods-detail">
+                          <span class="goods-stock">{{ item.stockStr }}</span>
                         </div>
                       </div>
                     </div>
-                    <img class="lite_img" src="./static/on.png" alt="" />
+                    <img class="selection-indicator" src="./static/on.png" alt="" />
                   </div>
                 </div>
               </t-col>
@@ -57,42 +54,41 @@
           </div>
 
           <t-divider />
-          <div class="row">
-            <div class="title">商品描述</div>
-            <div class="content" v-html="goodsInfo.content"></div>
+          <div class="description-section">
+            <div class="section-title">商品描述</div>
+            <div class="section-content" v-html="goodsInfo.content"></div>
 
-            <div v-if="goodsInfo.wholesale_discount_list.length > 0" class="row">
-              <h4 class="title">满减优惠</h4>
-              <div class="content">
-                <div v-for="(item, index) in goodsInfo.wholesale_discount_list" :key="index">买满{{ item.num }}件，单价{{ item.price }}元</div>
+            <div v-if="goodsInfo.wholesale_discount_list.length > 0" class="promotion-section">
+              <h4 class="section-title">满减优惠</h4>
+              <div class="section-content">
+                <div v-for="(item, index) in goodsInfo.wholesale_discount_list" :key="index" class="promotion-item">买满{{ item.num }}件，单价{{ item.price }}元</div>
               </div>
             </div>
-            <div v-if="goodsInfo.event_give != null && goodsInfo.event_give.length > 0" class="row">
-              <h4 class="title">活动赠送</h4>
-              <div class="content">
-                <div v-for="(item, index) in goodsInfo.event_give" :key="index">买满{{ item.num }}件，赠送{{ item.give_num }}件</div>
+            <div v-if="goodsInfo.event_give != null && goodsInfo.event_give.length > 0" class="promotion-section">
+              <h4 class="section-title">活动赠送</h4>
+              <div class="section-content">
+                <div v-for="(item, index) in goodsInfo.event_give" :key="index" class="promotion-item">买满{{ item.num }}件，赠送{{ item.give_num }}件</div>
               </div>
             </div>
-            <div v-if="goodsInfo.addtion_give != null && goodsInfo.addtion_give.length > 0" class="row">
-              <h4 class="title">附加赠送</h4>
-              <div class="content">
-                <div v-for="(item, index) in goodsInfo.addtion_give" :key="index">
-                  买满{{ item.bug_num }}件，赠送`<b>{{ item.goods_name }}</b
-                  >`商品{{ item.give_num }}件
+            <div v-if="goodsInfo.addtion_give != null && goodsInfo.addtion_give.length > 0" class="promotion-section">
+              <h4 class="section-title">附加赠送</h4>
+              <div class="section-content">
+                <div v-for="(item, index) in goodsInfo.addtion_give" :key="index" class="promotion-item">
+                  买满{{ item.bug_num }}件，赠送<b>{{ item.goods_name }}</b
+                  >商品{{ item.give_num }}件
                 </div>
               </div>
             </div>
           </div>
 
           <t-divider />
-          <div class="row">
-            <div class="title">填写购买信息</div>
-            <div class="content">
+          <div class="purchase-form-section">
+            <div class="section-title">填写购买信息</div>
+            <div class="section-content">
               <t-form label-width="80" layout="inline">
                 <t-form-item label="联系方式" tips="联系方式特别重要,可用来查询订单">
                   <t-input v-model="formData.contact" name="contact" :placeholder="contactText" clearable />
                 </t-form-item>
-                <!-- tips="短信提醒可能需要支付额外的短信费用" -->
                 <t-form-item label="提醒服务">
                   <t-check-tag-group
                     v-model="checkTagValue1"
@@ -103,14 +99,9 @@
                     ]"
                   />
                 </t-form-item>
-                <!-- 如果checkTagValue1包含2 -->
                 <t-form-item v-if="checkTagValue1.includes(2)" label="邮箱地址">
                   <t-input v-model="formData.email" name="email" placeholder="填写你常用的邮箱地址" clearable />
                 </t-form-item>
-                <!-- <t-form-item label="购买数量">
-                <t-input-number v-model="formData.quantity" :step="1" :max="goodsInfo.cards_stock_count" :min="goodsInfo.limit_quantity" auto-width clearable @change="handleChange" />
-              </t-form-item> -->
-                <!-- 优惠券 -->
                 <t-form-item v-if="goodsInfo.coupon_type" label="优惠券">
                   <t-switch v-model="couponBtnActive" />
                 </t-form-item>
@@ -118,21 +109,21 @@
                   <t-input v-model="formData.coupon_code" name="coupon_code" placeholder="请填写你的优惠券" />
                 </t-form-item>
                 <t-form-item v-if="goodsInfo.take_card_type != 0" label="取卡密码">
-                  <t-input v-if="goodsInfo.take_card_type != 0" v-model="formData.pwdforsearch" placeholder="请输入取卡密码（6-20位）" />
+                  <t-input v-model="formData.pwdforsearch" placeholder="请输入取卡密码（6-20位）" />
                 </t-form-item>
               </t-form>
             </div>
           </div>
-          <div v-if="payList.length" class="row">
+          <div v-if="payList.length" class="payment-section">
             <t-divider />
-            <div class="title">选择支付方式</div>
-            <div class="ure_info_box content">
-              <div class="pay_type">
-                <div class="pay_type_box">
-                  <div v-for="(item, key) in payList" :key="key" class="pay_type_leng" :class="payInfo.channel_id == item.channel_id ? 'pay_type_leng_xz' : ''" @click="clickPayType(item.channel_id)">
-                    <img style="width: 21px" :src="baseUrl + item.ico" />
-                    <span>{{ item.show_name }}</span>
-                    <img class="xiadui" src="./static/on.png" alt="" />
+            <div class="section-title">选择支付方式</div>
+            <div class="section-content">
+              <div class="payment-methods">
+                <div class="payment-options">
+                  <div v-for="(item, key) in payList" :key="key" class="payment-option" :class="{ 'payment-option--selected': payInfo.channel_id == item.channel_id }" @click="clickPayType(item.channel_id)">
+                    <img class="payment-icon" :src="baseUrl + item.ico" />
+                    <span class="payment-name">{{ item.show_name }}</span>
+                    <img class="selection-indicator" src="./static/on.png" alt="" />
                   </div>
                 </div>
               </div>
@@ -142,23 +133,24 @@
 
         <!-- <span @click="showPriceModal()">价格说明</span> -->
       </t-card>
-      <footer>
-        <!-- <price :form-data="formData" :visible="priceDialogVisible" :sms-price="smsPrice" :price="goodsInfo.price" @update-show="handelPriceDialogVisible" /> -->
-        <div class="copyright"><span v-html="siteInfoCopyright"></span></div>
-        <div class="copyright">{{ siteInfoIcp }}</div>
+      <footer class="shop-footer">
+        <div class="footer-copyright"><span v-html="siteInfoCopyright"></span></div>
+        <div class="footer-copyright">{{ siteInfoIcp }}</div>
       </footer>
-      <div class="create-order">
-        <div class="create-item container">
+      <div class="order-bar">
+        <div class="order-bar-content shop-container">
           <div class="goods-title">
             <!-- {{ goodsInfo?.name }} -->
           </div>
-          <div class="create-goods-counts"><t-input-number v-model="formData.quantity" :step="1" :max="goodsInfo.cards_stock_count" :min="goodsInfo.limit_quantity" auto-width clearable size="large" @change="handleChange" /></div>
-          <div>
+          <div class="quantity-selector">
+            <t-input-number v-model="formData.quantity" :step="1" :max="goodsInfo.cards_stock_count" :min="goodsInfo.limit_quantity" auto-width clearable size="large" @change="handleChange" />
+          </div>
+          <div class="order-summary">
             <t-space align="center" size="large">
-              <div class="price">
+              <div class="price-info">
                 支付金额
-                <span class="total">￥{{ paymoneyTotal }}</span>
-                <span v-if="goodsInfo.coupon_type && formData.coupon_code" class="s">原价：{{ paymoney }}</span>
+                <span class="price-total">￥{{ paymoneyTotal }}</span>
+                <span v-if="goodsInfo.coupon_type && formData.coupon_code" class="price-original">原价：{{ paymoney }}</span>
               </div>
               <t-button shape="round" theme="primary" variant="base" size="large" @click="handleSubmit()"> 确认订单 </t-button>
             </t-space>

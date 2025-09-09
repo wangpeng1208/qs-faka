@@ -19,7 +19,7 @@
     </div>
     <t-table :data="lists" :columns="columns" row-key="id" vertical-align="middle" :hover="lists?.length > 0 ? true : false" :pagination="pagination" :header-affixed-top="headerAffixedTop" table-layout="fixed" max-height="100%" :loading="dataLoading" @page-change="rehandlePageChange">
       <template #operate="{ row }">
-        <t-dropdown :options="getOperateOptions(row)" @click="handleOperateClick">
+        <t-dropdown :options="getOperateOptions(row)">
           <t-button theme="default" variant="text" size="small">
             操作
             <template #suffix>
@@ -105,12 +105,6 @@ initPayTypeOptions();
 // 操作下拉菜单
 const getOperateOptions = (row: any) => {
   return createOperateDropdown(row, detailRow, delRow, handleNotifyExport, hadleFreeze);
-};
-
-const handleOperateClick = (data: any) => {
-  if (data.value && typeof data.onClick === 'function') {
-    data.onClick();
-  }
 };
 </script>
 
