@@ -24,12 +24,6 @@ export function notify(params: any) {
     params,
   });
 }
-export function refund(params: any) {
-  return request.post({
-    url: '/adminapi/order/order/refund',
-    params,
-  });
-}
 export function freeze(params: any) {
   return request.post({
     url: '/adminapi/order/order/freeze',

@@ -1,7 +1,6 @@
-import { Button, DialogPlugin, Link, MessagePlugin, PrimaryTableCol, TableRowData, Tag } from 'tdesign-vue-next';
-import { VNode } from 'vue';
+import { DialogPlugin, MessagePlugin, PrimaryTableCol, TableRowData, Tag } from 'tdesign-vue-next';
 
-import { freeze, notify, refund } from '@/api/admin/order/order';
+import { freeze, notify } from '@/api/admin/order/order';
 import { formatTime } from '@/utils/date';
 
 interface StatusOption {
@@ -36,154 +35,63 @@ export const statusOptions: StatusOption[] = [
 
 export const columns: PrimaryTableCol<TableRowData>[] = [
   {
-    width: '180px',
+    width: '160px',
     colKey: 'trade_no',
     title: '订单号',
     fixed: 'left',
   },
   {
-    colKey: 'shop_name',
+    colKey: 'merchant_info',
+    width: '200px',
+    title: '商户信息',
+    cell: (h, { row }) => {
+      return h('div', { class: 'merchant-info-cell' }, [h('div', { style: 'font-weight: 500; color: #0052d9; margin-bottom: 2px; font-size: 12px;' }, `店铺: ${row.shop.shop_name}`), h('div', { style: 'color: #333; margin-bottom: 2px; font-size: 12px;' }, `商品: ${row.goods_name}`), h('div', { style: 'color: #666; font-size: 12px;' }, `商户: ${row.user.username}`)]);
+    },
+  },
+  {
+    colKey: 'buyer_info',
     width: '180px',
-    title: '店铺名',
-    cell: (h, { row }) => `${row.shop.shop_name}`,
+    title: '买家资料',
+    cell: (h, { row }) => {
+      return h('div', { class: 'buyer-info-cell' }, [h('div', { style: 'color: #333; margin-bottom: 2px; font-size: 12px;' }, `联系: ${row.contact}`), h('div', { style: 'color: #666; font-size: 12px;' }, [`购买: ${row.quantity}件 `, h('span', { style: 'color: #e37318; font-weight: 500;' }, `¥${row.total_price}`)])]);
+    },
   },
   {
-    colKey: 'username',
-    width: '180px',
-    title: '商户名',
-    cell: (h, { row }) => `${row.user.username}`,
-  },
-  {
-    colKey: 'goods_name',
-    width: '180px',
-    title: '商品名',
-  },
-  {
-    colKey: 'contact',
-    width: '180px',
-    title: '联系方式',
-  },
-  {
-    colKey: 'quantity',
-    width: '100px',
-    title: '商品数量',
-  },
-  {
-    colKey: 'total_price',
-    title: '订单金额',
-  },
-  {
-    colKey: 'fee',
-    title: '手续费',
-  },
-  {
-    colKey: 'rate',
-    title: '手续费率',
-    cell: (h, { row }) => `${(row.rate * 1000).toFixed(2)}‰`,
-  },
-  {
-    colKey: 'channel',
-    title: '支付渠道',
-    cell: (h, { row }) => `${row.channel.title}`,
-  },
-  // status: 1 已支付, 2 已关闭, 3 已退款, 0 未支付
-  {
-    width: '150px',
-    colKey: 'status',
-    title: '订单状态',
-    fixed: 'right',
+    colKey: 'status_info',
+    width: '140px',
+    title: '状态信息',
     cell: (h, { row }) => {
       const statusOption = statusOptions.find((t) => t.value === row.status);
-      const tag = h(
+      const statusTag = h(
         Tag,
         {
           theme: statusOption.theme,
           variant: 'light',
+          size: 'small',
         },
         () => statusOption?.label,
       );
-      let html;
-      if (row.status === 1) {
-        html = h(
-          Button,
-          {
-            vPerms: "['admin/order/order/refund']",
-            hover: 'color',
-            size: 'small',
-            style: 'margin-left: 10px',
-            onClick: () => {
-              hadleRefund(row);
-            },
-          },
-          () => '退款',
-        );
-      } else if (row.status === 0) {
-        html = h(
-          Button,
-          {
-            vPerms: "['admin/order/order/notify']",
-            hover: 'color',
-            size: 'small',
-            onClick: () => {
-              handleNotify(row);
-            },
-          },
-          () => '补单',
-        );
-      } else {
-        html = '';
-      }
-      return [tag, html];
-    },
-  },
-  {
-    colKey: 'cards_count',
-    title: '取卡状态',
-    fixed: 'right',
-    cell: (h, { row }) => {
-      return h(
+
+      const cardTag = h(
         Tag,
         {
           theme: row.cards_count === row.quantity ? 'success' : 'warning',
           variant: 'light',
+          size: 'small',
+          style: 'margin-top: 4px;',
         },
         () => {
-          if (row.cards_count === 0) {
-            return '未取卡';
-          }
-          if (row.cards_count === row.quantity) {
-            return '已取卡';
-          }
+          if (row.cards_count === 0) return '未取卡';
+          if (row.cards_count === row.quantity) return '已取卡';
           return '部分取卡';
         },
       );
+
+      return h('div', { class: 'status-info-cell' }, [statusTag, cardTag]);
     },
   },
   {
-    colKey: 'is_freeze',
-    title: '冻结',
-    fixed: 'right',
-    cell: (h, { row }): VNode | string => {
-      let html: VNode | string = '';
-      if (row.status === 1) {
-        html = h(
-          Link,
-          {
-            theme: row.is_freeze ? 'danger' : 'success',
-            vPerms: "['admin/order/order/freeze']",
-            hover: 'color',
-            onClick: () => {
-              hadleFreeze(row);
-            },
-          },
-          () => (row.is_freeze ? '解冻' : '冻结'),
-        );
-      }
-      return html;
-    },
-  },
-  {
-    width: '200px',
+    width: '140px',
     colKey: 'create_at',
     title: '下单时间',
     cell: (h, { row }) => formatTime(row.create_at),
@@ -222,15 +130,7 @@ const handleAction = (row: TableRowData, action: Function, message: string) => {
   });
 };
 
-const handleNotify = (row: TableRowData) => {
-  handleAction(row, notify, '确认要设置这个订单已支付吗？该操作不可恢复');
-};
-
-const hadleRefund = (row: TableRowData) => {
-  handleAction(row, refund, '确认要退款吗？该操作不可恢复');
-};
-
-const hadleFreeze = (row: TableRowData) => {
+export const hadleFreeze = (row: TableRowData) => {
   let content;
   if (row.is_freeze === 1) {
     content = `确认要解冻吗？`;
@@ -238,4 +138,46 @@ const hadleFreeze = (row: TableRowData) => {
     content = `确认要冻结吗？此处用于存在投诉争议的订单，手工冻结。冻结后，该订单将不会被自动退款，也不会被自动结算。`;
   }
   handleAction(row, freeze, content);
+};
+
+export const handleNotifyExport = (row: TableRowData) => {
+  handleAction(row, notify, '确认要设置这个订单已支付吗？该操作不可恢复');
+};
+
+// 操作菜单处理函数
+export const createOperateDropdown = (row: TableRowData, onDetail: (row: TableRowData) => void, onDelete: (row: TableRowData) => void, onNotify: (row: TableRowData) => void, onFreeze: (row: TableRowData) => void) => {
+  const options = [
+    {
+      content: '详情',
+      value: 'detail',
+      onClick: () => onDetail(row),
+    },
+  ];
+
+  // 根据订单状态添加补单选项
+  if (row.status === 0) {
+    options.push({
+      content: '补单',
+      value: 'notify',
+      onClick: () => onNotify(row),
+    });
+  }
+
+  // 根据订单状态添加冻结/解冻选项
+  if (row.status === 1) {
+    options.push({
+      content: row.is_freeze ? '解冻' : '冻结',
+      value: 'freeze',
+      onClick: () => onFreeze(row),
+    });
+  }
+
+  // 添加删除选项
+  options.push({
+    content: '删除',
+    value: 'delete',
+    onClick: () => onDelete(row),
+  });
+
+  return options;
 };

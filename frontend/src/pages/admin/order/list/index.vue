@@ -17,12 +17,16 @@
         <t-button theme="warning" @click="clearData">清空无效</t-button>
       </div>
     </div>
-    <t-table size="small" :data="lists" :columns="columns" row-key="id" vertical-align="middle" :hover="lists?.length > 0 ? true : false" :pagination="pagination" :header-affixed-top="headerAffixedTop" table-layout="fixed" max-height="100%" :loading="dataLoading" @page-change="rehandlePageChange">
+    <t-table :data="lists" :columns="columns" row-key="id" vertical-align="middle" :hover="lists?.length > 0 ? true : false" :pagination="pagination" :header-affixed-top="headerAffixedTop" table-layout="fixed" max-height="100%" :loading="dataLoading" @page-change="rehandlePageChange">
       <template #operate="{ row }">
-        <t-space>
-          <t-link theme="primary" @click="detailRow(row)">详情</t-link>
-          <t-link v-perms="['adminapi/order/order/del']" theme="danger" @click="delRow(row)">删除</t-link>
-        </t-space>
+        <t-dropdown :options="getOperateOptions(row)" @click="handleOperateClick">
+          <t-button theme="default" variant="text" size="small">
+            操作
+            <template #suffix>
+              <t-icon name="chevron-down" />
+            </template>
+          </t-button>
+        </t-dropdown>
       </template>
     </t-table>
     <row-detail ref="detailRef" :pay-type-options="payTypeOptions" />
@@ -38,7 +42,7 @@ import { clear, del, list } from '@/api/admin/order/order';
 import { baseUrl } from '@/api/base';
 import { table } from '@/hooks/table';
 
-import { columns } from './components/constant';
+import { columns, createOperateDropdown, hadleFreeze, handleNotifyExport } from './components/constant';
 import RowDetail from './components/detail.vue';
 import RowSearch from './components/search.vue';
 
@@ -97,4 +101,44 @@ const initPayTypeOptions = async () => {
   payTypeOptions.value = data;
 };
 initPayTypeOptions();
+
+// 操作下拉菜单
+const getOperateOptions = (row: any) => {
+  return createOperateDropdown(row, detailRow, delRow, handleNotifyExport, hadleFreeze);
+};
+
+const handleOperateClick = (data: any) => {
+  if (data.value && typeof data.onClick === 'function') {
+    data.onClick();
+  }
+};
 </script>
+
+<style scoped>
+.merchant-info-cell {
+  line-height: 1.4;
+}
+
+.buyer-info-cell {
+  line-height: 1.4;
+}
+
+.status-info-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.category-header {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.category-header .l {
+  flex: 1;
+}
+
+.category-header .r {
+  gap: 8px;
+}
+</style>
