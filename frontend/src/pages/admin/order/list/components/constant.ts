@@ -97,7 +97,7 @@ export const columns: PrimaryTableCol<TableRowData>[] = [
     cell: (h, { row }) => formatTime(row.create_at),
   },
   {
-    width: '100px',
+    width: '60px',
     colKey: 'operate',
     title: '操作',
     fixed: 'right',
