@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container header-container">
     <header>
       <t-head-menu theme="light">
         <template #logo>
@@ -30,13 +30,13 @@
         </template>
         <template #operations>
           <t-space>
-            <t-button theme="primary" shape="round" size="large" variant="base" @click="goPage(`/order`)">
+            <t-button theme="primary" shape="round" variant="base" @click="goPage(`/order`)">
               <template #icon>
                 <search-icon class="icon" />
               </template>
               订单查询
             </t-button>
-            <t-button theme="danger" shape="round" size="large" variant="base" @click="goPage(`/order`, { ts: 1 })">
+            <t-button theme="danger" shape="round" variant="base" @click="goPage(`/order`, { ts: 1 })">
               <template #icon>
                 <shield-error-icon class="icon" />
               </template>
@@ -74,6 +74,9 @@ const goPage = (path: string, query = {}) => {
 };
 </script>
 <style lang="less" scoped>
+.header-container {
+  margin-bottom: 40px;
+}
 header {
   padding-top: 20px;
   .shop-name {
@@ -131,8 +134,6 @@ header {
 .container-lg,
 .container-xl {
   width: 100%;
-  padding-right: 15px;
-  padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
 }
