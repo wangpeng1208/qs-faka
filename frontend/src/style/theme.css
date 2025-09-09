@@ -1412,7 +1412,6 @@ ul.t-select-option-group__header,
 }
 .t-layout__sider{
   background-color: none;
-  width: 200px;
 }
 :deep(.t-tabs){
   background-color: none;

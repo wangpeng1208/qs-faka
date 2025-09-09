@@ -2,9 +2,9 @@
   <div :class="sideNavCls">
     <t-menu :class="menuCls" :theme="theme" :value="active" :collapsed="collapsed" :default-expanded="defaultExpanded" :expand-mutex="expandMutex" width="200px">
       <template #logo>
-        <span v-if="showLogo" :class="`${prefix}-side-nav-logo-wrapper`" @click="goHome">
+        <a v-if="showLogo" :class="`${prefix}-side-nav-logo-wrapper`" href="/" target="_blank">
           <t-image :src="getLogo()" :class="`${prefix}-side-nav-logo-${collapsed ? 't' : 'tdesign'}-logo`" />
-        </span>
+        </a>
       </template>
       <menu-content :nav-data="menu" />
       <template #operations>
@@ -24,7 +24,6 @@
 import union from 'lodash/union';
 import type { PropType } from 'vue';
 import { computed, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
 
 //  WEBSITE_NAM
 import { prefix } from '@/config/global';
@@ -110,7 +109,6 @@ const menuCls = computed(() => {
   ];
 });
 
-const router = useRouter();
 const settingStore = useSettingStore();
 
 const autoCollapsed = () => {
@@ -126,10 +124,6 @@ onMounted(() => {
     autoCollapsed();
   };
 });
-
-const goHome = () => {
-  router.push('/');
-};
 
 const getLogo = () => {
   if (collapsed.value) return AssetLogo;

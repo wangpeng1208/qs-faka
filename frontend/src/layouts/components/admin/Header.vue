@@ -3,7 +3,7 @@
     <t-head-menu :class="menuCls" :theme="menuTheme" expand-type="popup" :value="active">
       <template #logo>
         <a v-if="showLogo" class="header-logo-container" href="/" target="_blank">
-          <img :src="siteLogo" alt="" style="width: 184px; height: 26px" />
+          <img :src="siteLogo" alt="" />
         </a>
       </template>
       <template v-if="layout !== 'side'" #default>
@@ -204,21 +204,6 @@ const handleLogout = () => {
   .t-button {
     margin-left: var(--td-comp-margin-l);
   }
-
-  .shop-status-not {
-    margin-left: var(--td-comp-margin-l);
-    color: #999;
-    background: #eaeaea;
-    padding: 0 16px;
-  }
-
-  .shop-status-right {
-    margin-left: var(--td-comp-margin-l);
-    background-color: var(--td-brand-color);
-    color: var(--td-text-color-anti);
-    border-color: var(--td-brand-color);
-    padding: 0 16px;
-  }
 }
 
 .header-operate-left {
@@ -229,7 +214,7 @@ const handleLogout = () => {
 
 .header-logo-container {
   width: 184px;
-  height: 26px;
+  height: 55px;
   display: flex;
   margin-left: 24px;
   color: var(--td-text-color-primary);
