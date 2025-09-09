@@ -1,34 +1,32 @@
 <template>
-  <div>
-    <t-card title="商户信息" :bordered="false" class="basic-container" style="margin-top: 20px">
-      <t-form label-align="left" :label-width="150">
-        <t-form-item label="用户头像">
-          <wp-upload theme="image" :initial="userData" app="merchant" name="avatar" :data="{ type: 'image' }" @update="handleUpdateImage" />
-        </t-form-item>
-        <t-form-item label="账号状态" tips="账号审核状态">
-          <span v-if="userData.status" class="status"></span>
-          {{ userData.status ? '已审核' : '未审核' }}
-        </t-form-item>
-        <t-form-item label="创建时间" tips="账号创建时间">
-          {{ formatTime(userData.create_at) }}
-        </t-form-item>
-        <t-form-item label="账号名称" tips="账号名称，可用来登录后台">
-          {{ userData.username ?? '未设置' }}
-        </t-form-item>
-        <t-form-item label="手机号码" tips="手机号码也是登录账号，不可更改，如需更改请联系管理员">
-          {{ userData.mobile }}
-        </t-form-item>
-        <t-form-item label="邮箱地址" tips="邮箱地址可以用来登录账号及消息提醒">
-          <t-space>
-            {{ userData.email ? userData.email : '未绑定' }}
-            <t-link v-if="!userData.email" theme="warning" size="small" @click="changeEmail(userData.email)">{{ userData.email ? '修改邮箱' : '点击绑定' }}</t-link>
-          </t-space>
-        </t-form-item>
+  <t-card title="商户信息" :bordered="false">
+    <t-form label-align="left" :label-width="150">
+      <t-form-item label="用户头像">
+        <wp-upload theme="image" :initial="userData" app="merchant" name="avatar" :data="{ type: 'image' }" @update="handleUpdateImage" />
+      </t-form-item>
+      <t-form-item label="账号状态" tips="账号审核状态">
+        <span v-if="userData.status" class="status"></span>
+        {{ userData.status ? '已审核' : '未审核' }}
+      </t-form-item>
+      <t-form-item label="创建时间" tips="账号创建时间">
+        {{ formatTime(userData.create_at) }}
+      </t-form-item>
+      <t-form-item label="账号名称" tips="账号名称，可用来登录后台">
+        {{ userData.username ?? '未设置' }}
+      </t-form-item>
+      <t-form-item label="手机号码" tips="手机号码也是登录账号，不可更改，如需更改请联系管理员">
+        {{ userData.mobile }}
+      </t-form-item>
+      <t-form-item label="邮箱地址" tips="邮箱地址可以用来登录账号及消息提醒">
+        <t-space>
+          {{ userData.email ? userData.email : '未绑定' }}
+          <t-link v-if="!userData.email" theme="warning" size="small" @click="changeEmail(userData.email)">{{ userData.email ? '修改邮箱' : '点击绑定' }}</t-link>
+        </t-space>
+      </t-form-item>
 
-        <email-dialog ref="emailRef" @success="initUserSetting" />
-      </t-form>
-    </t-card>
-  </div>
+      <email-dialog ref="emailRef" @success="initUserSetting" />
+    </t-form>
+  </t-card>
 </template>
 
 <script lang="ts">

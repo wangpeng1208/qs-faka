@@ -1,5 +1,5 @@
 <template>
-  <t-card title="商品列表" class="basic-container" :bordered="false">
+  <t-card title="商品列表" :bordered="false">
     <template #actions>
       <t-button variant="text" theme="default" @click="router.push('/merchant/goods/trash')">
         <template #icon><t-icon name="delete" /></template>

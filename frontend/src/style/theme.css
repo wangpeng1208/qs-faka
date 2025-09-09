@@ -1220,45 +1220,6 @@ ul.t-select-option-group__header,
   border-radius: none;
 }
 
-.t-table__pagination {
-  padding: var(--td-comp-paddingTB-s) var(--td-comp-paddingLR-s);
-}
-
-.t-table th,
-.t-table td {
-  padding: var(--td-comp-paddingTB-s) var(--td-comp-paddingLR-s);
-}
-
-.t-table td[key='row-select'] {
-  padding: 13px 0 11px var(--td-comp-paddingLR-s);
-}
-
-.t-table.t-size-s th,
-.t-table.t-size-s td {
-  padding: var(--td-comp-paddingTB-s) var(--td-comp-paddingLR-xs);
-}
-
-.t-table.t-size-l th,
-.t-table.t-size-l td {
-  padding: var(--td-comp-paddingTB-m) var(--td-comp-paddingLR-l);
-}
-
-.t-table--bordered .t-table__pagination {
-  padding: var(--td-comp-paddingTB-s) var(--td-comp-paddingLR-s);
-}
-
-.t-table__filter-pop-content-inner > .t-date-range-picker__panel {
-  margin: calc(0px - var(--td-comp-margin-s));
-}
-
-.t-table__filter--bottom-buttons {
-  padding: var(--td-comp-paddingTB-s) var(--td-comp-paddingLR-s);
-}
-
-.t-table__row-full-element {
-  padding: var(--td-comp-paddingTB-s) var(--td-comp-paddingLR-s);
-}
-
 .t-timeline-item__wrapper {
   width: 10px;
 }
@@ -1323,20 +1284,6 @@ ul.t-select-option-group__header,
   box-shadow: 0px 1px 4px rgba(38, 47, 62, 0.2);
 }
 
-.table-tree-container {
-  box-shadow: 0px 1px 4px rgba(38, 47, 62, 0.2);
-}
-
-.form-basic-container {
-  box-shadow: 0px 1px 4px rgba(38, 47, 62, 0.2);
-}
-
-.form-step-container {
-  box-shadow: 0px 1px 4px rgba(38, 47, 62, 0.2);
-}
-
-
-
 .t-avatar {
   background: var(--td-brand-color-light);
 }
@@ -1352,11 +1299,6 @@ ul.t-select-option-group__header,
 .dashboard-list-card__number {
   font-family: 'TCloud Number';
 }
-/* 自定义区域 + add */
-/* .t-layout {
-  background-color: var(--td-bg-color-container) !important;
-} */
-
 
 .c-flex {
   display: flex;
@@ -1379,7 +1321,6 @@ ul.t-select-option-group__header,
 
 .basic-container {
   background-color: var(--td-bg-color-container);
-  /* padding: var(--td-comp-paddingTB-xxl) var(--td-comp-paddingLR-xxl); */
   border-radius: var(--td-radius-medium);
   height: 100%;
 }
@@ -1399,10 +1340,6 @@ ul.t-select-option-group__header,
   font-size: var(--td-font-size-body-small);
   height: var(--td-comp-size-xxl);
   line-height: var(--td-comp-size-xxl);
-}
-.t-card {
-  box-shadow: none;
-  background-color: none;
 }
 .t-head-menu {
   font: var(--td-font-body-small);
