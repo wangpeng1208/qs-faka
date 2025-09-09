@@ -1,1 +1,0 @@
-import{d as e,l as o,m as r}from"./vue-d500b9b9.js";import{_ as t}from"./index-5ae314bf.js";import"./libs-035f127b.js";import"./plugins-f7b3b094.js";import"./others-381f73b9.js";import"./echarts-415f4206.js";const n=e({name:"FrameBlank"});function a(m,p,s,c,i,_){return o(),r("div")}const $=t(n,[["render",a]]);export{$ as default};
