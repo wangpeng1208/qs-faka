@@ -2,6 +2,7 @@ import { MessagePlugin } from 'tdesign-vue-next';
 import { nextTick } from 'vue';
 import useClipboard from 'vue-clipboard3';
 
+import { baseUrl } from '@/api/base';
 import router from '@/router/index';
 
 /**
@@ -77,4 +78,13 @@ export function downloadFile(url: string) {
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
+}
+
+// 通过url获取图片真实路径
+export function getImgUrl(url: string) {
+  // 如果url包含http则直接返回 或者以 / 开头
+  if (url.includes('http')) {
+    return url;
+  }
+  return baseUrl + url;
 }
