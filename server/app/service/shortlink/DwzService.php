@@ -28,7 +28,8 @@ class DwzService
      */
     public function create($url)
     {
-        $type = conf('site_domain_short');
+        // $type = conf('site_domain_short');
+        $type = "Other";
         $dwz  = $this->invoke($type);
         return $dwz->create($url) ?? '';
     }
