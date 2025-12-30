@@ -48,7 +48,7 @@
       <search-popup @success="handelSearch" />
       <div class="category-header c-flex">
         <t-space align="baseline">
-          <t-link hover="underline"> 打款站内信通知 已开启 </t-link>
+          <t-link hover="underline" disabled> 打款站内信通知 已开启 </t-link>
           <t-link :theme="notifyData.cash_emailnotify_open ? 'primary' : 'danger'" @click="setConfig('cash_emailnotify_open')">
             打款邮件通知
             {{ notifyData.cash_emailnotify_open ? '已开启' : '已关闭' }}
