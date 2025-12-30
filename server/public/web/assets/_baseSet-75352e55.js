@@ -1,0 +1,1 @@
+import{aj as _,ax as u,aN as v,aR as e,j as l}from"./index-ebc513dd.js";function m(r,i,g,f){if(!_(r))return r;i=u(i,r);for(var a=-1,x=i.length,o=x-1,s=r;s!=null&&++a<x;){var n=v(i[a]),t=g;if(n==="__proto__"||n==="constructor"||n==="prototype")return r;if(a!=o){var d=s[n];t=f?f(d,n,s):void 0,t===void 0&&(t=_(d)?d:e(i[a+1])?[]:{})}l(s,n,t),s=s[n]}return r}export{m as b};

@@ -1,0 +1,1 @@
+import{_ as r}from"./index-ebc513dd.js";import{l as o,m as t}from"./vue-51c2f431.js";import"./libs-1cd01688.js";import"./plugins-ccea0c8f.js";import"./others-24e1b5c5.js";import"./echarts-a13411ed.js";const e={};function c(m,n){return o(),t("div",null,"抱歉，您无权限访问此页面")}const l=r(e,[["render",c]]);export{l as default};

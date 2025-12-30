@@ -1,0 +1,1 @@
+.icon-grid[data-v-e30da723]{display:grid;grid-template-columns:repeat(auto-fill,60px);gap:5px;padding:5px}.item[data-v-e30da723]{width:60px;height:60px;display:flex;align-items:center;justify-content:center;border:1px solid #f0f0f0;cursor:pointer;font-size:28px;transition:all .3s}.item.active[data-v-e30da723]{border:3px solid #409eff}

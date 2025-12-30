@@ -1,1 +1,0 @@
-import{I as _,s as u,aK as v,aO as I,f as e}from"./index-1ae915eb.js";function K(r,i,g,d){if(!_(r))return r;i=u(i,r);for(var t=-1,x=i.length,o=x-1,s=r;s!=null&&++t<x;){var n=v(i[t]),f=g;if(n==="__proto__"||n==="constructor"||n==="prototype")return r;if(t!=o){var a=s[n];f=d?d(a,n,s):void 0,f===void 0&&(f=_(a)?a:I(i[t+1])?[]:{})}e(s,n,f),s=s[n]}return r}export{K as b};

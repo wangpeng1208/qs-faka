@@ -1,0 +1,5 @@
+import{T as f,ag as x,aS as d,aI as s,K as b,aT as L,aj as N}from"./index-ebc513dd.js";import{b as o,w as p,o as w}from"./vue-51c2f431.js";/**
+ * tdesign v1.16.1
+ * (c) 2025 tdesign
+ * @license MIT
+ */function I(u){var g=function(a){var e=u.value,t=e.allowInputOverMax,n=e.maxlength,c=e.maxcharacter;if(!(n||c)||t||!a)return a;if(n)return L(a,n);if(c){var v=s(a,c);if(N(v))return v.characters}},l=o(function(){var r=u.value,a=r.maxlength,e=r.maxcharacter,t=r.value;if(f(t))return String(t);if(a&&e&&x.warn("Input","Pick one of maxlength and maxcharacter please."),a){var n=t!=null&&t.length?d(t):0;return"".concat(n,"/").concat(a)}return e?"".concat(s(t||""),"/").concat(e):""}),i=o(function(){if(l.value){var r=l.value.split("/"),a=b(r,2),e=a[0],t=a[1];return Number(e)>Number(t)?"error":""}return""}),h=o(function(){var r=u.value.status;return r||i.value}),m=function(){var a,e;(a=(e=u.value).onValidate)===null||a===void 0||a.call(e,{error:i.value?"exceed-maximum":void 0})};return p(i,m),w(function(){i.value&&m()}),{tStatus:h,limitNumber:l,getValueByLimitNumber:g}}export{I as u};
