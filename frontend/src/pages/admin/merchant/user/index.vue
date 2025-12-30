@@ -95,8 +95,10 @@ import RatePopup from './components/rate.vue';
 import RolePopup from './components/role.vue';
 import RowSearch from './components/row-search.vue';
 
+const params = reactive<any>({});
 const { pagination, fetchData, dataLoading, headerAffixedTop, rehandlePageChange, lists, searchData } = table({
   fetchFun: list,
+  params,
 });
 fetchData();
 
@@ -147,7 +149,6 @@ const messageRow = (id: number) => {
   messageRef.value?.init(id);
 };
 // 搜索
-const params = reactive<any>({});
 const fetchSearchData = (newParams: any) => {
   Object.assign(params, newParams);
   searchData();

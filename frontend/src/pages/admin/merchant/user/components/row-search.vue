@@ -3,8 +3,8 @@
     <t-form-item label="" name="username">
       <t-input v-model="params.username" clearable placeholder="请输入商户账号"> </t-input>
     </t-form-item>
-    <t-form-item label="" name="contact">
-      <t-input v-model="params.contact" clearable placeholder="请输入联系方式"> </t-input>
+    <t-form-item label="" name="mobile">
+      <t-input v-model="params.mobile" clearable placeholder="请输入手机号码"> </t-input>
     </t-form-item>
     <t-form-item label="" name="date_range">
       <t-date-range-picker v-model="params.date_range" allow-input clearable cancel-range-select-limit />
