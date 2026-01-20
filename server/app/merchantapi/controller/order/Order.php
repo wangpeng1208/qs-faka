@@ -35,7 +35,7 @@ class Order extends Base
             ['order_type', ''],
         ]);
         $list = $this->user->orders()->order("id desc")->withSearch($where[0], $where[1])->fetchSql(true)->paginate($this->limit)->each(function ($item) {
-            $item->paytype          = get_paytype($item->paytype)->name;
+            $item->paytype          = get_paytype($item->paytype)?->name;
             $item->take_status_text = $item->cards_count > 0
                 ? ($item->cards_count >= $item->quantity ? '已取' : '已取部分')
                 : '未取';

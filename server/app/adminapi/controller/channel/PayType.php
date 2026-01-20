@@ -13,6 +13,7 @@
 namespace app\adminapi\controller\channel;
 
 use app\common\model\PayType as PayTypeModel;
+use app\common\model\Channel as ChannelModel;
 use app\adminapi\controller\Base;
 
 /**
@@ -88,6 +89,10 @@ class PayType extends Base
   public function del()
   {
     $id  = inputs('id/d', 0);
+    // 验证是否在使用中
+    if(ChannelModel::where('paytype', $id)->find()) {
+      $this->error('使用中，禁止删除');
+    }
     $res = PayTypeModel::destroy($id);
     return $res ? $this->success('操作成功') : $this->error('操作失败');
   }

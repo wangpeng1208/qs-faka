@@ -91,7 +91,6 @@ class Collection extends Base
             'code'           => inputs('code'),
             'account_fields' => inputs('account_fields'),
             'default_fields' => inputs('default_fields', ''),
-            'applyurl'       => inputs('applyurl'),
         ];
         $validate = new \app\adminapi\validate\channel\CollectionValidate;
         $validate->scene('collection')->failException(true)->check($data);

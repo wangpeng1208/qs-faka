@@ -106,7 +106,11 @@ function J($code, $msg = '', $data = [], $url = null)
  */
 function get_paytype($paytype)
 {
-    return \app\common\model\PayType::find($paytype);
+    $res = \app\common\model\PayType::find($paytype);
+    if(!$res) {
+        throw new \Exception('支付分类未找到,请联系平台管理员');
+    }
+    return $res;
 }
 
 /**

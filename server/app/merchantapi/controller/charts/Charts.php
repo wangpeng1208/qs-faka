@@ -56,7 +56,7 @@ class Charts extends Base
         ]);
         $res   = $this->user->orders()->withSearch($where[0], $where[1])->order("id desc")->paginate($this->limit)->each(function ($item, $key) {
             $item->setAttr('cards_count', $item->cards_count);
-            $item->paytype = get_paytype($item['paytype'])->name;
+            $item->paytype = get_paytype($item['paytype'])?->name;
             if ($item->cards_count) {
                 if ($item->cards_count >= $item->quantity) {
                     $item->task_status = '已取';
