@@ -651,7 +651,6 @@ CREATE TABLE `pay_channel` (
   `show_name` varchar(255) NOT NULL DEFAULT '' COMMENT '前台展示名称',
   `is_available` tinyint(4) NOT NULL DEFAULT 0 COMMENT '接口可用 0通用 1手机 2电脑',
   `default_fields` varchar(1024) NOT NULL DEFAULT '' COMMENT '字段默认值',
-  `applyurl` varchar(255) NOT NULL DEFAULT '' COMMENT '申请地址',
   `sort` int(10) NOT NULL DEFAULT 0 COMMENT '渠道排序',
   `type` tinyint(1) NOT NULL DEFAULT 1 COMMENT '类型：1支付，2提现',
   PRIMARY KEY (`id`)
