@@ -20,7 +20,7 @@ use app\home\collection\interfaces\CollectionInterface;
  * @var $trade_no string 外部单号
  * @var $order object 订单
  * @var $config array
- * @field params  网关:gateway|pid:pid|key:key|支付类型:type
+ * @field params  网关:gateway|商户ID:pid|密钥:key|支付类型:type
  */
 class Yipay extends PayService implements CollectionInterface
 {
