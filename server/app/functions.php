@@ -80,27 +80,6 @@ function conf($name, $value = null)
 }
 
 /**
- * 返回接口数据
- * @param int    $code 状态码
- * @param string $msg  信息
- * @param array  $data 数据
- *
- * @return string json数据
- */
-function J($code, $msg = '', $data = [], $url = null)
-{
-    $return = [
-        'code'      => $code,
-        'msg'       => $msg,
-        'data'      => $data,
-        'url'       => $url,
-        'timestamp' => time(),
-    ];
-    return json($return);
-}
-
-
-/**
  * 获取支付类型名称
  * @param int $paytype 支付类型
  */

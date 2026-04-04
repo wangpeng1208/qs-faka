@@ -151,22 +151,23 @@ class Complaint extends Base
                     $order->status = 3;
                     $order->save();
                     DB::commit();
-
+                    
+                    $msg = "判决成功";
                     if (conf("complaint_refund") == 1) {
                         $pay         = new PayService();
                         $pay_channel = $pay->invoke($order->channel->code);
                         if (method_exists($pay_channel, "refund")) {
                             $refund_result = $pay_channel->refund($order);
                             if ($refund_result["code"] == 1) {
-                                return J(200, "判决成功商家余额已扣除,买家已通过API退款。");
+                                $msg = "判决成功商家余额已扣除,买家已通过API退款。";
                             } else {
-                                return J(200, "判决成功商家余额已扣除,API退款失败请手动操作！（" . $refund_result["msg"] . "），您需要人工联系买家进行退款！");
+                                $msg = "判决成功商家余额已扣除,API退款失败请手动操作！（" . $refund_result["msg"] . "），您需要人工联系买家进行退款！";
                             }
                         } else {
-                            return J(200, "判决成功商家余额已扣除,当前支付通道不支持退款，您需要人工联系买家进行退款！");
+                            $msg = "判决成功商家余额已扣除,当前支付通道不支持退款，您需要人工联系买家进行退款！";
                         }
                     } else {
-                        return J(200, "判决成功商家余额已扣除,您需要人工联系买家进行退款！");
+                        $msg = "判决成功商家余额已扣除,您需要人工联系买家进行退款！";
                     }
                 }
             }
@@ -178,7 +179,7 @@ class Complaint extends Base
                 $this->error("判决失败");
             }
         }
-        $this->success("判决成功");
+        $this->success($msg);
     }
 
     public function del()
