@@ -108,7 +108,7 @@ class AutoInstallCommand extends Command
             return parent::FAILURE;
         }
         // 执行还原数据库命令
-        $command = "mysql -u" . $dbUser . " -p" . $dbPwd . " " . $dbName . " < " . $sql_file;
+        $command = "mysql --default-character-set=utf8mb4 -u" . $dbUser . " -p" . $dbPwd . " " . $dbName . " < " . $sql_file;
         $output->writeln("正在还原数据库...");
         $output->writeln($command);
 

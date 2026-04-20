@@ -131,7 +131,7 @@ if ! mysql -u${db_username} -p${db_password} -e "use ${db_name};" > /dev/null 2>
 fi
 # 开始 还原数据库
 echo "开始还原数据库"
-mysql -u${db_username} -p${db_password} ${db_name} < ./mysql.sql
+mysql --default-character-set=utf8mb4 -u${db_username} -p${db_password} ${db_name} < ./mysql.sql
 # 数据库还原完成
 echo "数据库还原完成"
 # 删除数据库文件
